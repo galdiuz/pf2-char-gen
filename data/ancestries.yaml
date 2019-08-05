@@ -1,0 +1,49 @@
+ancestries:
+  - name: "Dwarf"
+    hitpoints: 10
+    size: "Medium"
+    speed: 20
+    abilityBoosts:
+      - "Con"
+      - "Wis"
+      - "Free"
+    abilityFlaws:
+      - "Cha"
+    languages:
+      - "Common"
+      - "Dwarven"
+    traits:
+      - "Dwarf"
+      - "Humanoid"
+    heritages:
+      - name: "Ancient-Blooded Dwarf"
+        description: ""
+      - name: "Death Warden Dwarf"
+        description: ""
+    feats:
+      - name: "Dwarven Lore"
+        level: 1
+        description: "Desc"
+      - name: "Dwarven Weapon Familiarity"
+        level: 1
+        description: "Desc"
+  - name: "Elf"
+    hitpoints: 6
+    size: "Medium"
+    speed: 30
+    abilityBoosts:
+      - Dexterity
+      - Intelligence
+      - Free
+    abilityFlaws:
+      - Charisma
+    languages:
+      - "Common"
+      - "Elven"
+    traits:
+      - "Elf"
+      - "Humanoid"
+    heritages:
+        []
+    feats:
+        []
