@@ -17,7 +17,7 @@ emptyState =
     { characters = []
     , currentCharacter = Character.testCharacter
     , data = Data.emptyData
-    , currentView = View.Characters
+    , currentView = View.Ancestry
     }
 
 

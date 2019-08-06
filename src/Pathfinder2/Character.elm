@@ -1,6 +1,8 @@
 module Pathfinder2.Character exposing (..)
 
-import Pathfinder2.Data.Ancestry exposing (Ancestry)
+import Dict exposing (Dict)
+import List.Extra
+import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 import Pathfinder2.Data.Class exposing (Class)
 
 
@@ -31,8 +33,8 @@ type alias CharacterAncestry =
 
 
 type alias AncestryOptions =
-    { abilityBoosts : List String
-    , abilityFlaws : List String
+    { abilityBoosts : Dict Int Ancestry.Ability
+    , abilityFlaws : Dict Int Ancestry.Ability
     , heritage : Maybe String
     , languages : List String
     }
@@ -40,8 +42,8 @@ type alias AncestryOptions =
 
 emptyAncestryOptions : AncestryOptions
 emptyAncestryOptions =
-    { abilityBoosts = []
-    , abilityFlaws = []
+    { abilityBoosts = Dict.empty
+    , abilityFlaws = Dict.empty
     , heritage = Nothing
     , languages = []
     }
@@ -49,7 +51,35 @@ emptyAncestryOptions =
 
 type Abilities
     = Standard
+    | VoluntaryFlaw
     | Rolled Int Int Int Int Int Int
+
+
+getAbilityBoosts : Character -> List Ancestry.AbilityMod
+getAbilityBoosts character =
+    case (character.ancestry.ancestry, character.info.abilities) of
+        (Nothing, _) ->
+            []
+        (Just ancestry, Standard) ->
+            ancestry.abilityBoosts
+        (Just ancestry, VoluntaryFlaw) ->
+            ancestry.abilityBoosts ++ [Ancestry.Free]
+        (Just ancestry, Rolled _ _ _ _ _ _) ->
+            Maybe.withDefault [] <| List.Extra.init ancestry.abilityBoosts
+
+
+getAbilityFlaws : Character -> List Ancestry.AbilityMod
+getAbilityFlaws character =
+    case (character.ancestry.ancestry, character.info.abilities) of
+        (Nothing, _) ->
+            []
+        (Just ancestry, Standard) ->
+            ancestry.abilityFlaws
+        (Just ancestry, VoluntaryFlaw) ->
+            ancestry.abilityFlaws ++ [Ancestry.Free, Ancestry.Free]
+        (Just ancestry, Rolled _ _ _ _ _ _) ->
+            ancestry.abilityFlaws
+
 
 
 --emptyCharacter : Character

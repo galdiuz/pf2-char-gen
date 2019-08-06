@@ -32,16 +32,33 @@ ancestries:
     size: "Medium"
     speed: 30
     abilityBoosts:
-      - Dexterity
-      - Intelligence
-      - Free
+      - "Dex"
+      - "Int"
+      - "Free"
     abilityFlaws:
-      - Charisma
+      - "Cha"
     languages:
       - "Common"
       - "Elven"
     traits:
       - "Elf"
+      - "Humanoid"
+    heritages:
+        []
+    feats:
+        []
+  - name: "Human"
+    hitpoints: 8
+    size: "Medium"
+    speed: 25
+    abilityBoosts:
+      - "Free"
+      - "Free"
+    abilityFlaws:
+        []
+    languages:
+      - "Common"
+    traits:
       - "Humanoid"
     heritages:
         []

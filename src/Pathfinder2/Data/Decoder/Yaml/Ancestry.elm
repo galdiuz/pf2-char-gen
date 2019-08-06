@@ -1,5 +1,6 @@
 module Pathfinder2.Data.Decoder.Yaml.Ancestry exposing (decoder)
 
+import Maybe.Extra
 import Yaml.Decode as Decode exposing (Decoder)
 import Yaml.Decode.Field as Field
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
@@ -11,20 +12,36 @@ decoder =
     Field.require "hitpoints" Decode.int <| \hitpoints ->
     Field.require "size" Decode.string <| \size ->
     Field.require "speed" Decode.int <| \speed ->
-    --boosts
-    --flaws
+    Field.require "abilityBoosts" (Decode.list Decode.string) <| \boosts ->
+    Field.require "abilityFlaws" (Decode.list Decode.string) <| \flaws ->
     Field.require "languages" (Decode.list Decode.string) <| \languages ->
     Field.require "traits" (Decode.list Decode.string) <| \traits ->
     Field.require "heritages" (Decode.list heritageDecoder) <| \heritages ->
     Field.require "feats" (Decode.list featDecoder) <| \feats ->
+
+    let
+        abilityBoosts =
+            List.map Ancestry.abilityModFromString boosts
+
+        abilityFlaws =
+            List.map Ancestry.abilityModFromString flaws
+    in
+
+    if not <| List.all Maybe.Extra.isJust abilityBoosts then
+        Decode.fail "Invalid ability boost"
+    else
+
+    if not <| List.all Maybe.Extra.isJust abilityFlaws then
+        Decode.fail "Invalid ability flaw"
+    else
 
     Decode.succeed
         { name = name
         , hitpoints = hitpoints
         , size = size
         , speed = speed
-        , abilityBoosts = []
-        , abilityFlaws = []
+        , abilityBoosts = List.filterMap identity abilityBoosts
+        , abilityFlaws = List.filterMap identity abilityFlaws
         , languages = languages
         , traits = traits
         , heritages = heritages

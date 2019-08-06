@@ -3,6 +3,7 @@ module View.Ancestry exposing (render)
 import Dict
 
 import Element exposing (Element, text, el)
+import Element as El
 import Element.Events as Events
 import Element.Input as Input
 import Element.Border as Border
@@ -11,7 +12,7 @@ import Element.Background as Background
 import Action.Ancestry as Ancestry
 import App.Msg as Msg exposing (Msg)
 import Pathfinder2.Data as Data exposing (Data)
-import Pathfinder2.Data.Ancestry exposing (Ancestry)
+import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 import Pathfinder2.Character as Character exposing (Character)
 
 type alias State s =
@@ -83,12 +84,44 @@ renderAncestryOptions state =
         Just ancestry ->
             Just <| Element.column
                 []
-                [ text "options"
+                [ abilityBoosts ancestry state.currentCharacter.ancestry.options state.currentCharacter
                 ]
 
         Nothing ->
             Nothing
 
 
-abilityBoosts =
-    []
+abilityBoosts ancestry options character =
+    El.column
+        [ El.spacing 10 ]
+        [ El.text "Ability Boosts"
+        , El.column
+            [ El.spacing 5 ]
+            <| List.indexedMap (a ancestry options) <| Character.getAbilityBoosts character
+        , El.text "Ability Flaws"
+        , El.column
+            [ El.spacing 5 ]
+            <| List.indexedMap (a ancestry options) <| Character.getAbilityFlaws character
+        ]
+
+
+--a : Ancestry -> Options -> Int -> AbilityMod
+a ancestry options index boost =
+    let
+        button text =
+            El.el
+                [ Border.width 1
+                , El.padding 2
+                ]
+                <| El.text text
+    in
+    case boost of
+        Ancestry.Ability ability ->
+            El.text <| Ancestry.abilityToString ability
+        Ancestry.Free ->
+            El.row
+                [ El.spacing 5 ]
+                <| List.map (button << Ancestry.abilityToString) Ancestry.allAbilities
+
+
+--validBoosts
