@@ -3,6 +3,7 @@ module Pathfinder2.Data.Decoder.Yaml.Ancestry exposing (decoder)
 import Maybe.Extra
 import Yaml.Decode as Decode exposing (Decoder)
 import Yaml.Decode.Field as Field
+import Pathfinder2.Data.Ability as Ability
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 
 
@@ -21,10 +22,10 @@ decoder =
 
     let
         abilityBoosts =
-            List.map Ancestry.abilityModFromString boosts
+            List.map Ability.abilityModFromString boosts
 
         abilityFlaws =
-            List.map Ancestry.abilityModFromString flaws
+            List.map Ability.abilityModFromString flaws
     in
 
     if not <| List.all Maybe.Extra.isJust abilityBoosts then

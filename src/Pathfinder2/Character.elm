@@ -3,6 +3,7 @@ module Pathfinder2.Character exposing (..)
 import Dict exposing (Dict)
 import List.Extra
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
+import Pathfinder2.Data.Ability as Ability exposing (Ability)
 import Pathfinder2.Data.Class exposing (Class)
 
 
@@ -33,8 +34,8 @@ type alias CharacterAncestry =
 
 
 type alias AncestryOptions =
-    { abilityBoosts : Dict Int Ancestry.Ability
-    , abilityFlaws : Dict Int Ancestry.Ability
+    { abilityBoosts : Dict Int Ability
+    , abilityFlaws : Dict Int Ability
     , heritage : Maybe String
     , languages : List String
     }
@@ -55,7 +56,7 @@ type Abilities
     | Rolled Int Int Int Int Int Int
 
 
-getAbilityBoosts : Character -> List Ancestry.AbilityMod
+getAbilityBoosts : Character -> List Ability.AbilityMod
 getAbilityBoosts character =
     case (character.ancestry.ancestry, character.info.abilities) of
         (Nothing, _) ->
@@ -63,12 +64,12 @@ getAbilityBoosts character =
         (Just ancestry, Standard) ->
             ancestry.abilityBoosts
         (Just ancestry, VoluntaryFlaw) ->
-            ancestry.abilityBoosts ++ [Ancestry.Free]
+            ancestry.abilityBoosts ++ [Ability.Free]
         (Just ancestry, Rolled _ _ _ _ _ _) ->
             Maybe.withDefault [] <| List.Extra.init ancestry.abilityBoosts
 
 
-getAbilityFlaws : Character -> List Ancestry.AbilityMod
+getAbilityFlaws : Character -> List Ability.AbilityMod
 getAbilityFlaws character =
     case (character.ancestry.ancestry, character.info.abilities) of
         (Nothing, _) ->
@@ -76,7 +77,7 @@ getAbilityFlaws character =
         (Just ancestry, Standard) ->
             ancestry.abilityFlaws
         (Just ancestry, VoluntaryFlaw) ->
-            ancestry.abilityFlaws ++ [Ancestry.Free, Ancestry.Free]
+            ancestry.abilityFlaws ++ [Ability.Free, Ability.Free]
         (Just ancestry, Rolled _ _ _ _ _ _) ->
             ancestry.abilityFlaws
 
@@ -111,7 +112,7 @@ testCharacter =
         , alignment = "NG"
         , level = 3
         , experience = 0
-        , abilities = Standard
+        , abilities = VoluntaryFlaw
         }
     , class =
         { name = "Monk"

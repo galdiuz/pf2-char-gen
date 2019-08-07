@@ -12,6 +12,7 @@ import Element.Background as Background
 import Action.Ancestry as Ancestry
 import App.Msg as Msg exposing (Msg)
 import Pathfinder2.Data as Data exposing (Data)
+import Pathfinder2.Data.Ability as Ability exposing (Ability)
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 import Pathfinder2.Character as Character exposing (Character)
 
@@ -93,7 +94,8 @@ renderAncestryOptions state =
 
 abilityBoosts ancestry options character =
     El.column
-        [ El.spacing 10 ]
+        [ El.spacing 10
+        ]
         [ El.text "Ability Boosts"
         , El.column
             [ El.spacing 5 ]
@@ -116,12 +118,13 @@ a ancestry options index boost =
                 <| El.text text
     in
     case boost of
-        Ancestry.Ability ability ->
-            El.text <| Ancestry.abilityToString ability
-        Ancestry.Free ->
+        Ability.Ability ability ->
+            El.text <| Ability.abilityToString ability
+        Ability.Free ->
             El.row
                 [ El.spacing 5 ]
-                <| List.map (button << Ancestry.abilityToString) Ancestry.allAbilities
+                <| List.append (List.singleton <| text "Choose one: ")
+                <| List.map (button << Ability.abilityToString) Ability.allAbilities
 
 
 --validBoosts
