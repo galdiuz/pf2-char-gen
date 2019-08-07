@@ -1,6 +1,6 @@
 module View.Information exposing (render)
 
-import Element exposing (Element, el, text, row, column, table)
+import Element as El exposing (Element)
 import Element.Events as Events
 import Element.Input as Input
 
@@ -15,19 +15,19 @@ type alias State s =
 
 render : State s -> Element Msg
 render state =
-    table
-        []
+    El.table
+        [ El.alignTop ]
         { data = inputs state
         , columns =
-            [ { header = text ""
-              , width = Element.px 150
+            [ { header = El.text ""
+              , width = El.px 150
               , view = \row ->
-                    el
-                        [ Element.centerY ]
-                        <| text row.label
+                    El.el
+                        [ El.centerY ]
+                        <| El.text row.label
               }
-            , { header = text ""
-              , width = Element.fill
+            , { header = El.text ""
+              , width = El.fill
               , view = \row -> row.input
               }
             ]

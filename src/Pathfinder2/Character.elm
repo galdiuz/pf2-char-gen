@@ -82,7 +82,6 @@ getAbilityFlaws character =
             ancestry.abilityFlaws
 
 
-
 --emptyCharacter : Character
 emptyCharacter =
     { info =

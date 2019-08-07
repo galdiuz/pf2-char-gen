@@ -7,6 +7,7 @@ import Element.Input as Input
 import Element.Events as Events
 import Element.Border as Border
 import Element.Font as Font
+import Element.Background as Background
 
 import App.Msg as Msg exposing (Msg)
 import App.View as View exposing (View)
@@ -26,7 +27,8 @@ type alias State s =
 
 render : State s -> Html Msg
 render state =
-    El.layout []
+    El.layout
+        [ Background.color <| El.rgb 0.95 0.95 0.95 ]
         <| El.row
             [ El.spacing 10
             , El.height El.fill
