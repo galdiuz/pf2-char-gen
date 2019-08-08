@@ -21,8 +21,8 @@ allAbilities =
     ]
 
 
-abilityToString : Ability -> String
-abilityToString ability =
+toString : Ability -> String
+toString ability =
     case ability of
         Str -> "Strength"
         Dex -> "Dexterity"
@@ -32,8 +32,8 @@ abilityToString ability =
         Cha -> "Charisma"
 
 
-abilityFromString : String -> Maybe Ability
-abilityFromString string =
+fromString : String -> Maybe Ability
+fromString string =
     case string of
         "Str" -> Just Str
         "Dex" -> Just Dex
@@ -44,12 +44,12 @@ abilityFromString string =
         _ -> Nothing
 
 
-abilityModFromString : String -> Maybe AbilityMod
-abilityModFromString string =
+modFromString : String -> Maybe AbilityMod
+modFromString string =
     if string == "Free" then
         Just Free
     else
-        Maybe.map Ability <| abilityFromString string
+        Maybe.map Ability <| fromString string
 
 
 type AbilityMod

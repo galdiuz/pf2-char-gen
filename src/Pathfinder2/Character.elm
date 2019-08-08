@@ -56,8 +56,8 @@ type Abilities
     | Rolled Int Int Int Int Int Int
 
 
-getAbilityBoosts : Character -> List Ability.AbilityMod
-getAbilityBoosts character =
+ancestryAbilityBoosts : Character -> List Ability.AbilityMod
+ancestryAbilityBoosts character =
     case (character.ancestry.ancestry, character.info.abilities) of
         (Nothing, _) ->
             []
@@ -69,8 +69,8 @@ getAbilityBoosts character =
             Maybe.withDefault [] <| List.Extra.init ancestry.abilityBoosts
 
 
-getAbilityFlaws : Character -> List Ability.AbilityMod
-getAbilityFlaws character =
+ancestryAbilityFlaws : Character -> List Ability.AbilityMod
+ancestryAbilityFlaws character =
     case (character.ancestry.ancestry, character.info.abilities) of
         (Nothing, _) ->
             []

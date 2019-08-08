@@ -22,10 +22,10 @@ decoder =
 
     let
         abilityBoosts =
-            List.map Ability.abilityModFromString boosts
+            List.map Ability.modFromString boosts
 
         abilityFlaws =
-            List.map Ability.abilityModFromString flaws
+            List.map Ability.modFromString flaws
     in
 
     if not <| List.all Maybe.Extra.isJust abilityBoosts then

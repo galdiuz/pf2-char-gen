@@ -108,7 +108,7 @@ abilityBoosts ancestry character =
         , El.column
             [ El.spacing 5 ]
             <| List.indexedMap (renderAbilityMod ancestry character Boost)
-            <| Character.getAbilityBoosts character
+            <| Character.ancestryAbilityBoosts character
         , El.el
             [ Font.heavy
             ]
@@ -116,7 +116,7 @@ abilityBoosts ancestry character =
         , El.column
             [ El.spacing 5 ]
             <| List.indexedMap (renderAbilityMod ancestry character Flaw)
-            <| Character.getAbilityFlaws character
+            <| Character.ancestryAbilityFlaws character
         ]
 
 
@@ -124,7 +124,7 @@ renderAbilityMod : Ancestry -> Character -> AbilityModType -> Int -> Ability.Abi
 renderAbilityMod ancestry character modType index mod =
     case mod of
         Ability.Ability ability ->
-            El.text <| Ability.abilityToString ability
+            El.text <| Ability.toString ability
         Ability.Free ->
             El.row
                 [ El.spacing 5 ]
@@ -198,7 +198,7 @@ renderAbilityButton ancestry options modType index ability =
     in
     El.el
         style
-        <| text <| Ability.abilityToString ability
+        <| text <| Ability.toString ability
 
 
 
