@@ -3,13 +3,12 @@ module View.Ancestry exposing (render)
 import Dict exposing (Dict)
 
 import Maybe.Extra
-import Element exposing (Element, text, el)
-import Element as El
-import Element.Events as Events
-import Element.Input as Input
-import Element.Border as Border
+import Element as El exposing (Element)
 import Element.Background as Background
+import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
+import Element.Input as Input
 
 import Action.Ancestry as Ancestry
 import App.Msg as Msg exposing (Msg)
@@ -32,25 +31,26 @@ type AbilityModType
 
 render : State s -> Element Msg
 render state =
-    Element.column
-        [ Element.alignTop ]
+    El.column
+        [ El.alignTop ]
         <| List.filterMap identity
             [ renderAncestryChoice state
             , renderAncestryOptions state
             ]
 
 
+renderAncestryChoice : State s -> Maybe (Element Msg)
 renderAncestryChoice state =
-    Just <| Element.column
+    Just <| El.column
         [ El.spacing 5 ]
-        [ el
+        [ El.el
             [ Font.bold
             , Font.size 24
             ]
-            <| text "Ancestry"
+            <| El.text "Ancestry"
         , Input.radioRow
-            [ Element.spacing 5
-            , Element.paddingXY 0 10
+            [ El.spacing 5
+            , El.paddingXY 0 10
             ]
             { onChange = \value -> Msg.Ancestry <| Ancestry.SetAncestry value
             , options =
@@ -73,22 +73,22 @@ renderAncestry ancestry optionState =
             case optionState of
                 Input.Selected ->
                     [ Border.width 2
-                    , Element.padding 4
-                    , Background.color <| Element.rgb 0.8 0.8 0.8
+                    , El.padding 4
+                    , Background.color <| El.rgb 0.8 0.8 0.8
                     ]
 
                 _ ->
                     [ Border.width 1
-                    , Element.padding 5
+                    , El.padding 5
                     ]
     in
-        el style <| text ancestry.name
+        El.el style <| El.text ancestry.name
 
 
 renderAncestryOptions state =
     case state.currentCharacter.ancestry.ancestry of
         Just ancestry ->
-            Just <| Element.column
+            Just <| El.column
                 []
                 [ abilityBoosts ancestry state.currentCharacter
                 ]
@@ -198,7 +198,7 @@ renderAbilityButton ancestry options modType index ability =
     in
     El.el
         style
-        <| text <| Ability.toString ability
+        <| El.text <| Ability.toString ability
 
 
 

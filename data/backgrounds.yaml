@@ -1,0 +1,28 @@
+backgrounds:
+  - name: "Acolyte"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Religion"
+      - "Lore - Scribing"
+    feats:
+      - "Student of the Canon"
+  - name: "Acrobat"
+    abilityBoosts:
+      - "Str"
+      - "Dex"
+    skills:
+      - "Acrobatics"
+      - "Lore - Circus"
+    feats:
+      - "Steady Balance"
+  - name: "Animal Whisperer"
+    abilityBoosts:
+      - "Wis"
+      - "Cha"
+    skills:
+      - "Nature"
+      - "Lore - (Terrain)"
+    feats:
+      - "Train Animal"

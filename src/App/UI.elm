@@ -3,29 +3,23 @@ module App.UI exposing (render)
 import Html exposing (Html)
 
 import Element as El
-import Element.Input as Input
-import Element.Events as Events
-import Element.Border as Border
-import Element.Font as Font
 import Element.Background as Background
+import Element.Border as Border
+import Element.Events as Events
+import Element.Font as Font
+import Element.Input as Input
 
+import App.State exposing (State)
 import App.Msg as Msg exposing (Msg)
 import App.View as View exposing (View)
 import View.Ancestry as Ancestry
+import View.Background as Background
 import View.Information as Information
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Character as Character exposing (Character)
 
 
-type alias State s =
-    { s
-        | currentView : View
-        , currentCharacter : Character
-        , data : Data
-    }
-
-
-render : State s -> Html Msg
+render : State -> Html Msg
 render state =
     El.layout
         [ Background.color <| El.rgb 0.95 0.95 0.95 ]
@@ -63,6 +57,7 @@ renderNavigation state =
                     , label = El.el
                         [ Font.center
                         , El.height El.shrink
+                        , El.width El.fill
                         ]
                         <| El.text item.label
                     }
@@ -75,6 +70,9 @@ renderNavigation state =
               }
             , { msg = Msg.SetView View.Ancestry
               , label = "Ancestry"
+              }
+            , { msg = Msg.SetView View.Background
+              , label = "Background"
               }
             ]
 
@@ -89,6 +87,9 @@ renderContent state =
 
         View.Ancestry ->
             Ancestry.render state
+
+        View.Background ->
+            Background.render state
 
         _ ->
             El.text "_"

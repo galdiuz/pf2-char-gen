@@ -20,9 +20,8 @@ init flags url navKey =
     State.emptyState
         |> State.setData
             ( flags.data
-                |> List.map (Yaml.Decode.fromString Yaml.decoder)
+                |> List.map (Yaml.decode)
                 |> List.map (Debug.log "data")
-                |> List.map (Result.withDefault Data.emptyData)
                 |> List.foldl (Data.mergeData) Data.emptyData
             )
         |> noCmd
