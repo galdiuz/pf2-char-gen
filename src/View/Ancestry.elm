@@ -183,6 +183,10 @@ renderAbilityButton ancestry options modType index ability =
                         |> Dict.remove index
                         |> Dict.values
                     )
+                    (Maybe.map (optionField False) options
+                        |> Maybe.withDefault Dict.empty
+                        |> Dict.values
+                    )
 
         style =
             if isSelected then
@@ -211,11 +215,14 @@ mapAbilityList mods =
         mods
 
 
-validChoices : List Ability -> List Ability -> List Ability -> List Ability
-validChoices same other selected =
+{-| Valid ability choices = All - (Ancestry Same - Ancestry Other) - (Selected Same - Ancestry Other) - Selected Other
+-}
+validChoices : List Ability -> List Ability -> List Ability -> List Ability -> List Ability
+validChoices ancestrySame ancestryOther selectedSame selectedOther =
     Ability.allAbilities
-        |> diffList (diffList other same)
-        |> diffList (diffList other selected)
+        |> diffList (diffList ancestryOther ancestrySame)
+        |> diffList (diffList ancestryOther selectedSame)
+        |> diffList selectedOther
 
 
 diffList : List a -> List a -> List a
