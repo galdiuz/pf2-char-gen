@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Main</title>
     <script src="build/elm.js"></script>
+    <script src="js-yaml.min.js"></script>
 </head>
 
 <body>
@@ -21,6 +22,11 @@
                 fetch(file)
                     .then(res => res.text())
                     .then(text => data[i] = text)
+                    .then(function(text) {
+                        var json = jsyaml.safeLoad(text);
+                        console.log(json);
+                        return text;
+                    })
             );
         });
 
