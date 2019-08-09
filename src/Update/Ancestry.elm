@@ -23,26 +23,18 @@ update action state =
                 Nothing ->
                     state
                         |> noCmd
-            -- state.
-            -- asAncestryIn
-
-            -- asNameIn state.currentCharacter.info name
-            --     |> asInfoIn state.currentCharacter
-            --     |> asCharacterIn state
-            --     |> noCmd
 
         SetAbilityBoost index value ->
             setAbilityBoost state index value
-                |> asOptionsIn state.currentCharacter state.currentCharacter.ancestry.ancestry
+                |> asOptionsIn state.currentCharacter
                 |> asCharacterIn state
                 |> noCmd
 
         SetAbilityFlaw index value ->
             setAbilityFlaw state index value
-                |> asOptionsIn state.currentCharacter state.currentCharacter.ancestry.ancestry
+                |> asOptionsIn state.currentCharacter
                 |> asCharacterIn state
                 |> noCmd
-
 
 
 setAbilityBoost state index value =
@@ -65,19 +57,14 @@ setAbilityFlaw state index value =
 
 asAncestryIn character ancestry =
     { character
-        | ancestry =
-            { ancestry = Just ancestry
-            , options = Nothing
-            }
+        | ancestry = Just ancestry
+        , ancestryOptions = Nothing
     }
 
 
-asOptionsIn character ancestry options =
+asOptionsIn character options =
     { character
-        | ancestry =
-            { ancestry = ancestry
-            , options = Just options
-            }
+        | ancestryOptions = Just options
     }
 
 
@@ -90,4 +77,4 @@ noCmd state =
 
 
 getOptions state =
-    Maybe.withDefault Character.emptyAncestryOptions state.currentCharacter.ancestry.options
+    Maybe.withDefault Character.emptyAncestryOptions state.currentCharacter.ancestryOptions

@@ -32,7 +32,9 @@ type AbilityModType
 render : State s -> Element Msg
 render state =
     El.column
-        [ El.alignTop ]
+        [ El.alignTop
+        , El.width El.fill
+        ]
         <| List.filterMap identity
             [ renderAncestryChoice state
             , renderAncestryOptions state
@@ -60,7 +62,7 @@ renderAncestryChoice state =
                         (\(key, ancestry) ->
                             Input.optionWith key (renderAncestry ancestry)
                         )
-            , selected = Maybe.map .name state.currentCharacter.ancestry.ancestry
+            , selected = Maybe.map .name state.currentCharacter.ancestry
             , label = Input.labelHidden ""
             }
         ]
@@ -86,10 +88,11 @@ renderAncestry ancestry optionState =
 
 
 renderAncestryOptions state =
-    case state.currentCharacter.ancestry.ancestry of
+    case state.currentCharacter.ancestry of
         Just ancestry ->
             Just <| El.column
-                []
+                [ El.width El.fill
+                ]
                 [ abilityBoosts ancestry state.currentCharacter
                 ]
 
@@ -97,6 +100,7 @@ renderAncestryOptions state =
             Nothing
 
 
+abilityBoosts : Ancestry -> Character -> Element Msg
 abilityBoosts ancestry character =
     El.column
         [ El.spacing 10
@@ -106,7 +110,7 @@ abilityBoosts ancestry character =
             ]
             <| El.text "Ability Boosts"
         , El.column
-            [ El.spacing 5 ]
+            [ El.spacing 15 ]
             <| List.indexedMap (renderAbilityMod ancestry character Boost)
             <| Character.ancestryAbilityBoosts character
         , El.el
@@ -114,7 +118,7 @@ abilityBoosts ancestry character =
             ]
             <| El.text "Ability Flaws"
         , El.column
-            [ El.spacing 5 ]
+            [ El.spacing 15 ]
             <| List.indexedMap (renderAbilityMod ancestry character Flaw)
             <| Character.ancestryAbilityFlaws character
         ]
@@ -126,10 +130,10 @@ renderAbilityMod ancestry character modType index mod =
         Ability.Ability ability ->
             El.text <| Ability.toString ability
         Ability.Free ->
-            El.row
+            El.wrappedRow
                 [ El.spacing 5 ]
                 --<| List.append (List.singleton <| text "Choose one: ")
-                <| List.map (renderAbilityButton ancestry character.ancestry.options modType index) Ability.allAbilities
+                <| List.map (renderAbilityButton ancestry character.ancestryOptions modType index) Ability.allAbilities
 
 
 renderAbilityButton : Ancestry -> Maybe Character.AncestryOptions -> AbilityModType -> Int -> Ability -> Element Msg

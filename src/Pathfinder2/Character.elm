@@ -2,15 +2,18 @@ module Pathfinder2.Character exposing (..)
 
 import Dict exposing (Dict)
 import List.Extra
-import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 import Pathfinder2.Data.Ability as Ability exposing (Ability)
+import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
+import Pathfinder2.Data.Background as Background exposing (Background)
 import Pathfinder2.Data.Class exposing (Class)
 
 
 type alias Character =
     { info : CharacterInfo
-    , ancestry : CharacterAncestry
-    -- background : Background
+    , ancestry : Maybe Ancestry
+    , ancestryOptions : Maybe AncestryOptions
+    , background : Maybe Background
+    , backgroundOptions : Maybe BackgroundOptions
     , class : Class
     --, abilities : Abilities
     }
@@ -27,17 +30,16 @@ type alias CharacterInfo =
     }
 
 
-type alias CharacterAncestry =
-    { ancestry : Maybe Ancestry
-    , options : Maybe AncestryOptions
-    }
-
-
 type alias AncestryOptions =
     { abilityBoosts : Dict Int Ability
     , abilityFlaws : Dict Int Ability
     , heritage : Maybe String
     , languages : List String
+    }
+
+
+type alias BackgroundOptions =
+    { abilityBoosts : Dict Int Ability
     }
 
 
@@ -58,7 +60,7 @@ type Abilities
 
 ancestryAbilityBoosts : Character -> List Ability.AbilityMod
 ancestryAbilityBoosts character =
-    case (character.ancestry.ancestry, character.info.abilities) of
+    case (character.ancestry, character.info.abilities) of
         (Nothing, _) ->
             []
         (Just ancestry, Standard) ->
@@ -71,7 +73,7 @@ ancestryAbilityBoosts character =
 
 ancestryAbilityFlaws : Character -> List Ability.AbilityMod
 ancestryAbilityFlaws character =
-    case (character.ancestry.ancestry, character.info.abilities) of
+    case (character.ancestry, character.info.abilities) of
         (Nothing, _) ->
             []
         (Just ancestry, Standard) ->
@@ -116,10 +118,8 @@ testCharacter =
     , class =
         { name = "Monk"
         }
-    , ancestry =
-        { ancestry = Nothing
-        , options = Nothing
-        }
+    , ancestry = Nothing
+    , ancestryOptions = Nothing
+    , background = Nothing
+    , backgroundOptions = Nothing
     }
-
-
