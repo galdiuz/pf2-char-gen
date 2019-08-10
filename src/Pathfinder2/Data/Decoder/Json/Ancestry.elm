@@ -1,8 +1,8 @@
-module Pathfinder2.Data.Decoder.Yaml.Ancestry exposing (decoder)
+module Pathfinder2.Data.Decoder.Json.Ancestry exposing (decoder)
 
 import Maybe.Extra
-import Yaml.Decode as Decode exposing (Decoder)
-import Yaml.Decode.Field as Field
+import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Field as Field
 
 import Pathfinder2.Data.Ability as Ability
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)

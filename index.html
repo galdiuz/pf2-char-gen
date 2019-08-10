@@ -21,12 +21,8 @@
             list.push(
                 fetch(file)
                     .then(res => res.text())
-                    .then(text => data[i] = text)
-                    .then(function(text) {
-                        var json = jsyaml.safeLoad(text);
-                        console.log(json);
-                        return text;
-                    })
+                    .then(text => jsyaml.safeLoad(text))
+                    .then(json => data[i] = json)
             );
         });
 

@@ -164,9 +164,9 @@ renderAbilityMod ancestry character modType index mod =
 validChoices : List a -> List a -> List a -> List a -> List a -> List a
 validChoices ancestrySame ancestryOther selectedSame selectedOther list =
     list
-        |> filter (filter ancestryOther ancestrySame)
-        |> filter (filter ancestryOther selectedSame)
-        |> filter selectedOther
+        |> filterList (filterList ancestryOther ancestrySame)
+        |> filterList (filterList ancestryOther selectedSame)
+        |> filterList selectedOther
 
 
 mapAbilityList : List Ability.AbilityMod -> List Ability
@@ -182,9 +182,9 @@ mapAbilityList mods =
         mods
 
 
-filter : List a -> List a -> List a
-filter toRemove list =
-    List.filter (\v -> not <| List.member v toRemove) list
+filterList : List a -> List a -> List a
+filterList filter list =
+    List.filter (\v -> not <| List.member v filter) list
 
 
 optionField modType invert =

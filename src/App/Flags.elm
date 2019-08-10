@@ -1,8 +1,8 @@
 module App.Flags exposing (Flags)
 
-import Yaml.Decode
+import Json.Decode
 
 
 type alias Flags =
-    { data : List String
+    { data : List Json.Decode.Value
     }

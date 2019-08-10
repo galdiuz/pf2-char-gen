@@ -93,7 +93,7 @@ renderAbilityMod background character index mod =
                         |> Maybe.map (Dict.get index)
                         |> Maybe.Extra.join
                 , available =
-                    filter
+                    filterList
                         (character.backgroundOptions
                             |> Maybe.map .abilityBoosts
                             |> Maybe.withDefault Dict.empty
@@ -105,6 +105,6 @@ renderAbilityMod background character index mod =
                 }
 
 
-filter : List a -> List a -> List a
-filter toRemove list =
-    List.filter (\v -> not <| List.member v toRemove) list
+filterList : List a -> List a -> List a
+filterList filter list =
+    List.filter (\v -> not <| List.member v filter) list

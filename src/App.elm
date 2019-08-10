@@ -12,7 +12,7 @@ import App.Msg exposing (Msg)
 import App.State as State exposing (State)
 import App.UI as UI
 import Pathfinder2.Data as Data
-import Pathfinder2.Data.Decoder.Yaml as Yaml
+import Pathfinder2.Data.Decoder.Json as Json
 
 
 init : Flags -> Url.Url -> Browser.Navigation.Key -> ( State, Cmd Msg )
@@ -20,8 +20,7 @@ init flags url navKey =
     State.emptyState
         |> State.setData
             ( flags.data
-                |> List.map (Yaml.decode)
-                |> List.map (Debug.log "data")
+                |> List.map (Json.decode)
                 |> List.foldl (Data.mergeData) Data.emptyData
             )
         |> noCmd
