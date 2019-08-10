@@ -6,7 +6,7 @@ import Pathfinder2.Data.Ability as Ability
 
 type alias Ancestry =
     { name : String
-    , hitpoints : Int
+    , hitPoints : Int
     , size : String
     , speed : Int
     , abilityBoosts : List Ability.AbilityMod

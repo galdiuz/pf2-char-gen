@@ -6,18 +6,18 @@ import Pathfinder2.Data as Data exposing (Data)
 
 
 type alias State =
-    { characters : List Character
-    , currentCharacter : Character
+    { character : Character
     , data : Data
     , currentView : View
+    , currentModal : Maybe View
     }
 
 
 emptyState =
-    { characters = []
-    , currentCharacter = Character.emptyCharacter
+    { character = Character.emptyCharacter
     , data = Data.emptyData
-    , currentView = View.Background
+    , currentView = View.Build
+    , currentModal = Nothing
     }
 
 

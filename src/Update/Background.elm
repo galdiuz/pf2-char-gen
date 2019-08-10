@@ -14,13 +14,13 @@ update action state =
 
         SetBackground background ->
             background
-                |> asBackgroundIn state.currentCharacter
+                |> asBackgroundIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
         SetAbilityBoost index value ->
-            setAbilityBoost state.currentCharacter index value
-                |> asOptionsIn state.currentCharacter
+            setAbilityBoost state.character index value
+                |> asOptionsIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
@@ -32,7 +32,7 @@ noCmd state =
     ( state, Cmd.none )
 
 asCharacterIn state character =
-    { state | currentCharacter = character }
+    { state | character = character }
 
 
 asBackgroundIn character background =

@@ -29,23 +29,27 @@ renderButton config value =
     let
         activeStyle =
             [ Border.width 1
+            , Border.rounded 2
             , El.padding 5
-            , Events.onClick <| config.onChange value
             , El.pointer
+            , Events.onClick <| config.onChange value
+            , Background.color <| El.rgb 1 1 1
             ]
 
         selectedStyle =
             [ Border.width 2
+            , Border.rounded 2
             , El.padding 4
-            , Background.color <| El.rgb 0.8 0.8 0.8
+            , Background.color <| El.rgb 1 1 0.8
             ]
 
         inactiveStyle =
-            [ Border.width 1
+            [ Border.color <| El.rgb 0.5 0.5 0.5
             , Border.dashed
-            , Border.color <| El.rgb 0.5 0.5 0.5
-            , Font.color <| El.rgb 0.5 0.5 0.5
+            , Border.rounded 2
+            , Border.width 1
             , El.padding 5
+            , Font.color <| El.rgb 0.5 0.5 0.5
             ]
 
         style =

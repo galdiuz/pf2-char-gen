@@ -1,6 +1,6 @@
 ancestries:
   - name: "Dwarf"
-    hitpoints: 10
+    hitPoints: 10
     size: "Medium"
     speed: 20
     abilityBoosts:
@@ -28,7 +28,7 @@ ancestries:
         description: "Desc"
 
   - name: "Elf"
-    hitpoints: 6
+    hitPoints: 6
     size: "Medium"
     speed: 30
     abilityBoosts:
@@ -48,7 +48,7 @@ ancestries:
         []
 
   - name: "Human"
-    hitpoints: 8
+    hitPoints: 8
     size: "Medium"
     speed: 25
     abilityBoosts:

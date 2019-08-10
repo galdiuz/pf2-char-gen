@@ -9,15 +9,15 @@ update action state =
             ( state, Cmd.none )
 
         SetName name ->
-            asNameIn state.currentCharacter.info name
-                |> asInfoIn state.currentCharacter
+            asNameIn state.character.info name
+                |> asInfoIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
 
 
 asCharacterIn state character =
-    { state | currentCharacter = character }
+    { state | character = character }
 
 
 asInfoIn character info =

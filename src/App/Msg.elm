@@ -14,6 +14,8 @@ type Msg
     | NewUrlRequest Browser.UrlRequest
     | NewLocation Url.Url
     | SetView View.View
+    | SetModal View.View
+    | CloseModal
     | Ancestry Ancestry.Action
     | Background Background.Action
     | Information Information.Action

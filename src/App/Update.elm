@@ -25,6 +25,14 @@ update msg state =
             { state | currentView = view }
                 |> noCmd
 
+        SetModal view ->
+            { state | currentModal = Just view }
+                |> noCmd
+
+        CloseModal ->
+            { state | currentModal = Nothing }
+                |> noCmd
+
         Ancestry action ->
             Ancestry.update action state
 

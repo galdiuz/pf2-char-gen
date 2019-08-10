@@ -2,12 +2,13 @@ module App.View exposing (View(..))
 
 
 type View
-    = Characters
+    = Build
     | Information
     | Ancestry
     | Background
     | Class
-    | Skills
-    | Feats
-    | Equipment
-    | Spells
+    | Abilities
+    -- | Skills
+    -- | Feats
+    -- | Equipment
+    -- | Spells

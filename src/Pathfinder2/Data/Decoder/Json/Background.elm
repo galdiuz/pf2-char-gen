@@ -1,8 +1,9 @@
 module Pathfinder2.Data.Decoder.Json.Background exposing (decoder)
 
-import Maybe.Extra
 import Json.Decode as Decode exposing (Decoder)
+
 import Json.Decode.Field as Field
+import Maybe.Extra
 
 import Pathfinder2.Data.Ability as Ability
 import Pathfinder2.Data.Background as Background exposing (Background)

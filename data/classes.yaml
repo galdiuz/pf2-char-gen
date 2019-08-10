@@ -1,0 +1,25 @@
+classes:
+  - name: "Monk"
+    hitPoints: 10
+    keyAbility:
+      - "Str"
+      - "Dex"
+    savingThrows:
+        []
+    skills: 4
+    proficiencies:
+        []
+    feats:
+        []
+
+  - name: "Barbarian"
+    hitPoints: 12
+    keyAbility:
+      - "Str"
+    savingThrows:
+        []
+    skills: 3
+    proficiencies:
+        []
+    feats:
+        []

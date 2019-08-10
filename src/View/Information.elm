@@ -10,7 +10,7 @@ import Pathfinder2.Character as Character exposing (Character)
 
 
 type alias State s =
-    { s | currentCharacter : Character }
+    { s | character : Character }
 
 
 render : State s -> Element Msg
@@ -39,7 +39,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.currentCharacter.info.name
+        , text = state.character.info.name
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }
@@ -48,7 +48,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.currentCharacter.info.player
+        , text = state.character.info.player
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }
@@ -57,7 +57,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.currentCharacter.info.player
+        , text = state.character.info.player
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }

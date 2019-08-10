@@ -24,17 +24,7 @@ render state =
     El.column
         [ El.alignTop
         , El.width El.fill
-        ]
-        <| List.filterMap identity
-            [ renderBackgroundChoice state
-            , renderBackgroundOptions state
-            ]
-
-
-renderBackgroundChoice : State -> Maybe (Element Msg)
-renderBackgroundChoice state =
-    Just <| El.column
-        [ El.spacing 5
+        , El.spacing 5
         ]
         [ El.el
             [ Font.bold
@@ -44,20 +34,23 @@ renderBackgroundChoice state =
         , UI.ChooseOne.render
             { all = Dict.values state.data.backgrounds
             , available = Dict.values state.data.backgrounds
-            , selected = state.currentCharacter.background
+            , selected = state.character.background
             , onChange = Msg.Background << Background.SetBackground
             , toString = .name
             }
         ]
 
 
+
+
+
 renderBackgroundOptions : State -> Maybe (Element Msg)
 renderBackgroundOptions state =
-    case state.currentCharacter.background of
+    case state.character.background of
         Just background ->
             Just <| El.column
                 []
-                [ abilityBoosts background state.currentCharacter
+                [ abilityBoosts background state.character
                 ]
 
         Nothing ->

@@ -14,25 +14,25 @@ update action state =
 
         SetAncestry ancestry ->
             ancestry
-                |> asAncestryIn state.currentCharacter
+                |> asAncestryIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
         SetVoluntaryFlaw value ->
-            setVoluntaryFlaw state.currentCharacter value
-                |> asOptionsIn state.currentCharacter
+            setVoluntaryFlaw state.character value
+                |> asOptionsIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
         SetAbilityBoost index value ->
-            setAbilityBoost state.currentCharacter index value
-                |> asOptionsIn state.currentCharacter
+            setAbilityBoost state.character index value
+                |> asOptionsIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
         SetAbilityFlaw index value ->
-            setAbilityFlaw state.currentCharacter index value
-                |> asOptionsIn state.currentCharacter
+            setAbilityFlaw state.character index value
+                |> asOptionsIn state.character
                 |> asCharacterIn state
                 |> noCmd
 
@@ -43,6 +43,8 @@ setVoluntaryFlaw character value =
     in
     { options
         | voluntaryFlaw = value
+        , abilityBoosts = Dict.empty
+        , abilityFlaws = Dict.empty
     }
 
 
@@ -78,7 +80,7 @@ asOptionsIn character options =
 
 
 asCharacterIn state character =
-    { state | currentCharacter = character }
+    { state | character = character }
 
 
 noCmd state =

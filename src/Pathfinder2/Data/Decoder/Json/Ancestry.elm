@@ -11,7 +11,7 @@ import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 decoder : Decoder Ancestry
 decoder =
     Field.require "name" Decode.string <| \name ->
-    Field.require "hitpoints" Decode.int <| \hitpoints ->
+    Field.require "hitPoints" Decode.int <| \hitPoints ->
     Field.require "size" Decode.string <| \size ->
     Field.require "speed" Decode.int <| \speed ->
     Field.require "abilityBoosts" (Decode.list Decode.string) <| \boosts ->
@@ -39,7 +39,7 @@ decoder =
 
     Decode.succeed
         { name = name
-        , hitpoints = hitpoints
+        , hitPoints = hitPoints
         , size = size
         , speed = speed
         , abilityBoosts = List.filterMap identity abilityBoosts
