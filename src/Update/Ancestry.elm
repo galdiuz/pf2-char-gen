@@ -12,43 +12,52 @@ update action state =
             state
                 |> noCmd
 
-        SetAncestry key ->
-            case Dict.get key state.data.ancestries of
-                Just ancestry ->
-                    ancestry
-                        |> asAncestryIn state.currentCharacter
-                        |> asCharacterIn state
-                        |> noCmd
+        SetAncestry ancestry ->
+            ancestry
+                |> asAncestryIn state.currentCharacter
+                |> asCharacterIn state
+                |> noCmd
 
-                Nothing ->
-                    state
-                        |> noCmd
+        SetVoluntaryFlaw value ->
+            setVoluntaryFlaw state.currentCharacter value
+                |> asOptionsIn state.currentCharacter
+                |> asCharacterIn state
+                |> noCmd
 
         SetAbilityBoost index value ->
-            setAbilityBoost state index value
+            setAbilityBoost state.currentCharacter index value
                 |> asOptionsIn state.currentCharacter
                 |> asCharacterIn state
                 |> noCmd
 
         SetAbilityFlaw index value ->
-            setAbilityFlaw state index value
+            setAbilityFlaw state.currentCharacter index value
                 |> asOptionsIn state.currentCharacter
                 |> asCharacterIn state
                 |> noCmd
 
 
-setAbilityBoost state index value =
+setVoluntaryFlaw character value =
     let
-        options = getOptions state
+        options = Character.ancestryOptions character
+    in
+    { options
+        | voluntaryFlaw = value
+    }
+
+
+setAbilityBoost character index value =
+    let
+        options = Character.ancestryOptions character
     in
     { options
         | abilityBoosts = Dict.insert index value <| .abilityBoosts options
     }
 
 
-setAbilityFlaw state index value =
+setAbilityFlaw character index value =
     let
-        options = getOptions state
+        options = Character.ancestryOptions character
     in
     { options
         | abilityFlaws = Dict.insert index value <| .abilityFlaws options
@@ -74,7 +83,3 @@ asCharacterIn state character =
 
 noCmd state =
     ( state, Cmd.none )
-
-
-getOptions state =
-    Maybe.withDefault Character.emptyAncestryOptions state.currentCharacter.ancestryOptions

@@ -6,7 +6,6 @@ ancestries:
     abilityBoosts:
       - "Con"
       - "Wis"
-      - "Free"
     abilityFlaws:
       - "Cha"
     languages:
@@ -34,9 +33,8 @@ ancestries:
     abilityBoosts:
       - "Dex"
       - "Int"
-      - "Free"
     abilityFlaws:
-      - "Cha"
+      - "Con"
     languages:
       - "Common"
       - "Elven"
@@ -52,7 +50,6 @@ ancestries:
     size: "Medium"
     speed: 25
     abilityBoosts:
-      - "Free"
       - "Free"
     abilityFlaws:
         []

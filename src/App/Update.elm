@@ -2,6 +2,7 @@ module App.Update exposing (update)
 
 import App.Msg exposing (Msg(..), noCmd)
 import Update.Ancestry as Ancestry
+import Update.Background as Background
 import Update.Information as Information
 
 
@@ -26,6 +27,9 @@ update msg state =
 
         Ancestry action ->
             Ancestry.update action state
+
+        Background action ->
+            Background.update action state
 
         Information action ->
             Information.update action state

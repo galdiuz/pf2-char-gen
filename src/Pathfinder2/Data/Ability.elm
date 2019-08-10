@@ -47,11 +47,16 @@ fromString string =
 modFromString : String -> Maybe AbilityMod
 modFromString string =
     if string == "Free" then
-        Just Free
+        Just free
     else
-        Maybe.map Ability <| fromString string
+        Maybe.map Fixed <| fromString string
+
+
+free : AbilityMod
+free =
+    Choice [ Str, Dex, Con, Int, Wis, Cha ]
 
 
 type AbilityMod
-    = Ability Ability
-    | Free
+    = Fixed Ability
+    | Choice (List Ability)

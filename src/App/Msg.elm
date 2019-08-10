@@ -5,6 +5,7 @@ import Url
 
 import App.View as View
 import Action.Ancestry as Ancestry
+import Action.Background as Background
 import Action.Information as Information
 
 
@@ -14,6 +15,7 @@ type Msg
     | NewLocation Url.Url
     | SetView View.View
     | Ancestry Ancestry.Action
+    | Background Background.Action
     | Information Information.Action
 
 

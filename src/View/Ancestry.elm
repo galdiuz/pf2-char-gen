@@ -16,6 +16,7 @@ import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Data.Ability as Ability exposing (Ability)
 import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
 import Pathfinder2.Character as Character exposing (Character)
+import UI.ChooseOne
 
 type alias State s =
     { s
@@ -50,41 +51,14 @@ renderAncestryChoice state =
             , Font.size 24
             ]
             <| El.text "Ancestry"
-        , Input.radioRow
-            [ El.spacing 5
-            , El.paddingXY 0 10
-            ]
-            { onChange = \value -> Msg.Ancestry <| Ancestry.SetAncestry value
-            , options =
-                state.data.ancestries
-                    |> Dict.toList
-                    |> List.map
-                        (\(key, ancestry) ->
-                            Input.optionWith key (renderAncestry ancestry)
-                        )
-            , selected = Maybe.map .name state.currentCharacter.ancestry
-            , label = Input.labelHidden ""
+        , UI.ChooseOne.render
+            { all = Dict.values state.data.ancestries
+            , available = Dict.values state.data.ancestries
+            , selected = state.currentCharacter.ancestry
+            , onChange = Msg.Ancestry << Ancestry.SetAncestry
+            , toString = .name
             }
         ]
-
-
-renderAncestry : Ancestry -> Input.OptionState -> Element Msg
-renderAncestry ancestry optionState =
-    let
-        style =
-            case optionState of
-                Input.Selected ->
-                    [ Border.width 2
-                    , El.padding 4
-                    , Background.color <| El.rgb 0.8 0.8 0.8
-                    ]
-
-                _ ->
-                    [ Border.width 1
-                    , El.padding 5
-                    ]
-    in
-        El.el style <| El.text ancestry.name
 
 
 renderAncestryOptions state =
@@ -105,105 +79,94 @@ abilityBoosts ancestry character =
     El.column
         [ El.spacing 10
         ]
+        (
         [ El.el
             [ Font.heavy
             ]
             <| El.text "Ability Boosts"
+        , El.row
+            []
+            [ Input.checkbox
+                []
+                { onChange = Msg.Ancestry << Ancestry.SetVoluntaryFlaw
+                , icon = Input.defaultCheckbox
+                , checked =
+                    Maybe.map .voluntaryFlaw character.ancestryOptions
+                        |> Maybe.withDefault False
+                , label =
+                    Input.labelRight
+                        []
+                        <| El.text "Voluntary Flaw"
+                }
+            ]
         , El.column
             [ El.spacing 15 ]
             <| List.indexedMap (renderAbilityMod ancestry character Boost)
             <| Character.ancestryAbilityBoosts character
-        , El.el
-            [ Font.heavy
-            ]
-            <| El.text "Ability Flaws"
-        , El.column
-            [ El.spacing 15 ]
-            <| List.indexedMap (renderAbilityMod ancestry character Flaw)
-            <| Character.ancestryAbilityFlaws character
         ]
+        ++
+        if List.isEmpty <| Character.ancestryAbilityFlaws character then
+            []
+        else
+            [ El.el
+                [ Font.heavy
+                ]
+                <| El.text "Ability Flaws"
+            , El.column
+                [ El.spacing 15 ]
+                <| List.indexedMap (renderAbilityMod ancestry character Flaw)
+                <| Character.ancestryAbilityFlaws character
+            ]
+        )
 
 
 renderAbilityMod : Ancestry -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
 renderAbilityMod ancestry character modType index mod =
     case mod of
-        Ability.Ability ability ->
+        Ability.Fixed ability ->
             El.text <| Ability.toString ability
-        Ability.Free ->
-            El.wrappedRow
-                [ El.spacing 5 ]
-                --<| List.append (List.singleton <| text "Choose one: ")
-                <| List.map (renderAbilityButton ancestry character.ancestryOptions modType index) Ability.allAbilities
+        Ability.Choice list ->
+            UI.ChooseOne.render
+                { all = list
+                , selected =
+                    character.ancestryOptions
+                        |> Maybe.map (optionField modType True)
+                        |> Maybe.map (Dict.get index)
+                        |> Maybe.Extra.join
+                , available =
+                    validChoices
+                        (mapAbilityList <| optionField modType True <| ancestry)
+                        (mapAbilityList <| optionField modType False <| ancestry)
+                        (character.ancestryOptions
+                            |> Maybe.map (optionField modType True)
+                            |> Maybe.withDefault Dict.empty
+                            |> Dict.remove index
+                            |> Dict.values
+                        )
+                        (character.ancestryOptions
+                            |> Maybe.map (optionField modType False)
+                            |> Maybe.withDefault Dict.empty
+                            |> Dict.values
+                        )
+                        list
+                , onChange =
+                    case modType of
+                        Boost ->
+                            Msg.Ancestry << Ancestry.SetAbilityBoost index
+                        Flaw ->
+                            Msg.Ancestry << Ancestry.SetAbilityFlaw index
+                , toString = Ability.toString
+                }
 
 
-renderAbilityButton : Ancestry -> Maybe Character.AncestryOptions -> AbilityModType -> Int -> Ability -> Element Msg
-renderAbilityButton ancestry options modType index ability =
-    let
-        actionType =
-            case modType of
-                Boost -> Ancestry.SetAbilityBoost
-                Flaw -> Ancestry.SetAbilityFlaw
-
-        optionField invert =
-            case (modType, invert) of
-                (Boost, True) -> .abilityBoosts
-                (Boost, False) -> .abilityFlaws
-                (Flaw, True) -> .abilityFlaws
-                (Flaw, False) -> .abilityBoosts
-
-        activeStyle =
-            [ Border.width 1
-            , El.padding 5
-            , Events.onClick <| Msg.Ancestry <| actionType index ability
-            , El.pointer
-            ]
-
-        selectedStyle =
-            [ Border.width 2
-            , El.padding 4
-            , Background.color <| El.rgb 0.8 0.8 0.8
-            ]
-
-        inactiveStyle =
-            [ Border.width 1
-            , Border.dashed
-            , Border.color <| El.rgb 0.5 0.5 0.5
-            , Font.color <| El.rgb 0.5 0.5 0.5
-            , El.padding 5
-            ]
-
-        isSelected =
-            Maybe.map (optionField True) options
-                |> Maybe.map (Dict.get index)
-                |> (==) (Just <| Just ability)
-
-        isValidChoice =
-            List.member ability
-                <| validChoices
-                    (mapAbilityList <| optionField True ancestry)
-                    (mapAbilityList <| optionField False ancestry)
-                    (Maybe.map (optionField True) options
-                        |> Maybe.withDefault Dict.empty
-                        |> Dict.remove index
-                        |> Dict.values
-                    )
-                    (Maybe.map (optionField False) options
-                        |> Maybe.withDefault Dict.empty
-                        |> Dict.values
-                    )
-
-        style =
-            if isSelected then
-                selectedStyle
-            else if isValidChoice then
-                activeStyle
-            else
-                inactiveStyle
-    in
-    El.el
-        style
-        <| El.text <| Ability.toString ability
-
+{-| Valid ability choices = All - (Ancestry Same - Ancestry Other) - (Selected Same - Ancestry Other) - Selected Other
+-}
+validChoices : List a -> List a -> List a -> List a -> List a -> List a
+validChoices ancestrySame ancestryOther selectedSame selectedOther list =
+    list
+        |> filter (filter ancestryOther ancestrySame)
+        |> filter (filter ancestryOther selectedSame)
+        |> filter selectedOther
 
 
 mapAbilityList : List Ability.AbilityMod -> List Ability
@@ -211,24 +174,22 @@ mapAbilityList mods =
     List.filterMap
         (\abilityMod ->
             case abilityMod of
-                Ability.Ability ability ->
+                Ability.Fixed ability ->
                     Just ability
-                Ability.Free ->
+                Ability.Choice _ ->
                     Nothing
         )
         mods
 
 
-{-| Valid ability choices = All - (Ancestry Same - Ancestry Other) - (Selected Same - Ancestry Other) - Selected Other
--}
-validChoices : List Ability -> List Ability -> List Ability -> List Ability -> List Ability
-validChoices ancestrySame ancestryOther selectedSame selectedOther =
-    Ability.allAbilities
-        |> diffList (diffList ancestryOther ancestrySame)
-        |> diffList (diffList ancestryOther selectedSame)
-        |> diffList selectedOther
-
-
-diffList : List a -> List a -> List a
-diffList toRemove list =
+filter : List a -> List a -> List a
+filter toRemove list =
     List.filter (\v -> not <| List.member v toRemove) list
+
+
+optionField modType invert =
+    case (modType, invert) of
+        (Boost, True) -> .abilityBoosts
+        (Boost, False) -> .abilityFlaws
+        (Flaw, True) -> .abilityFlaws
+        (Flaw, False) -> .abilityBoosts

@@ -10,12 +10,12 @@ import Pathfinder2.Data.Class exposing (Class)
 
 type alias Character =
     { info : CharacterInfo
+    , abilities : Abilities
     , ancestry : Maybe Ancestry
     , ancestryOptions : Maybe AncestryOptions
     , background : Maybe Background
     , backgroundOptions : Maybe BackgroundOptions
-    , class : Class
-    --, abilities : Abilities
+    , class : Maybe Class
     }
 
 
@@ -26,13 +26,13 @@ type alias CharacterInfo =
     , alignment : String
     , level : Int
     , experience : Int
-    , abilities : Abilities
     }
 
 
 type alias AncestryOptions =
     { abilityBoosts : Dict Int Ability
     , abilityFlaws : Dict Int Ability
+    , voluntaryFlaw : Bool
     , heritage : Maybe String
     , languages : List String
     }
@@ -43,48 +43,12 @@ type alias BackgroundOptions =
     }
 
 
-emptyAncestryOptions : AncestryOptions
-emptyAncestryOptions =
-    { abilityBoosts = Dict.empty
-    , abilityFlaws = Dict.empty
-    , heritage = Nothing
-    , languages = []
-    }
-
-
 type Abilities
     = Standard
-    | VoluntaryFlaw
     | Rolled Int Int Int Int Int Int
 
 
-ancestryAbilityBoosts : Character -> List Ability.AbilityMod
-ancestryAbilityBoosts character =
-    case (character.ancestry, character.info.abilities) of
-        (Nothing, _) ->
-            []
-        (Just ancestry, Standard) ->
-            ancestry.abilityBoosts
-        (Just ancestry, VoluntaryFlaw) ->
-            ancestry.abilityBoosts ++ [Ability.Free]
-        (Just ancestry, Rolled _ _ _ _ _ _) ->
-            Maybe.withDefault [] <| List.Extra.init ancestry.abilityBoosts
-
-
-ancestryAbilityFlaws : Character -> List Ability.AbilityMod
-ancestryAbilityFlaws character =
-    case (character.ancestry, character.info.abilities) of
-        (Nothing, _) ->
-            []
-        (Just ancestry, Standard) ->
-            ancestry.abilityFlaws
-        (Just ancestry, VoluntaryFlaw) ->
-            ancestry.abilityFlaws ++ [Ability.Free, Ability.Free]
-        (Just ancestry, Rolled _ _ _ _ _ _) ->
-            ancestry.abilityFlaws
-
-
---emptyCharacter : Character
+emptyCharacter : Character
 emptyCharacter =
     { info =
         { name = ""
@@ -93,33 +57,92 @@ emptyCharacter =
         , alignment = ""
         , level = 1
         , experience = 0
-        , abilities = Standard
         }
-    , ancestry =
-        { name = ""
-        }
-    , class =
-        { name = ""
-        }
-    }
-
-
---testCharacter : Character
-testCharacter =
-    { info =
-        { name = "Monk Dude"
-        , player = "Galdiuz"
-        , campaign = ""
-        , alignment = "NG"
-        , level = 3
-        , experience = 0
-        , abilities = VoluntaryFlaw
-        }
-    , class =
-        { name = "Monk"
-        }
+    , abilities = Standard
     , ancestry = Nothing
     , ancestryOptions = Nothing
     , background = Nothing
     , backgroundOptions = Nothing
+    , class = Nothing
     }
+
+
+emptyAncestryOptions : AncestryOptions
+emptyAncestryOptions =
+    { abilityBoosts = Dict.empty
+    , abilityFlaws = Dict.empty
+    , voluntaryFlaw = False
+    , heritage = Nothing
+    , languages = []
+    }
+
+
+ancestryOptions : Character -> AncestryOptions
+ancestryOptions character =
+    Maybe.withDefault emptyAncestryOptions character.ancestryOptions
+
+
+ancestryAbilityBoosts : Character -> List Ability.AbilityMod
+ancestryAbilityBoosts character =
+    let
+        voluntaryFlaw =
+            Maybe.withDefault emptyAncestryOptions character.ancestryOptions
+                |> .voluntaryFlaw
+    in
+    case (character.ancestry, voluntaryFlaw, character.abilities) of
+        (Nothing, _, _) ->
+            []
+
+        (Just ancestry, False, Standard) ->
+            ancestry.abilityBoosts ++ [Ability.free]
+
+        (Just ancestry, True, Standard) ->
+            ancestry.abilityBoosts ++ [Ability.free, Ability.free]
+
+        (Just ancestry, False, Rolled _ _ _ _ _ _) ->
+            ancestry.abilityBoosts
+
+        (Just ancestry, True, Rolled _ _ _ _ _ _) ->
+            ancestry.abilityBoosts ++ [Ability.free]
+
+
+ancestryAbilityFlaws : Character -> List Ability.AbilityMod
+ancestryAbilityFlaws character =
+    let
+        voluntaryFlaw =
+            Maybe.withDefault emptyAncestryOptions character.ancestryOptions
+                |> .voluntaryFlaw
+    in
+    case (character.ancestry, voluntaryFlaw) of
+        (Nothing, _) ->
+            []
+
+        (Just ancestry, False) ->
+            ancestry.abilityFlaws
+
+        (Just ancestry, True) ->
+            ancestry.abilityFlaws ++ [Ability.free, Ability.free]
+
+
+emptyBackgroundOptions : BackgroundOptions
+emptyBackgroundOptions =
+    { abilityBoosts = Dict.empty
+    }
+
+
+backgroundOptions : Character -> BackgroundOptions
+backgroundOptions character =
+    Maybe.withDefault emptyBackgroundOptions character.backgroundOptions
+
+
+backgroundAbilityBoosts : Character -> List Ability.AbilityMod
+backgroundAbilityBoosts character =
+    case (character.background, character.abilities) of
+        (Nothing, _) ->
+            []
+
+        (Just background, Standard) ->
+            background.abilityBoosts ++ [Ability.free]
+
+        (Just background, Rolled _ _ _ _ _ _) ->
+            background.abilityBoosts

@@ -24,5 +24,5 @@ decoder =
 
     Decode.succeed
         { name = name
-        , abilityBoosts = List.filterMap identity abilityBoosts
+        , abilityBoosts = List.singleton <| Ability.Choice <| List.filterMap identity abilityBoosts
         }

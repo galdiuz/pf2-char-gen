@@ -15,7 +15,7 @@ type alias State =
 
 emptyState =
     { characters = []
-    , currentCharacter = Character.testCharacter
+    , currentCharacter = Character.emptyCharacter
     , data = Data.emptyData
     , currentView = View.Background
     }
