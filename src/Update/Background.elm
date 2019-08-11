@@ -3,9 +3,13 @@ module Update.Background exposing (update)
 import Dict
 
 import Action.Background exposing (Action(..))
-import Pathfinder2.Character as Character
+import App.State exposing (State)
+import Pathfinder2.Character as Character exposing (Character)
+import Pathfinder2.Data.Ability exposing (Ability)
+import Pathfinder2.Data.Background exposing (Background)
 
 
+update : Action -> State -> ( State, Cmd msg )
 update action state =
     case action of
         NoOp ->
@@ -19,39 +23,38 @@ update action state =
                 |> noCmd
 
         SetAbilityBoost index value ->
-            setAbilityBoost state.character index value
+            setAbilityBoost state.character.backgroundOptions index value
                 |> asOptionsIn state.character
                 |> asCharacterIn state
                 |> noCmd
-
-        -- _ ->
-        --     Debug.todo "TODO"
 
 
 noCmd state =
     ( state, Cmd.none )
 
+
+asCharacterIn : State -> Character -> State
 asCharacterIn state character =
     { state | character = character }
 
 
+asBackgroundIn : Character -> Background -> Character
 asBackgroundIn character background =
     { character
         | background = Just background
-        , backgroundOptions = Nothing
+        , backgroundOptions = Character.emptyBackgroundOptions
     }
 
 
+asOptionsIn : Character -> Character.BackgroundOptions -> Character
 asOptionsIn character options =
     { character
-        | backgroundOptions = Just options
+        | backgroundOptions = options
     }
 
 
-setAbilityBoost character index value =
-    let
-        options = Character.backgroundOptions character
-    in
+setAbilityBoost : Character.BackgroundOptions -> Int -> Ability -> Character.BackgroundOptions
+setAbilityBoost options index value =
     { options
         | abilityBoosts = Dict.insert index value <| .abilityBoosts options
     }

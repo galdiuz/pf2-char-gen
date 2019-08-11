@@ -28,3 +28,21 @@ backgrounds:
       - "Lore - (Terrain)"
     feats:
       - "Train Animal"
+  - name: "Martial Disciple (Athletics)"
+    abilityBoosts:
+      - "Str"
+      - "Dex"
+    skills:
+      - "Athletics"
+      - "Lore - Warfare"
+    feats:
+      - "Quick Jump"
+  - name: "Martial Disciple (Acrobatics)"
+    abilityBoosts:
+      - "Str"
+      - "Dex"
+    skills:
+      - "Acrobatics"
+      - "Lore - Warfare"
+    feats:
+      - "Cat Fall"

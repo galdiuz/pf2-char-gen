@@ -81,17 +81,11 @@ renderAbilityMod background character index mod =
             UI.ChooseOne.render
                 { all = list
                 , selected =
-                    character.backgroundOptions
-                        |> Maybe.map .abilityBoosts
-                        |> Maybe.map (Dict.get index)
-                        |> Maybe.Extra.join
+                    character.backgroundOptions.abilityBoosts
+                        |> Dict.get index
                 , available =
                     filterList
-                        (character.backgroundOptions
-                            |> Maybe.map .abilityBoosts
-                            |> Maybe.withDefault Dict.empty
-                            |> Dict.values
-                        )
+                        (Dict.values character.backgroundOptions.abilityBoosts)
                         list
                 , onChange = Msg.Background << Background.SetAbilityBoost index
                 , toString = Ability.toString

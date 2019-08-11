@@ -8,6 +8,7 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 import Element.Input as Input
+import List.Extra
 
 import App.State exposing (State)
 import App.Msg as Msg exposing (Msg)
@@ -26,10 +27,10 @@ import UI.Button
 render : State -> Html Msg
 render state =
     El.layout
-        ( renderModal
+        ( withModals
             [ Background.color <| El.rgb 0.8 0.8 0.8
             ]
-            state.currentModal
+            (List.reverse state.modals)
             state
         )
         <| El.row
@@ -104,34 +105,43 @@ renderContent view state =
             Abilities.render state
 
 
-renderModal attributes modal state =
-    case modal of
-        Just view ->
-            attributes
-            ++
-            [ El.inFront
-                <| El.el
-                    [ El.width El.fill
-                    , El.height El.fill
-                    , El.padding 50
-                    , Background.color <| El.rgba 0 0 0 0.5
-                    ]
-                    <| El.el
-                        [ El.padding 10
-                        , Background.color <| El.rgb 0.8 0.8 0.8
-                        , El.centerX
-                        , El.centerY
-                        , Border.rounded 2
-                        ]
-                        <| El.column
-                            [ El.spacing 20
-                            ]
-                            [ renderContent view state
-                            , UI.Button.render
-                                { onClick = Msg.CloseModal
-                                , text = "Close"
-                                }
-                            ]
-            ]
+withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
+withModals attributes views state =
+    case List.Extra.uncons views of
         Nothing ->
             attributes
+        Just ( view, remaining ) ->
+            attributes
+            ++
+            [ El.inFront <| renderModal view remaining state
+            ]
+
+
+renderModal : View -> List View -> State -> Element Msg
+renderModal view remaining state =
+    El.el
+        [ El.width El.fill
+        , El.height El.fill
+        , El.padding 50
+        , Background.color <| El.rgba 0 0 0 0.5
+        ]
+        <| El.el
+            ( withModals
+                [ El.padding 10
+                , Background.color <| El.rgb 0.8 0.8 0.8
+                , Border.width 1
+                , El.centerX
+                , Border.rounded 2
+                ]
+                remaining
+                state
+            )
+            <| El.column
+                [ El.spacing 20
+                ]
+                [ renderContent view state
+                , UI.Button.render
+                    { onPress = Just Msg.CloseModal
+                    , label = El.text "Close"
+                    }
+                ]

@@ -1,5 +1,6 @@
-module UI.ChooseOne exposing (render)
+module UI.ChooseMany exposing (render)
 
+import List.Extra
 import Element as El exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -10,18 +11,28 @@ import Element.Input as Input
 
 type alias Config a msg =
     { all : List a
-    , available : List a
-    , selected : Maybe a
-    , onChange : a -> msg
+    , selected : List a
+    , max : Int
+    , onChange : List a -> msg
     , toString : a -> String
     }
 
 
 render : Config a msg -> Element msg
 render config =
-    El.wrappedRow
-        [ El.spacing 2 ]
-        <| List.map (renderButton config) config.all
+    El.column
+        [ El.spacing 5 ]
+        [ El.text
+            ( "Select "
+            ++ (String.fromInt <| config.max)
+            ++ " (Remaining: "
+            ++ (String.fromInt <| config.max - List.length config.selected)
+            ++ ")"
+            )
+        , El.wrappedRow
+            [ El.spacing 2 ]
+            <| List.map (renderButton config) config.all
+        ]
 
 
 renderButton : Config a msg -> a -> Element msg
@@ -32,7 +43,7 @@ renderButton config value =
             , Border.rounded 2
             , El.padding 5
             , El.pointer
-            , Events.onClick <| config.onChange value
+            , Events.onClick <| config.onChange <| value :: config.selected
             , Background.color <| El.rgb 1 1 1
             ]
 
@@ -40,6 +51,8 @@ renderButton config value =
             [ Border.width 2
             , Border.rounded 2
             , El.padding 4
+            , El.pointer
+            , Events.onClick <| config.onChange <| List.Extra.remove value config.selected
             , Background.color <| El.rgb 1 1 0.8
             ]
 
@@ -53,9 +66,9 @@ renderButton config value =
             ]
 
         style =
-            if config.selected == Just value then
+            if List.member value config.selected then
                 selectedStyle
-            else if List.member value config.available then
+            else if List.length config.selected < config.max then
                 activeStyle
             else
                 inactiveStyle

@@ -14,9 +14,9 @@ import Action.Ancestry as Ancestry
 import Action.Background as Background
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
+import App.View as View
 import UI.Button
 import UI.ChooseOne
-import App.View as View
 
 render : State -> Element Msg
 render state =
@@ -27,29 +27,29 @@ render state =
         , El.padding 10
         ]
         [ UI.Button.render
-            { onClick = Msg.SetModal View.Ancestry
-            , text =
+            { onPress = Just <| Msg.OpenModal View.Ancestry
+            , label = El.text <|
                 "Ancestry: "
                 ++
                 (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.ancestry)
             }
         , UI.Button.render
-            { onClick = Msg.SetModal View.Background
-            , text =
+            { onPress = Just <| Msg.OpenModal View.Background
+            , label = El.text <|
                 "Background: "
                 ++
                 (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.background)
             }
         , UI.Button.render
-            { onClick = Msg.SetModal View.Class
-            , text =
+            { onPress = Just <| Msg.OpenModal View.Class
+            , label = El.text <|
                 "Class: "
                 ++
                 (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.class)
             }
         , UI.Button.render
-            { onClick = Msg.SetModal View.Abilities
-            , text =
+            { onPress = Just <| Msg.OpenModal View.Abilities
+            , label = El.text <|
                 "Abilities"
             }
         ]

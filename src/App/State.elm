@@ -9,15 +9,16 @@ type alias State =
     { character : Character
     , data : Data
     , currentView : View
-    , currentModal : Maybe View
+    , modals : List View
     }
 
 
+emptyState : State
 emptyState =
     { character = Character.emptyCharacter
     , data = Data.emptyData
     , currentView = View.Build
-    , currentModal = Nothing
+    , modals = []
     }
 
 

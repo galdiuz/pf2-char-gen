@@ -12,10 +12,12 @@ type alias Character =
     { info : CharacterInfo
     , abilities : Abilities
     , ancestry : Maybe Ancestry
-    , ancestryOptions : Maybe AncestryOptions
+    , ancestryOptions : AncestryOptions
     , background : Maybe Background
-    , backgroundOptions : Maybe BackgroundOptions
+    , backgroundOptions : BackgroundOptions
     , class : Maybe Class
+    , classOptions : ClassOptions
+    , freeBoosts : List Ability
     }
 
 
@@ -43,6 +45,11 @@ type alias BackgroundOptions =
     }
 
 
+type alias ClassOptions =
+    { keyAbility : Maybe Ability
+    }
+
+
 type Abilities
     = Standard
     | Rolled Int Int Int Int Int Int
@@ -60,10 +67,12 @@ emptyCharacter =
         }
     , abilities = Standard
     , ancestry = Nothing
-    , ancestryOptions = Nothing
+    , ancestryOptions = emptyAncestryOptions
     , background = Nothing
-    , backgroundOptions = Nothing
+    , backgroundOptions = emptyBackgroundOptions
     , class = Nothing
+    , classOptions = emptyClassOptions
+    , freeBoosts = []
     }
 
 
@@ -77,19 +86,21 @@ emptyAncestryOptions =
     }
 
 
-ancestryOptions : Character -> AncestryOptions
-ancestryOptions character =
-    Maybe.withDefault emptyAncestryOptions character.ancestryOptions
+emptyBackgroundOptions : BackgroundOptions
+emptyBackgroundOptions =
+    { abilityBoosts = Dict.empty
+    }
+
+
+emptyClassOptions : ClassOptions
+emptyClassOptions =
+    { keyAbility = Nothing
+    }
 
 
 ancestryAbilityBoosts : Character -> List Ability.AbilityMod
 ancestryAbilityBoosts character =
-    let
-        voluntaryFlaw =
-            Maybe.withDefault emptyAncestryOptions character.ancestryOptions
-                |> .voluntaryFlaw
-    in
-    case (character.ancestry, voluntaryFlaw, character.abilities) of
+    case (character.ancestry, character.ancestryOptions.voluntaryFlaw, character.abilities) of
         (Nothing, _, _) ->
             []
 
@@ -108,12 +119,7 @@ ancestryAbilityBoosts character =
 
 ancestryAbilityFlaws : Character -> List Ability.AbilityMod
 ancestryAbilityFlaws character =
-    let
-        voluntaryFlaw =
-            Maybe.withDefault emptyAncestryOptions character.ancestryOptions
-                |> .voluntaryFlaw
-    in
-    case (character.ancestry, voluntaryFlaw) of
+    case (character.ancestry, character.ancestryOptions.voluntaryFlaw) of
         (Nothing, _) ->
             []
 
@@ -122,17 +128,6 @@ ancestryAbilityFlaws character =
 
         (Just ancestry, True) ->
             ancestry.abilityFlaws ++ [Ability.free, Ability.free]
-
-
-emptyBackgroundOptions : BackgroundOptions
-emptyBackgroundOptions =
-    { abilityBoosts = Dict.empty
-    }
-
-
-backgroundOptions : Character -> BackgroundOptions
-backgroundOptions character =
-    Maybe.withDefault emptyBackgroundOptions character.backgroundOptions
 
 
 backgroundAbilityBoosts : Character -> List Ability.AbilityMod
@@ -146,3 +141,93 @@ backgroundAbilityBoosts character =
 
         (Just background, Rolled _ _ _ _ _ _) ->
             background.abilityBoosts
+
+
+abilities character =
+    let
+        base =
+            case character.abilities of
+                Standard ->
+                    { str = 10
+                    , dex = 10
+                    , con = 10
+                    , int = 10
+                    , wis = 10
+                    , cha = 10
+                    }
+                Rolled str dex con int wis cha ->
+                    { str = str
+                    , dex = dex
+                    , con = con
+                    , int = int
+                    , wis = wis
+                    , cha = cha
+                    }
+
+        boosts =
+            ( Maybe.map .abilityBoosts character.ancestry
+                |> Maybe.withDefault []
+                |> fixedAbilities
+            )
+            ++
+            Dict.values character.ancestryOptions.abilityBoosts
+            ++
+            Dict.values character.backgroundOptions.abilityBoosts
+            ++
+            ( Maybe.map .keyAbility character.class
+                |> Maybe.map List.singleton
+                |> Maybe.withDefault []
+                |> fixedAbilities
+            )
+            ++
+            ( Maybe.map List.singleton character.classOptions.keyAbility
+                |> Maybe.withDefault []
+            )
+            ++
+            character.freeBoosts
+
+        flaws =
+            ( Maybe.map .abilityFlaws character.ancestry
+                |> Maybe.withDefault []
+                |> fixedAbilities
+            )
+            ++
+            Dict.values character.ancestryOptions.abilityFlaws
+    in
+    base
+        |> (\v -> List.foldl (addAbility -2) v flaws)
+        |> (\v -> List.foldl (addAbility 2) v boosts)
+
+
+addAbility mod ability totals =
+    case ability of
+        Ability.Str ->
+            { totals | str = calc totals.str mod }
+        Ability.Dex ->
+            { totals | dex = calc totals.dex mod }
+        Ability.Con ->
+            { totals | con = calc totals.con mod }
+        Ability.Int ->
+            { totals | int = calc totals.int mod }
+        Ability.Wis ->
+            { totals | wis = calc totals.wis mod }
+        Ability.Cha ->
+            { totals | cha = calc totals.cha mod }
+
+
+calc : Int -> Int -> Int
+calc a b =
+    min (a + b) 18
+
+
+fixedAbilities : List Ability.AbilityMod -> List Ability
+fixedAbilities mods =
+    List.filterMap
+        (\abilityMod ->
+            case abilityMod of
+                Ability.Fixed ability ->
+                    Just ability
+                Ability.Choice _ ->
+                    Nothing
+        )
+        mods

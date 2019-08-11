@@ -1,12 +1,15 @@
 module App.Update exposing (update)
 
-import App.Msg exposing (Msg(..), noCmd)
+import App.Msg exposing (Msg(..))
+import App.State exposing (State)
+import Update.Abilities as Abilities
 import Update.Ancestry as Ancestry
 import Update.Background as Background
+import Update.Class as Class
 import Update.Information as Information
 
 
--- update : Msg -> State -> ( State, Cmd Msg )
+update : Msg -> State -> ( State, Cmd msg )
 update msg state =
     case msg of
         NoOp ->
@@ -25,13 +28,16 @@ update msg state =
             { state | currentView = view }
                 |> noCmd
 
-        SetModal view ->
-            { state | currentModal = Just view }
+        OpenModal view ->
+            { state | modals = view :: state.modals }
                 |> noCmd
 
         CloseModal ->
-            { state | currentModal = Nothing }
+            { state | modals = List.drop 1 state.modals }
                 |> noCmd
+
+        Abilities action ->
+            Abilities.update action state
 
         Ancestry action ->
             Ancestry.update action state
@@ -39,5 +45,13 @@ update msg state =
         Background action ->
             Background.update action state
 
+        Class action ->
+            Class.update action state
+
         Information action ->
             Information.update action state
+
+
+noCmd : state -> ( state, Cmd msg )
+noCmd state =
+    ( state, Cmd.none )
