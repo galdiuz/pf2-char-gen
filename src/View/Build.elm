@@ -1,14 +1,6 @@
 module View.Build exposing (render)
 
-import Dict exposing (Dict)
-
-import Maybe.Extra
 import Element as El exposing (Element)
-import Element.Background as Background
-import Element.Border as Border
-import Element.Events as Events
-import Element.Font as Font
-import Element.Input as Input
 
 import Action.Ancestry as Ancestry
 import Action.Background as Background
@@ -17,6 +9,7 @@ import App.State exposing (State)
 import App.View as View
 import UI.Button
 import UI.ChooseOne
+
 
 render : State -> Element Msg
 render state =

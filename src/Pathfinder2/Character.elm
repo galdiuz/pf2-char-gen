@@ -10,7 +10,7 @@ import Pathfinder2.Data.Class exposing (Class)
 
 type alias Character =
     { info : CharacterInfo
-    , abilities : Abilities
+    , baseAbilities : BaseAbilities
     , ancestry : Maybe Ancestry
     , ancestryOptions : AncestryOptions
     , background : Maybe Background
@@ -29,6 +29,21 @@ type alias CharacterInfo =
     , level : Int
     , experience : Int
     }
+
+
+type alias Abilities =
+    { str : Int
+    , dex : Int
+    , con : Int
+    , int : Int
+    , wis : Int
+    , cha : Int
+    }
+
+
+type BaseAbilities
+    = Standard
+    | Rolled Abilities
 
 
 type alias AncestryOptions =
@@ -50,11 +65,6 @@ type alias ClassOptions =
     }
 
 
-type Abilities
-    = Standard
-    | Rolled Int Int Int Int Int Int
-
-
 emptyCharacter : Character
 emptyCharacter =
     { info =
@@ -65,7 +75,7 @@ emptyCharacter =
         , level = 1
         , experience = 0
         }
-    , abilities = Standard
+    , baseAbilities = Standard
     , ancestry = Nothing
     , ancestryOptions = emptyAncestryOptions
     , background = Nothing
@@ -74,6 +84,28 @@ emptyCharacter =
     , classOptions = emptyClassOptions
     , freeBoosts = []
     }
+
+
+defaultAbilities : Abilities
+defaultAbilities =
+    { str = 10
+    , dex = 10
+    , con = 10
+    , int = 10
+    , wis = 10
+    , cha = 10
+    }
+
+
+abilityValue : Ability -> (Abilities -> Int)
+abilityValue ability =
+    case ability of
+        Ability.Str -> .str
+        Ability.Dex -> .dex
+        Ability.Con -> .con
+        Ability.Int -> .int
+        Ability.Wis -> .wis
+        Ability.Cha -> .cha
 
 
 emptyAncestryOptions : AncestryOptions
@@ -100,7 +132,7 @@ emptyClassOptions =
 
 ancestryAbilityBoosts : Character -> List Ability.AbilityMod
 ancestryAbilityBoosts character =
-    case (character.ancestry, character.ancestryOptions.voluntaryFlaw, character.abilities) of
+    case (character.ancestry, character.ancestryOptions.voluntaryFlaw, character.baseAbilities) of
         (Nothing, _, _) ->
             []
 
@@ -110,10 +142,10 @@ ancestryAbilityBoosts character =
         (Just ancestry, True, Standard) ->
             ancestry.abilityBoosts ++ [Ability.free, Ability.free]
 
-        (Just ancestry, False, Rolled _ _ _ _ _ _) ->
+        (Just ancestry, False, Rolled _) ->
             ancestry.abilityBoosts
 
-        (Just ancestry, True, Rolled _ _ _ _ _ _) ->
+        (Just ancestry, True, Rolled _) ->
             ancestry.abilityBoosts ++ [Ability.free]
 
 
@@ -132,30 +164,25 @@ ancestryAbilityFlaws character =
 
 backgroundAbilityBoosts : Character -> List Ability.AbilityMod
 backgroundAbilityBoosts character =
-    case (character.background, character.abilities) of
+    case (character.background, character.baseAbilities) of
         (Nothing, _) ->
             []
 
         (Just background, Standard) ->
             background.abilityBoosts ++ [Ability.free]
 
-        (Just background, Rolled _ _ _ _ _ _) ->
+        (Just background, Rolled _) ->
             background.abilityBoosts
 
 
+abilities : Character -> Abilities
 abilities character =
     let
         base =
-            case character.abilities of
+            case character.baseAbilities of
                 Standard ->
-                    { str = 10
-                    , dex = 10
-                    , con = 10
-                    , int = 10
-                    , wis = 10
-                    , cha = 10
-                    }
-                Rolled str dex con int wis cha ->
+                    defaultAbilities
+                Rolled {str, dex, con, int, wis, cha} ->
                     { str = str
                     , dex = dex
                     , con = con
@@ -180,8 +207,12 @@ abilities character =
                 |> fixedAbilities
             )
             ++
-            ( Maybe.map List.singleton character.classOptions.keyAbility
-                |> Maybe.withDefault []
+            ( case character.baseAbilities of
+                Standard ->
+                    Maybe.map List.singleton character.classOptions.keyAbility
+                        |> Maybe.withDefault []
+                Rolled _ ->
+                    []
             )
             ++
             character.freeBoosts
@@ -231,3 +262,8 @@ fixedAbilities mods =
                     Nothing
         )
         mods
+
+
+modValue : Int -> Int
+modValue value =
+    floor <| (toFloat value - 10) / 2
