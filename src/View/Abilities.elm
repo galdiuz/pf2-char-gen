@@ -403,7 +403,7 @@ renderTotal state =
             []
             { data =
                 List.map
-                    (pairTotalInputs <| Character.abilities state.character)
+                    (pairTotalInputs <| Character.abilities 1 state.character)
                     [ (Ability.Str, Ability.Int)
                     , (Ability.Dex, Ability.Wis)
                     , (Ability.Con, Ability.Cha)

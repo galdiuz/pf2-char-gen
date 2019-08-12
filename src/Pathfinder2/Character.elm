@@ -9,7 +9,12 @@ import Pathfinder2.Data.Class exposing (Class)
 
 
 type alias Character =
-    { info : CharacterInfo
+    { name : String
+    , player : String
+    , campaign : String
+    , alignment : String
+    , level : Int
+    , experience : Int
     , baseAbilities : BaseAbilities
     , ancestry : Maybe Ancestry
     , ancestryOptions : AncestryOptions
@@ -18,16 +23,7 @@ type alias Character =
     , class : Maybe Class
     , classOptions : ClassOptions
     , freeBoosts : List Ability
-    }
-
-
-type alias CharacterInfo =
-    { name : String
-    , player : String
-    , campaign : String
-    , alignment : String
-    , level : Int
-    , experience : Int
+    , abilityBoosts: Dict Int (List Ability)
     }
 
 
@@ -67,14 +63,12 @@ type alias ClassOptions =
 
 emptyCharacter : Character
 emptyCharacter =
-    { info =
-        { name = ""
-        , player = ""
-        , campaign = ""
-        , alignment = ""
-        , level = 1
-        , experience = 0
-        }
+    { name = ""
+    , player = ""
+    , campaign = ""
+    , alignment = ""
+    , level = 1
+    , experience = 0
     , baseAbilities = Standard
     , ancestry = Nothing
     , ancestryOptions = emptyAncestryOptions
@@ -83,6 +77,7 @@ emptyCharacter =
     , class = Nothing
     , classOptions = emptyClassOptions
     , freeBoosts = []
+    , abilityBoosts = Dict.empty
     }
 
 
@@ -175,8 +170,8 @@ backgroundAbilityBoosts character =
             background.abilityBoosts
 
 
-abilities : Character -> Abilities
-abilities character =
+abilities : Int -> Character -> Abilities
+abilities level character =
     let
         base =
             case character.baseAbilities of
@@ -230,6 +225,7 @@ abilities character =
         |> (\v -> List.foldl (addAbility 2) v boosts)
 
 
+addAbility : Int -> Ability -> Abilities -> Abilities
 addAbility mod ability totals =
     case ability of
         Ability.Str ->

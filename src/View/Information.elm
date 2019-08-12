@@ -39,7 +39,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.character.info.name
+        , text = state.character.name
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }
@@ -48,7 +48,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.character.info.player
+        , text = state.character.player
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }
@@ -57,7 +57,7 @@ inputs state =
       , input = Input.text
         []
         { onChange = \value -> Msg.Information <| Action.SetName value
-        , text = state.character.info.player
+        , text = state.character.player
         , placeholder = Nothing
         , label = Input.labelHidden ""
         }
