@@ -22,7 +22,6 @@ type alias Character =
     , backgroundOptions : BackgroundOptions
     , class : Maybe Class
     , classOptions : ClassOptions
-    , freeBoosts : List Ability
     , abilityBoosts: Dict Int (List Ability)
     }
 
@@ -76,7 +75,6 @@ emptyCharacter =
     , backgroundOptions = emptyBackgroundOptions
     , class = Nothing
     , classOptions = emptyClassOptions
-    , freeBoosts = []
     , abilityBoosts = Dict.empty
     }
 
@@ -187,38 +185,35 @@ abilities level character =
                     }
 
         boosts =
-            ( Maybe.map .abilityBoosts character.ancestry
-                |> Maybe.withDefault []
-                |> fixedAbilities
-            )
-            ++
-            Dict.values character.ancestryOptions.abilityBoosts
-            ++
-            Dict.values character.backgroundOptions.abilityBoosts
-            ++
-            ( Maybe.map .keyAbility character.class
-                |> Maybe.map List.singleton
-                |> Maybe.withDefault []
-                |> fixedAbilities
-            )
-            ++
-            ( case character.baseAbilities of
-                Standard ->
-                    Maybe.map List.singleton character.classOptions.keyAbility
-                        |> Maybe.withDefault []
-                Rolled _ ->
-                    []
-            )
-            ++
-            character.freeBoosts
+            List.concat
+                [ Maybe.map .abilityBoosts character.ancestry
+                    |> Maybe.withDefault []
+                    |> fixedAbilities
+                , Dict.values character.ancestryOptions.abilityBoosts
+                , Dict.values character.backgroundOptions.abilityBoosts
+                , Maybe.map .keyAbility character.class
+                    |> Maybe.map List.singleton
+                    |> Maybe.withDefault []
+                    |> fixedAbilities
+                , case character.baseAbilities of
+                    Standard ->
+                        Maybe.map List.singleton character.classOptions.keyAbility
+                            |> Maybe.withDefault []
+                    Rolled _ ->
+                        []
+                , character.abilityBoosts
+                    |> Dict.filter (\k _ -> k <= level)
+                    |> Dict.values
+                    |> List.concat
+                ]
 
         flaws =
-            ( Maybe.map .abilityFlaws character.ancestry
-                |> Maybe.withDefault []
-                |> fixedAbilities
-            )
-            ++
-            Dict.values character.ancestryOptions.abilityFlaws
+            List.concat
+                [ Maybe.map .abilityFlaws character.ancestry
+                    |> Maybe.withDefault []
+                    |> fixedAbilities
+                , Dict.values character.ancestryOptions.abilityFlaws
+                ]
     in
     base
         |> (\v -> List.foldl (addAbility -2) v flaws)

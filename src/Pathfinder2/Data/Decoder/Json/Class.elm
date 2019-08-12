@@ -14,6 +14,8 @@ decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->
     Field.require "keyAbility" (Decode.list Decode.string) <| \boosts ->
+    Field.require "skillFeats" (Decode.list Decode.int) <| \skillFeats ->
+    Field.require "skillIncreases" (Decode.list Decode.int) <| \skillIncreases ->
 
     let
         abilityBoosts =
@@ -33,4 +35,6 @@ decoder =
                     Ability.Fixed ability
                 abilities ->
                     Ability.Choice <| List.filterMap identity abilities
+        , skillFeats = skillFeats
+        , skillIncreases = skillIncreases
         }

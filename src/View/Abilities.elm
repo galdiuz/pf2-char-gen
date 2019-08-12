@@ -173,20 +173,21 @@ renderAncestry state =
                         }
                     , El.column
                         box
-                        ( [ UI.Text.header3 "Ability Boosts" ]
-                        ++
-                        ( List.indexedMap (renderAncestryMod ancestry state.character Boost)
+                        <| List.concat
+                            [ [ UI.Text.header3 "Ability Boosts" ]
+                            , List.indexedMap (renderAncestryMod ancestry state.character Boost)
                                 <| Character.ancestryAbilityBoosts state.character
-                        )
-                        )
-                    , El.column
-                        box
-                        ( [ UI.Text.header3 "Ability Flaws" ]
-                        ++
-                        ( List.indexedMap (renderAncestryMod ancestry state.character Flaw)
-                            <| Character.ancestryAbilityFlaws state.character
-                        )
-                        )
+                            ]
+                    , if List.isEmpty (Character.ancestryAbilityFlaws state.character) then
+                        El.none
+                      else
+                        El.column
+                            box
+                            <| List.concat
+                                [ [ UI.Text.header3 "Ability Flaws" ]
+                                , List.indexedMap (renderAncestryMod ancestry state.character Flaw)
+                                    <| Character.ancestryAbilityFlaws state.character
+                                ]
                     ]
         ]
 
@@ -374,9 +375,12 @@ renderFree state =
                 [ UI.Text.header2 "Free Ability Boosts"
                 , UI.ChooseMany.render
                     { all = Ability.allAbilities
-                    , selected = state.character.freeBoosts
+                    , selected =
+                        state.character.abilityBoosts
+                            |> Dict.get 1
+                            |> Maybe.withDefault []
                     , max = 4
-                    , onChange = Msg.Abilities << Abilities.SetAbilityBoosts
+                    , onChange = Msg.Abilities << Abilities.SetAbilityBoosts 1
                     , toString = Ability.toString
                     }
                 ]

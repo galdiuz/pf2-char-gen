@@ -1,5 +1,7 @@
 module Update.Abilities exposing (update)
 
+import Dict
+
 import Action.Abilities exposing (Action(..))
 import App.State exposing (State)
 import Pathfinder2.Character as Character exposing (Character)
@@ -51,9 +53,9 @@ update action state =
                         |> noCmd
 
 
-        SetAbilityBoosts abilities ->
+        SetAbilityBoosts level abilities ->
             abilities
-                |> asBoostsIn state.character
+                |> asBoostsIn state.character level
                 |> asCharacterIn state
                 |> noCmd
 
@@ -69,7 +71,7 @@ asBaseAbilitiesIn character abilities =
         | baseAbilities = abilities
         , ancestryOptions = Character.emptyAncestryOptions
         , backgroundOptions = Character.emptyBackgroundOptions
-        , freeBoosts = []
+        , abilityBoosts = Dict.empty
     }
 
 
@@ -95,9 +97,9 @@ asAbilityIn abilities ability value =
             { abilities | cha = max 0 (min 20 value) }
 
 
-asBoostsIn : Character -> List Ability -> Character
-asBoostsIn character boosts =
-    { character | freeBoosts = boosts }
+asBoostsIn : Character -> Int -> List Ability -> Character
+asBoostsIn character level boosts =
+    { character | abilityBoosts = Dict.insert level boosts character.abilityBoosts }
 
 
 noCmd : state -> ( state, Cmd msg )

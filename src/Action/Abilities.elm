@@ -8,4 +8,4 @@ type Action
     = NoOp
     | SetBaseAbilities String
     | SetBaseAbility Character.Abilities Ability String
-    | SetAbilityBoosts (List Ability)
+    | SetAbilityBoosts Int (List Ability)

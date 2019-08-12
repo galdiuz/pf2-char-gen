@@ -7,4 +7,6 @@ type alias Class =
     { name : String
     , hitPoints : Int
     , keyAbility : Ability.AbilityMod
+    , skillFeats : List Int
+    , skillIncreases : List Int
     }
