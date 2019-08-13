@@ -430,12 +430,7 @@ renderTotal state level =
                   }
                 , { header = El.text "Mod"
                   , width = El.px 60
-                  , view =
-                        \row ->
-                            if row.value1 > 11 then
-                                El.text <| "+" ++ (String.fromInt <| Ability.modifier row.value1)
-                            else
-                                El.text <| String.fromInt <| Ability.modifier row.value1
+                  , view = El.text << Ability.modifierString << .value1
                   }
                 , { header = El.text "Ability"
                   , width = El.shrink
@@ -447,12 +442,7 @@ renderTotal state level =
                   }
                 , { header = El.text "Mod"
                   , width = El.px 60
-                  , view =
-                        \row ->
-                            if row.value2 > 11 then
-                                El.text <| "+" ++ (String.fromInt <| Ability.modifier row.value2)
-                            else
-                                El.text <| String.fromInt <| Ability.modifier row.value2
+                  , view = El.text << Ability.modifierString << .value2
                   }
                 ]
             }

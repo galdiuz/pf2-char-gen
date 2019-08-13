@@ -4,6 +4,7 @@ import Dict exposing (Dict)
 import List.Extra
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data
+import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 
 
 type alias Character =
@@ -23,8 +24,6 @@ type alias Character =
     , abilityBoosts : Dict Int (List Ability)
     --, skillIncreases : Dict 
     }
-
-
 
 
 type alias AncestryOptions =
@@ -170,3 +169,22 @@ abilities level character =
             |> Dict.values
             |> List.concat
         )
+
+
+skills : Int -> Character -> Dict String Skill
+skills level character =
+    -- Dict.empty
+    Dict.fromList [ ("Acrobatics", { name = "Acrobatics", proficiency = Proficiency.Master }) ]
+
+
+skillProficiency : String -> Int -> Character -> Proficiency
+skillProficiency skill level character =
+    Dict.get skill (skills level character)
+        |> Maybe.map .proficiency
+        |> Maybe.withDefault Proficiency.Untrained
+
+
+type alias Skill =
+    { name : String
+    , proficiency : Proficiency
+    }

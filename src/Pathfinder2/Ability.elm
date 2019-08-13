@@ -14,6 +14,7 @@ module Pathfinder2.Ability exposing
     , calculatedAbilities
     , abilityValue
     , modifier
+    , modifierString
     )
 
 
@@ -125,6 +126,8 @@ fixedAbilityMods mods =
                     Nothing
         )
         mods
+
+
 defaultAbilities : Abilities
 defaultAbilities =
     { str = 10
@@ -141,14 +144,8 @@ calculatedAbilities base flaws cappedBoosts uncappedBoosts =
     ( case base of
         Standard ->
             defaultAbilities
-        Rolled {str, dex, con, int, wis, cha} ->
-            { str = str
-            , dex = dex
-            , con = con
-            , int = int
-            , wis = wis
-            , cha = cha
-            }
+        Rolled abilities ->
+            abilities
     )
         |> (\v -> List.foldl (addAbility <| applyAbilityMod Remove True) v flaws)
         |> (\v -> List.foldl (addAbility <| applyAbilityMod Add True) v cappedBoosts)
@@ -200,3 +197,11 @@ abilityValue ability =
 modifier : Int -> Int
 modifier value =
     floor <| (toFloat value - 10) / 2
+
+
+modifierString : Int -> String
+modifierString value =
+    if modifier value >= 1 then
+        "+" ++ (String.fromInt <| modifier value)
+    else
+        String.fromInt <| modifier value

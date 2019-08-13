@@ -19,6 +19,7 @@ import View.Background as Background
 import View.Build as Build
 import View.Class as Class
 import View.Information as Information
+import View.Skill as Skill
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Character as Character exposing (Character)
 import UI.Button
@@ -106,6 +107,9 @@ renderContent view state =
 
         View.AbilityBoosts level ->
             Abilities.render2 state level
+
+        View.Skill level ->
+            Skill.render state level
 
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)

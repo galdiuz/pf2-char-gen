@@ -9,7 +9,7 @@ type View
     | Class
     | Abilities
     | AbilityBoosts Int
-    -- | Skills
+    | Skill Int
     -- | Feats
     -- | Equipment
     -- | Spells
