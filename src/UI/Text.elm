@@ -1,4 +1,4 @@
-module UI.Text exposing (header1, header2, header3)
+module UI.Text exposing (header1, header2, header3, label)
 
 import Element as El exposing (Element)
 import Element.Font as Font
@@ -27,5 +27,14 @@ header3 text =
     El.el
         [ Font.bold
         , Font.size 20
+        ]
+        <| El.text text
+
+
+label : String -> Element msg
+label text =
+    El.el
+        [ Font.size 18
+        , Font.italic
         ]
         <| El.text text

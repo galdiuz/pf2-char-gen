@@ -8,6 +8,7 @@ type View
     | Background
     | Class
     | Abilities
+    | AbilityBoosts Int
     -- | Skills
     -- | Feats
     -- | Equipment

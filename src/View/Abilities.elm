@@ -1,4 +1,4 @@
-module View.Abilities exposing (render)
+module View.Abilities exposing (render, render2)
 
 import Dict exposing (Dict)
 
@@ -36,8 +36,17 @@ render state =
         , renderAncestry state
         , renderBackground state
         , renderClass state
-        , renderFree state
-        , renderTotal state
+        , renderFree state 1
+        , renderTotal state 1
+        ]
+
+
+render2 : State -> Int -> Element Msg
+render2 state level =
+    El.column
+        [ El.spacing 10 ]
+        [ renderFree state level
+        , renderTotal state level
         ]
 
 
@@ -366,8 +375,8 @@ renderClassMod class character =
                 }
 
 
-renderFree : State -> Element Msg
-renderFree state =
+renderFree : State -> Int -> Element Msg
+renderFree state level =
     case state.character.baseAbilities of
         Character.Standard ->
             El.column
@@ -377,10 +386,10 @@ renderFree state =
                     { all = Ability.allAbilities
                     , selected =
                         state.character.abilityBoosts
-                            |> Dict.get 1
+                            |> Dict.get level
                             |> Maybe.withDefault []
                     , max = 4
-                    , onChange = Msg.Abilities << Abilities.SetAbilityBoosts 1
+                    , onChange = Msg.Abilities << Abilities.SetAbilityBoosts level
                     , toString = Ability.toString
                     }
                 ]
@@ -398,8 +407,8 @@ renderFreeMod character index =
         }
 
 
-renderTotal : State -> Element Msg
-renderTotal state =
+renderTotal : State -> Int -> Element Msg
+renderTotal state level =
     El.column
         box
         [ UI.Text.header2 "Total"
@@ -407,7 +416,7 @@ renderTotal state =
             []
             { data =
                 List.map
-                    (pairTotalInputs <| Character.abilities 1 state.character)
+                    (pairTotalInputs <| Character.abilities level state.character)
                     [ (Ability.Str, Ability.Int)
                     , (Ability.Dex, Ability.Wis)
                     , (Ability.Con, Ability.Cha)

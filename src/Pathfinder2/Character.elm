@@ -184,7 +184,15 @@ abilities level character =
                     , cha = cha
                     }
 
-        boosts =
+        flaws =
+            List.concat
+                [ Maybe.map .abilityFlaws character.ancestry
+                    |> Maybe.withDefault []
+                    |> fixedAbilities
+                , Dict.values character.ancestryOptions.abilityFlaws
+                ]
+
+        baseBoosts =
             List.concat
                 [ Maybe.map .abilityBoosts character.ancestry
                     |> Maybe.withDefault []
@@ -202,44 +210,62 @@ abilities level character =
                     Rolled _ ->
                         []
                 , character.abilityBoosts
-                    |> Dict.filter (\k _ -> k <= level)
+                    |> Dict.filter (\k _ -> k == 1)
                     |> Dict.values
                     |> List.concat
                 ]
 
-        flaws =
-            List.concat
-                [ Maybe.map .abilityFlaws character.ancestry
-                    |> Maybe.withDefault []
-                    |> fixedAbilities
-                , Dict.values character.ancestryOptions.abilityFlaws
-                ]
+        boosts =
+            character.abilityBoosts
+                |> Dict.filter (\k _ -> k <= level && k > 1)
+                |> Dict.values
+                |> List.concat
     in
     base
-        |> (\v -> List.foldl (addAbility -2) v flaws)
-        |> (\v -> List.foldl (addAbility 2) v boosts)
+        |> (\v -> List.foldl (addAbility (calcAbilityMod Remove Uncapped)) v flaws)
+        |> (\v -> List.foldl (addAbility (calcAbilityMod Add Capped)) v baseBoosts)
+        |> (\v -> List.foldl (addAbility (calcAbilityMod Add Uncapped)) v boosts)
 
 
-addAbility : Int -> Ability -> Abilities -> Abilities
-addAbility mod ability totals =
+type AbilityCap
+    = Capped
+    | Uncapped
+
+
+type AbilityMod
+    = Add
+    | Remove
+
+
+addAbility : (Int -> Int) -> Ability -> Abilities -> Abilities
+addAbility calc ability totals =
     case ability of
         Ability.Str ->
-            { totals | str = calc totals.str mod }
+            { totals | str = calc totals.str }
         Ability.Dex ->
-            { totals | dex = calc totals.dex mod }
+            { totals | dex = calc totals.dex }
         Ability.Con ->
-            { totals | con = calc totals.con mod }
+            { totals | con = calc totals.con }
         Ability.Int ->
-            { totals | int = calc totals.int mod }
+            { totals | int = calc totals.int }
         Ability.Wis ->
-            { totals | wis = calc totals.wis mod }
+            { totals | wis = calc totals.wis }
         Ability.Cha ->
-            { totals | cha = calc totals.cha mod }
+            { totals | cha = calc totals.cha }
 
 
-calc : Int -> Int -> Int
-calc a b =
-    min (a + b) 18
+calcAbilityMod : AbilityMod -> AbilityCap -> Int -> Int
+calcAbilityMod mod capped value =
+    case (mod, capped) of
+        (Add, Capped) ->
+            min (value + 2) 18
+        (Add, Uncapped) ->
+            if value >= 18 then
+                value + 1
+            else
+                value + 2
+        (Remove, _) ->
+            value - 2
 
 
 fixedAbilities : List Ability.AbilityMod -> List Ability

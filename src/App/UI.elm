@@ -104,6 +104,9 @@ renderContent view state =
         View.Abilities ->
             Abilities.render state
 
+        View.AbilityBoosts level ->
+            Abilities.render2 state level
+
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
 withModals attributes views state =

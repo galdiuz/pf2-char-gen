@@ -60,3 +60,19 @@ free =
 type AbilityMod
     = Fixed Ability
     | Choice (List Ability)
+
+
+compare : Ability -> Ability -> Order
+compare a b =
+    if a == Str && List.member b [Dex, Con, Int, Wis, Cha] then
+        LT
+    else if a == Dex && List.member b [Con, Int, Wis, Cha] then
+        LT
+    else if a == Con && List.member b [Int, Wis, Cha] then
+        LT
+    else if a == Int && List.member b [Wis, Cha] then
+        LT
+    else if a == Wis && List.member b [Cha] then
+        LT
+    else
+        GT

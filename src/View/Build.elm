@@ -1,5 +1,7 @@
 module View.Build exposing (render)
 
+import Dict
+
 import Element as El exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -9,6 +11,7 @@ import Action.Background as Background
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import App.View as View
+import Pathfinder2.Data.Ability as Ability exposing (Ability)
 import UI.Button
 import UI.ChooseOne
 import UI.Text
@@ -31,7 +34,7 @@ renderLevel state level =
         box
         [ UI.Text.header1 <| "Level " ++ String.fromInt level
         , renderLevel1 state level
-        , renderFreeBoosts state level
+        , renderAbilityBoosts state level
         , renderAncestryFeats state level
         , renderClassFeats state level
         , renderSkillIncreases state level
@@ -47,41 +50,73 @@ renderLevel1 state level =
             ]
             [ UI.Button.render
                 { onPress = Just <| Msg.OpenModal View.Ancestry
-                , label = El.text <|
-                    "Ancestry: "
-                    ++
-                    (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.ancestry)
+                , label =
+                    El.column
+                        []
+                        [ UI.Text.label "Ancestry"
+                        , El.text <| Maybe.withDefault "<Not selected>" <| Maybe.map .name state.character.ancestry
+                        ]
                 }
             , UI.Button.render
                 { onPress = Just <| Msg.OpenModal View.Background
-                , label = El.text <|
-                    "Background: "
-                    ++
-                    (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.background)
+                , label =
+                    El.column
+                        []
+                        [ UI.Text.label "Background"
+                        , El.text <| Maybe.withDefault "<Not selected>" <| Maybe.map .name state.character.background
+                        ]
                 }
             , UI.Button.render
                 { onPress = Just <| Msg.OpenModal View.Class
-                , label = El.text <|
-                    "Class: "
-                    ++
-                    (Maybe.withDefault "Not Selected" <| Maybe.map .name state.character.class)
+                , label =
+                    El.column
+                        []
+                        [ UI.Text.label "Class"
+                        , El.text <| Maybe.withDefault "<Not selected>" <| Maybe.map .name state.character.class
+                        ]
                 }
             , UI.Button.render
                 { onPress = Just <| Msg.OpenModal View.Abilities
                 , label = El.text <|
-                    "Abilities"
+                    "Ability Boosts"
+                }
+            , UI.Button.render
+                { onPress = Just <| Msg.NoOp
+                , label =
+                    El.column
+                        []
+                        [ UI.Text.label "Heritage"
+                        , El.text <| Maybe.withDefault "<Not selected>" <| Nothing
+                        ]
                 }
             ]
     else
         El.none
 
 
-renderFreeBoosts state level =
+renderAbilityBoosts state level =
     if List.member level [5, 10, 15, 20] then
         UI.Button.render
-            { onPress = Nothing
-            , label = El.text <|
-                "Ability Boosts"
+            { onPress = Just <| Msg.OpenModal <| View.AbilityBoosts level
+            , label =
+                let
+                    abilityBoosts =
+                        state.character.abilityBoosts
+                            |> Dict.get level
+                            |> Maybe.withDefault []
+                            |> List.sortWith Ability.compare
+                in
+                El.column
+                    []
+                    [ UI.Text.label "Ability Boosts"
+                    , if List.length abilityBoosts < 4 then
+                        El.text <| "<Remaining: " ++ String.fromInt (4 - List.length abilityBoosts) ++ ">"
+                      else
+                        El.none
+                    , El.text
+                        <| String.join ", "
+                        <| List.map Ability.toString abilityBoosts
+                    ]
             }
     else
         El.none
@@ -91,8 +126,12 @@ renderAncestryFeats state level =
     if List.member level [1, 5, 9, 13, 17] then
         UI.Button.render
             { onPress = Nothing
-            , label = El.text <|
-                "Ancestry Feat"
+            , label =
+                El.column
+                    []
+                    [ UI.Text.label "Ancestry Feat"
+                    , El.text "<Not selected>"
+                    ]
             }
     else
         El.none
@@ -102,8 +141,12 @@ renderClassFeats state level =
     if List.member level [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20] then
         UI.Button.render
             { onPress = Nothing
-            , label = El.text <|
-                "Class Feat"
+            , label =
+                El.column
+                    []
+                    [ UI.Text.label "Class Feat"
+                    , El.text "<Not selected>"
+                    ]
             }
     else
         El.none
@@ -119,8 +162,12 @@ renderSkillIncreases state level =
     if List.member level levels then
         UI.Button.render
             { onPress = Nothing
-            , label = El.text <|
-                "Skill Increase"
+            , label =
+                El.column
+                    []
+                    [ UI.Text.label "Skill Increase"
+                    , El.text "<Not selected>"
+                    ]
             }
     else
         El.none
@@ -136,8 +183,12 @@ renderSkillFeats state level =
     if List.member level levels then
         UI.Button.render
             { onPress = Nothing
-            , label = El.text <|
-                "Skill Feat"
+            , label =
+                El.column
+                    []
+                    [ UI.Text.label "Skill Feat"
+                    , El.text "<Not selected>"
+                    ]
             }
     else
         El.none
@@ -147,8 +198,12 @@ renderGeneralFeats state level =
     if List.member level [3, 7, 11, 15, 19] then
         UI.Button.render
             { onPress = Nothing
-            , label = El.text <|
-                "General Feat"
+            , label =
+                El.column
+                    []
+                    [ UI.Text.label "General Feat"
+                    , El.text "<Not selected>"
+                    ]
             }
     else
         El.none
