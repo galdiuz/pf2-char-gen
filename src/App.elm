@@ -29,7 +29,7 @@ init flags url navKey =
 render : State -> Document Msg
 render state =
     { body = [ renderView state ]
-    , title = "Title"
+    , title = "PF2 Char Gen"
     }
 
 

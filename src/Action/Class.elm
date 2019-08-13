@@ -1,10 +1,10 @@
 module Action.Class exposing (Action(..))
 
-import Pathfinder2.Data.Ability exposing (Ability)
-import Pathfinder2.Data.Class exposing (Class)
+import Pathfinder2.Ability exposing (Ability)
+import Pathfinder2.Data as Data
 
 
 type Action
     = NoOp
-    | SetClass Class
+    | SetClass Data.Class
     | SetKeyAbility Ability

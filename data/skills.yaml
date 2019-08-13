@@ -1,0 +1,48 @@
+skills:
+  - name: "Acrobatics"
+    keyAbility: "Dex"
+
+  - name: "Arcana"
+    keyAbility: "Int"
+
+  - name: "Athletics"
+    keyAbility: "Str"
+
+  - name: "Crafting"
+    keyAbility: "Int"
+
+  - name: "Deception"
+    keyAbility: "Cha"
+
+  - name: "Diplomancy"
+    keyAbility: "Cha"
+
+  - name: "Intimidation"
+    keyAbility: "Cha"
+
+  - name: "Medicine"
+    keyAbility: "Int"
+
+  - name: "Nature"
+    keyAbility: "Wis"
+
+  - name: "Occultism"
+    keyAbility: "Int"
+
+  - name: "Performance"
+    keyAbility: "Cha"
+
+  - name: "Religion"
+    keyAbility: "Wis"
+
+  - name: "Society"
+    keyAbility: "Int"
+
+  - name: "Stealth"
+    keyAbility: "Dex"
+
+  - name: "Survival"
+    keyAbility: "Wis"
+
+  - name: "Thievery"
+    keyAbility: "Dex"

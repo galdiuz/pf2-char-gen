@@ -1,10 +1,10 @@
 module Action.Background exposing (Action(..))
 
-import Pathfinder2.Data.Ability exposing (Ability)
-import Pathfinder2.Data.Background exposing (Background)
+import Pathfinder2.Ability exposing (Ability)
+import Pathfinder2.Data as Data
 
 
 type Action
     = NoOp
-    | SetBackground Background
+    | SetBackground Data.Background
     | SetAbilityBoost Int Ability

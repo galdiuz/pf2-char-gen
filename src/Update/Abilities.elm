@@ -4,8 +4,8 @@ import Dict
 
 import Action.Abilities exposing (Action(..))
 import App.State exposing (State)
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
-import Pathfinder2.Data.Ability as Ability exposing (Ability)
 
 
 update : Action -> State -> (State, Cmd msg)
@@ -18,12 +18,12 @@ update action state =
         SetBaseAbilities string ->
             case string of
                 "Standard" ->
-                    Character.Standard
+                    Ability.Standard
                         |> asBaseAbilitiesIn state.character
                         |> asCharacterIn state
                         |> noCmd
                 "Rolled" ->
-                    Character.Rolled Character.defaultAbilities
+                    Ability.Rolled Ability.defaultAbilities
                         |> asBaseAbilitiesIn state.character
                         |> asCharacterIn state
                         |> noCmd
@@ -32,9 +32,6 @@ update action state =
                         |> noCmd
 
         SetBaseAbility abilities ability string ->
-            let
-                _= Debug.log "string" string
-            in
             case (string, String.toInt string) of
                 ("", _) ->
                     0
@@ -65,7 +62,7 @@ asCharacterIn state character =
     { state | character = character }
 
 
-asBaseAbilitiesIn : Character -> Character.BaseAbilities -> Character
+asBaseAbilitiesIn : Character -> Ability.BaseAbilities -> Character
 asBaseAbilitiesIn character abilities =
     { character
         | baseAbilities = abilities
@@ -75,12 +72,12 @@ asBaseAbilitiesIn character abilities =
     }
 
 
-asRolledAbilitiesIn : Character -> Character.Abilities -> Character
+asRolledAbilitiesIn : Character -> Ability.Abilities -> Character
 asRolledAbilitiesIn character abilities =
-    { character | baseAbilities = Character.Rolled abilities }
+    { character | baseAbilities = Ability.Rolled abilities }
 
 
-asAbilityIn : Character.Abilities -> Ability -> Int -> Character.Abilities
+asAbilityIn : Ability.Abilities -> Ability -> Int -> Ability.Abilities
 asAbilityIn abilities ability value =
     case ability of
         Ability.Str ->

@@ -11,7 +11,7 @@ import Action.Background as Background
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import App.View as View
-import Pathfinder2.Data.Ability as Ability exposing (Ability)
+import Pathfinder2.Ability as Ability exposing (Ability)
 import UI.Button
 import UI.ChooseOne
 import UI.Text

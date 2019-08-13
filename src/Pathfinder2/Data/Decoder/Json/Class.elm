@@ -5,11 +5,11 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Field as Field
 import Maybe.Extra
 
-import Pathfinder2.Data.Ability as Ability
-import Pathfinder2.Data.Class as Class exposing (Class)
+import Pathfinder2.Ability as Ability
+import Pathfinder2.Data as Data
 
 
-decoder : Decoder Class
+decoder : Decoder Data.Class
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->

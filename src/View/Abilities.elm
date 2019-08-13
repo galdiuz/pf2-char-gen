@@ -16,11 +16,9 @@ import Action.Class as Class
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import App.View as View
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
-import Pathfinder2.Data.Ability as Ability exposing (Ability)
-import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
-import Pathfinder2.Data.Background as Background exposing (Background)
-import Pathfinder2.Data.Class as Class exposing (Class)
+import Pathfinder2.Data as Data
 import UI.Button
 import UI.ChooseOne
 import UI.ChooseMany
@@ -60,22 +58,22 @@ renderBaseAbilities state =
             , available = [ "Standard", "Rolled" ]
             , selected =
                 case state.character.baseAbilities of
-                    Character.Standard ->
+                    Ability.Standard ->
                         Just "Standard"
-                    Character.Rolled _ ->
+                    Ability.Rolled _ ->
                         Just "Rolled"
             , onChange = Msg.Abilities << Abilities.SetBaseAbilities
             , toString = identity
             }
         , case state.character.baseAbilities of
-            Character.Standard ->
+            Ability.Standard ->
                 El.none
-            Character.Rolled abilities ->
+            Ability.Rolled abilities ->
                 renderRolledAbilities abilities
         ]
 
 
-renderRolledAbilities : Character.Abilities -> Element Msg
+renderRolledAbilities : Ability.Abilities -> Element Msg
 renderRolledAbilities abilities =
     El.column
         box
@@ -124,7 +122,7 @@ pairRolledInputs abilities (ability1, ability2) =
             []
             { onChange = Msg.Abilities << Abilities.SetBaseAbility abilities ability1
             , text =
-                case Character.abilityValue ability1 abilities of
+                case Ability.abilityValue ability1 abilities of
                     0 -> ""
                     value -> String.fromInt value
             , placeholder = Nothing
@@ -141,7 +139,7 @@ pairRolledInputs abilities (ability1, ability2) =
             []
             { onChange = Msg.Abilities << Abilities.SetBaseAbility abilities ability2
             , text =
-                case Character.abilityValue ability2 abilities of
+                case Ability.abilityValue ability2 abilities of
                     0 -> ""
                     value -> String.fromInt value
             , placeholder = Nothing
@@ -206,7 +204,7 @@ type AbilityModType
     | Flaw
 
 
-renderAncestryMod : Ancestry -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
+renderAncestryMod : Data.Ancestry -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
 renderAncestryMod ancestry character modType index mod =
     case mod of
         Ability.Fixed ability ->
@@ -313,7 +311,7 @@ renderBackground state =
         ]
 
 
-renderBackgroundMod : Background -> Character -> Int -> Ability.AbilityMod -> Element Msg
+renderBackgroundMod : Data.Background -> Character -> Int -> Ability.AbilityMod -> Element Msg
 renderBackgroundMod background character index mod =
     case mod of
         Ability.Fixed ability ->
@@ -360,7 +358,7 @@ renderClass state =
         ]
 
 
-renderClassMod : Class -> Character -> Element Msg
+renderClassMod : Data.Class -> Character -> Element Msg
 renderClassMod class character =
     case class.keyAbility of
         Ability.Fixed ability ->
@@ -378,12 +376,12 @@ renderClassMod class character =
 renderFree : State -> Int -> Element Msg
 renderFree state level =
     case state.character.baseAbilities of
-        Character.Standard ->
+        Ability.Standard ->
             El.column
                 box
                 [ UI.Text.header2 "Free Ability Boosts"
                 , UI.ChooseMany.render
-                    { all = Ability.allAbilities
+                    { all = Ability.list
                     , selected =
                         state.character.abilityBoosts
                             |> Dict.get level
@@ -393,15 +391,15 @@ renderFree state level =
                     , toString = Ability.toString
                     }
                 ]
-        Character.Rolled _ ->
+        Ability.Rolled _ ->
             El.none
 
 
 renderFreeMod character index =
     UI.ChooseOne.render
-        { all = Ability.allAbilities
+        { all = Ability.list
         , selected = Nothing
-        , available = Ability.allAbilities
+        , available = Ability.list
         , onChange = \_ -> Msg.NoOp
         , toString = Ability.toString
         }
@@ -435,9 +433,9 @@ renderTotal state level =
                   , view =
                         \row ->
                             if row.value1 > 11 then
-                                El.text <| "+" ++ (String.fromInt <| Character.modValue row.value1)
+                                El.text <| "+" ++ (String.fromInt <| Ability.modifier row.value1)
                             else
-                                El.text <| String.fromInt <| Character.modValue row.value1
+                                El.text <| String.fromInt <| Ability.modifier row.value1
                   }
                 , { header = El.text "Ability"
                   , width = El.shrink
@@ -452,9 +450,9 @@ renderTotal state level =
                   , view =
                         \row ->
                             if row.value2 > 11 then
-                                El.text <| "+" ++ (String.fromInt <| Character.modValue row.value2)
+                                El.text <| "+" ++ (String.fromInt <| Ability.modifier row.value2)
                             else
-                                El.text <| String.fromInt <| Character.modValue row.value2
+                                El.text <| String.fromInt <| Ability.modifier row.value2
                   }
                 ]
             }
@@ -463,9 +461,9 @@ renderTotal state level =
 
 pairTotalInputs abilities (ability1, ability2) =
     { label1 = Ability.toString ability1
-    , value1 = Character.abilityValue ability1 <| abilities
+    , value1 = Ability.abilityValue ability1 <| abilities
     , label2 = Ability.toString ability2
-    , value2 = Character.abilityValue ability2 <| abilities
+    , value2 = Ability.abilityValue ability2 <| abilities
     }
 
 

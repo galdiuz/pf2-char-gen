@@ -4,11 +4,11 @@ import Maybe.Extra
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Field as Field
 
-import Pathfinder2.Data.Ability as Ability
-import Pathfinder2.Data.Ancestry as Ancestry exposing (Ancestry)
+import Pathfinder2.Ability as Ability
+import Pathfinder2.Data as Data
 
 
-decoder : Decoder Ancestry
+decoder : Decoder Data.Ancestry
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->
@@ -19,7 +19,7 @@ decoder =
     Field.require "languages" (Decode.list Decode.string) <| \languages ->
     Field.require "traits" (Decode.list Decode.string) <| \traits ->
     Field.require "heritages" (Decode.list heritageDecoder) <| \heritages ->
-    Field.require "feats" (Decode.list featDecoder) <| \feats ->
+    -- Field.require "feats" (Decode.list featDecoder) <| \feats ->
 
     let
         abilityBoosts =
@@ -47,7 +47,7 @@ decoder =
         , languages = languages
         , traits = traits
         , heritages = heritages
-        , feats = feats
+        -- , feats = feats
         }
 
 

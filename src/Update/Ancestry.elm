@@ -5,8 +5,8 @@ import Dict
 import Action.Ancestry exposing (Action(..))
 import App.State exposing (State)
 import Pathfinder2.Character as Character exposing (Character)
-import Pathfinder2.Data.Ability exposing (Ability)
-import Pathfinder2.Data.Ancestry exposing (Ancestry)
+import Pathfinder2.Ability exposing (Ability)
+import Pathfinder2.Data as Data
 
 
 update : Action -> State -> ( State, Cmd msg )
@@ -46,7 +46,7 @@ asCharacterIn state character =
     { state | character = character }
 
 
-asAncestryIn : Character -> Ancestry -> Character
+asAncestryIn : Character -> Data.Ancestry -> Character
 asAncestryIn character ancestry =
     { character
         | ancestry = Just ancestry

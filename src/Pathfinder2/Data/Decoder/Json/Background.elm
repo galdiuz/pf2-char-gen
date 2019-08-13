@@ -5,14 +5,15 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Field as Field
 import Maybe.Extra
 
-import Pathfinder2.Data.Ability as Ability
-import Pathfinder2.Data.Background as Background exposing (Background)
+import Pathfinder2.Ability as Ability
+import Pathfinder2.Data as Data
 
 
-decoder : Decoder Background
+decoder : Decoder Data.Background
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "abilityBoosts" (Decode.list Decode.string) <| \boosts ->
+    Field.require "skills" (Decode.list Decode.string) <| \skills ->
 
     let
         abilityBoosts =
@@ -26,4 +27,5 @@ decoder =
     Decode.succeed
         { name = name
         , abilityBoosts = List.singleton <| Ability.Choice <| List.filterMap identity abilityBoosts
+        , skillIncreases = skills
         }

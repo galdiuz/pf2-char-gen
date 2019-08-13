@@ -6,10 +6,10 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Field as Field
 
 import Pathfinder2.Data exposing (Data)
-import Pathfinder2.Data.Ancestry exposing (Ancestry)
 import Pathfinder2.Data.Decoder.Json.Ancestry as Ancestry
 import Pathfinder2.Data.Decoder.Json.Background as Background
 import Pathfinder2.Data.Decoder.Json.Class as Class
+import Pathfinder2.Data.Decoder.Json.Skill as Skill
 
 
 type alias NamedRecord r =
@@ -21,6 +21,7 @@ decode value =
     { ancestries = tryDecode "ancestries" Ancestry.decoder value
     , backgrounds = tryDecode "backgrounds" Background.decoder value
     , classes = tryDecode "classes" Class.decoder value
+    , skills = tryDecode "skills" Skill.decoder value
     }
 
 

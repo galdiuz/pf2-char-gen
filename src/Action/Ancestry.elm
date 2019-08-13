@@ -1,12 +1,12 @@
 module Action.Ancestry exposing (Action(..))
 
-import Pathfinder2.Data.Ability exposing (Ability)
-import Pathfinder2.Data.Ancestry exposing (Ancestry)
+import Pathfinder2.Ability exposing (Ability)
+import Pathfinder2.Data as Data
 
 
 type Action
     = NoOp
-    | SetAncestry Ancestry
+    | SetAncestry Data.Ancestry
     | SetVoluntaryFlaw Bool
     | SetAbilityBoost Int Ability
     | SetAbilityFlaw Int Ability

@@ -5,8 +5,8 @@ import Dict
 import Action.Class exposing (Action(..))
 import App.State exposing (State)
 import Pathfinder2.Character as Character exposing (Character)
-import Pathfinder2.Data.Ability exposing (Ability)
-import Pathfinder2.Data.Class exposing (Class)
+import Pathfinder2.Ability exposing (Ability)
+import Pathfinder2.Data as Data
 
 
 update : Action -> State -> ( State, Cmd msg )
@@ -35,7 +35,7 @@ asCharacterIn state character =
     { state | character = character }
 
 
-asClassIn : Character -> Class -> Character
+asClassIn : Character -> Data.Class -> Character
 asClassIn character class =
     { character
         | class = Just class
