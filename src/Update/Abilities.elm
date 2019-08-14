@@ -4,6 +4,7 @@ import Dict
 
 import Action.Abilities exposing (Action(..))
 import App.State exposing (State)
+import Fun
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
 
@@ -13,7 +14,7 @@ update action state =
     case action of
         NoOp ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         SetBaseAbilities string ->
             case string of
@@ -21,15 +22,15 @@ update action state =
                     Ability.Standard
                         |> asBaseAbilitiesIn state.character
                         |> asCharacterIn state
-                        |> noCmd
+                        |> Fun.noCmd
                 "Rolled" ->
                     Ability.Rolled Ability.defaultAbilities
                         |> asBaseAbilitiesIn state.character
                         |> asCharacterIn state
-                        |> noCmd
+                        |> Fun.noCmd
                 _ ->
                     state
-                        |> noCmd
+                        |> Fun.noCmd
 
         SetBaseAbility abilities ability string ->
             case (string, String.toInt string) of
@@ -38,23 +39,23 @@ update action state =
                         |> asAbilityIn abilities ability
                         |> asRolledAbilitiesIn state.character
                         |> asCharacterIn state
-                        |> noCmd
+                        |> Fun.noCmd
                 (_, Just value) ->
                     value
                         |> asAbilityIn abilities ability
                         |> asRolledAbilitiesIn state.character
                         |> asCharacterIn state
-                        |> noCmd
+                        |> Fun.noCmd
                 (_, Nothing) ->
                     state
-                        |> noCmd
+                        |> Fun.noCmd
 
 
         SetAbilityBoosts level abilities ->
             abilities
                 |> asBoostsIn state.character level
                 |> asCharacterIn state
-                |> noCmd
+                |> Fun.noCmd
 
 
 asCharacterIn : State -> Character -> State
@@ -97,8 +98,3 @@ asAbilityIn abilities ability value =
 asBoostsIn : Character -> Int -> List Ability -> Character
 asBoostsIn character level boosts =
     { character | abilityBoosts = Dict.insert level boosts character.abilityBoosts }
-
-
-noCmd : state -> ( state, Cmd msg )
-noCmd state =
-    ( state, Cmd.none )

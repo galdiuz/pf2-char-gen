@@ -16,6 +16,7 @@ import Action.Class as Class
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import App.View as View
+import Fun
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data
@@ -430,7 +431,7 @@ renderTotal state level =
                   }
                 , { header = El.text "Mod"
                   , width = El.px 60
-                  , view = El.text << Ability.modifierString << .value1
+                  , view = El.text << Fun.formatModifier << Ability.modifier << .value1
                   }
                 , { header = El.text "Ability"
                   , width = El.shrink
@@ -442,7 +443,7 @@ renderTotal state level =
                   }
                 , { header = El.text "Mod"
                   , width = El.px 60
-                  , view = El.text << Ability.modifierString << .value2
+                  , view = El.text << Fun.formatModifier << Ability.modifier << .value2
                   }
                 ]
             }

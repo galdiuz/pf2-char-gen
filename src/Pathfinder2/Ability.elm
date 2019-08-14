@@ -14,7 +14,6 @@ module Pathfinder2.Ability exposing
     , calculatedAbilities
     , abilityValue
     , modifier
-    , modifierString
     )
 
 
@@ -197,11 +196,3 @@ abilityValue ability =
 modifier : Int -> Int
 modifier value =
     floor <| (toFloat value - 10) / 2
-
-
-modifierString : Int -> String
-modifierString value =
-    if modifier value >= 1 then
-        "+" ++ (String.fromInt <| modifier value)
-    else
-        String.fromInt <| modifier value

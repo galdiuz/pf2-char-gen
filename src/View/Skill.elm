@@ -9,6 +9,7 @@ import Element.Font as Font
 
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
+import Fun
 import Pathfinder2.Ability as Ability
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data
@@ -32,6 +33,12 @@ renderSkill skill level character =
     let
         proficiency =
             Character.skillProficiency skill.name level character
+        proficiencyMod =
+            Proficiency.modifier proficiency level
+        abilityMod =
+            Character.abilities level character
+                |> Ability.abilityValue skill.keyAbility
+                |> Ability.modifier
     in
     UI.Button.render
         { onPress = Nothing
@@ -44,12 +51,11 @@ renderSkill skill level character =
                     [ El.alignLeft
                     ]
                     <| El.text skill.name
-
                 , El.row
                     [ El.alignRight
                     , El.spacing 5
                     ]
-                    [ El.text <| "0"
+                    [ El.text <| Fun.formatModifier (proficiencyMod + abilityMod)
                     , El.text "="
                     , renderProficiency proficiency
                     , El.column
@@ -61,7 +67,7 @@ renderSkill skill level character =
                             <| El.text <| Proficiency.toString proficiency
                         , El.el
                             [ El.width El.fill ]
-                            <| El.text <| Proficiency.bonusString proficiency level
+                            <| El.text <| Fun.formatModifier proficiencyMod
                         ]
                     , El.text "+"
                     , El.column
@@ -73,7 +79,7 @@ renderSkill skill level character =
                             <| El.text <| Ability.toString skill.keyAbility
                         , El.el
                             [ El.width El.fill ]
-                            <| El.text <| Ability.modifierString 10
+                            <| El.text <| Fun.formatModifier abilityMod
                         ]
                     ]
                 ]
@@ -81,77 +87,64 @@ renderSkill skill level character =
 
 
 renderProficiency : Proficiency -> Element Msg
-renderProficiency proficiency =
+renderProficiency rank =
     let
-        unlocked =
-            Background.color <| El.rgb 0.8 0.8 0.8
-
-        locked =
-            Background.color <| El.rgb 1 1 1
-
-        background rank =
-            if proficiency == Proficiency.Trained
-                && rank == Proficiency.Trained
-            then
-                unlocked
-
-            else if proficiency == Proficiency.Expert
-                && List.member rank [Proficiency.Trained, Proficiency.Expert]
-            then
-                unlocked
-
-            else if proficiency == Proficiency.Master
-                && List.member rank [Proficiency.Trained, Proficiency.Expert, Proficiency.Master]
-            then
-                unlocked
-
-            else if proficiency == Proficiency.Legendary
-            then
-                unlocked
-
+        style proficiency attributes =
+            if Proficiency.compare rank proficiency == LT then
+                [ Border.dashed
+                , Border.color <| El.rgb 0.5 0.5 0.5
+                , Font.color <| El.rgb 0.5 0.5 0.5
+                ]
+                ++ attributes
             else
-                locked
+                [ Border.solid
+                ]
+                ++ attributes
     in
     El.row
         [ El.alignRight
         ]
         [ El.el
-            [ Border.widthEach
-                { top = 1
-                , bottom = 1
-                , left = 1
-                , right = 0
-                }
-            , El.padding 2
-            , background Proficiency.Trained
-            ]
+            ( style Proficiency.Trained
+                [ Border.width 1
+                , El.padding 2
+                ]
+            )
             <| El.text "T"
         , El.el
-            [ Border.widthEach
-                { top = 1
-                , bottom = 1
-                , left = 1
-                , right = 0
-                }
-            , El.padding 2
-            , background Proficiency.Expert
-            ]
+            ( style Proficiency.Expert
+                [ Border.widthEach
+                    { top = 1
+                    , bottom = 1
+                    , left = 0
+                    , right = 1
+                    }
+                , El.padding 2
+                ]
+            )
             <| El.text "E"
         , El.el
-            [ Border.widthEach
-                { top = 1
-                , bottom = 1
-                , left = 1
-                , right = 0
-                }
-            , El.padding 2
-            , background Proficiency.Master
-            ]
+            ( style Proficiency.Master
+                [ Border.widthEach
+                    { top = 1
+                    , bottom = 1
+                    , left = 0
+                    , right = 1
+                    }
+                , El.padding 2
+                ]
+            )
             <| El.text "M"
         , El.el
-            [ Border.width 1
-            , El.padding 2
-            , background Proficiency.Legendary
-            ]
+            ( style Proficiency.Legendary
+                [ Border.widthEach
+                    { top = 1
+                    , bottom = 1
+                    , left = 0
+                    , right = 1
+                    }
+                , El.padding 2
+                ]
+            )
             <| El.text "L"
         ]
