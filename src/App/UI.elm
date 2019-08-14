@@ -131,6 +131,7 @@ renderModal view remaining state =
         , El.height El.fill
         , El.padding 50
         , Background.color <| El.rgba 0 0 0 0.5
+        , El.scrollbarY
         ]
         <| El.el
             ( withModals
@@ -147,8 +148,10 @@ renderModal view remaining state =
                 [ El.spacing 20
                 ]
                 [ renderContent view state
-                , UI.Button.render
-                    { onPress = Just Msg.CloseModal
-                    , label = El.text "Close"
-                    }
+                , El.el
+                    [ El.centerX ]
+                    <| UI.Button.render
+                        { onPress = Just Msg.CloseModal
+                        , label = El.text "Close"
+                        }
                 ]

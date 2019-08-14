@@ -161,7 +161,7 @@ renderSkillIncreases state level =
     in
     if List.member level levels then
         UI.Button.render
-            { onPress = Nothing
+            { onPress = Just <| Msg.OpenModal <| View.Skill level
             , label =
                 El.column
                     []
