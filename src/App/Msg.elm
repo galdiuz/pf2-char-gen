@@ -9,6 +9,7 @@ import Action.Ancestry as Ancestry
 import Action.Background as Background
 import Action.Class as Class
 import Action.Information as Information
+import Action.Skill as Skill
 
 
 type Msg
@@ -23,6 +24,7 @@ type Msg
     | Background Background.Action
     | Class Class.Action
     | Information Information.Action
+    | Skill Skill.Action
 
 
 init =

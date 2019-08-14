@@ -8,6 +8,7 @@ import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
 
+import Action.Skill as Skill
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import Fun
@@ -16,6 +17,7 @@ import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 import UI.Button
+import UI.ChooseOneGrid
 
 
 render : State -> Int -> Element Msg
@@ -29,112 +31,71 @@ render state level =
             Character.abilities level state.character
                 |> Ability.abilityValue skill.keyAbility
                 |> Ability.modifier
-        onClick skill =
-            Events.onClick Msg.NoOp
     in
-    El.table
-        [ El.spacingXY 0 5
-        ]
-        { data = Dict.values state.data.skills
+    UI.ChooseOneGrid.render
+        { items = Dict.values state.data.skills
+        , selected =
+            state.character.skillIncreases
+                |> Dict.get level
+        , onChange = Msg.Skill << Skill.SetSkillIncrease level
         , columns =
-            [ { header = El.none
-              , width = El.shrink
-              , view =
-                  \skill ->
-                    El.el
-                        [ Border.widthEach
-                            { top = 1
-                            , bottom = 1
-                            , left = 1
-                            , right = 0
-                            }
-                        , El.padding 5
-                        , El.height El.fill
-                        , El.pointer
-                        , Background.color <| El.rgb 1 1 1
-                        , onClick skill
+            [ \skill ->
+                El.el
+                    [ El.centerY
+                    ]
+                    <| El.text skill.name
+            , \skill ->
+                El.el
+                    [ El.centerY
+                    , Font.alignRight
+                    , El.width El.fill
+                    ]
+                    <| El.text <| (Fun.formatModifier (proficiencyMod skill + abilityMod skill))
+            , \skill ->
+                El.el
+                    [ El.centerY
+                    ]
+                    <| El.text "="
+            , \skill ->
+                El.el
+                    [ El.centerY
+                    ]
+                    <| renderProficiency (proficiency skill)
+            , \skill ->
+                El.el
+                    [ El.centerY
+                    , Font.center
+                    , El.width El.fill
+                    ]
+                    <| El.column
+                        [ Font.center
+                        , El.width El.fill
                         ]
-                        <| El.el
-                            [ El.centerY
-                            ]
-                            <| El.text skill.name
-              }
-            , { header = El.none
-              , width = El.shrink
-              , view =
-                  \skill ->
-                    El.el
-                        [ Border.widthXY 0 1
-                        , El.padding 5
-                        , El.height El.fill
-                        , El.pointer
-                        , Background.color <| El.rgb 1 1 1
-                        , onClick skill
+                        [ El.el
+                            [ El.width El.fill ]
+                            <| El.text <| Proficiency.toString (proficiency skill)
+                        , El.el
+                            [ El.width El.fill ]
+                            <| El.text <| Fun.formatModifier (proficiencyMod skill)
                         ]
-                        <| El.el
-                            [ El.centerY
-                            , Font.alignRight
-                            , El.width El.fill
-                            ]
-                            <| El.text <| (Fun.formatModifier (proficiencyMod skill + abilityMod skill)) ++ " ="
-              }
-            , { header = El.none
-              , width = El.shrink
-              , view =
-                  \skill ->
-                    El.row
-                        [ Border.widthXY 0 1
-                        , El.padding 5
-                        , El.height El.fill
-                        , El.pointer
-                        , Background.color <| El.rgb 1 1 1
-                        , onClick skill
-                        , El.spacing 5
-                        ]
-                        [ renderProficiency (proficiency skill)
-                        , El.column
-                            [ Font.center
-                            , El.width El.fill
-                            ]
-                            [ El.el
-                                [ El.width El.fill ]
-                                <| El.text <| Proficiency.toString (proficiency skill)
-                            , El.el
-                                [ El.width El.fill ]
-                                <| El.text <| Fun.formatModifier (proficiencyMod skill)
-                            ]
-                        , El.text " +"
-                        ]
-              }
-            , { header = El.none
-              , width = El.shrink
-              , view =
-                  \skill ->
-                    El.el
-                        [ Border.widthEach
-                            { top = 1
-                            , bottom = 1
-                            , left = 0
-                            , right = 1
-                            }
-                        , El.padding 5
-                        , El.height El.fill
-                        , El.pointer
-                        , Background.color <| El.rgb 1 1 1
-                        , onClick skill
-                        ]
-                        <| El.column
-                            [ Font.center
-                            , El.width El.fill
-                            ]
-                            [ El.el
-                                [ El.width El.fill ]
-                                <| El.text <| Ability.toString skill.keyAbility
-                            , El.el
-                                [ El.width El.fill ]
-                                <| El.text <| Fun.formatModifier <| abilityMod skill
-                            ]
-              }
+            , \skill ->
+                El.el
+                    [ El.centerY
+                    ]
+                    <| El.text "+"
+            , \skill ->
+                El.column
+                    [ Font.center
+                    , El.width El.fill
+                    ]
+                    [ El.el
+                        [ El.width El.fill ]
+                        <| El.text <| Ability.toString skill.keyAbility
+                    , El.el
+                        [ El.width El.fill ]
+                        <| El.text <| Fun.formatModifier <| abilityMod skill
+                    ]
+
             ]
         }
 

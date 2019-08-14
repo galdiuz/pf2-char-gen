@@ -3,6 +3,7 @@ module Pathfinder2.Proficiency exposing
     , toString
     , modifier
     , compare
+    , rank
     )
 
 
@@ -53,3 +54,13 @@ compare a b =
         LT
     else
         GT
+
+
+rank : Int -> Proficiency
+rank ranks =
+    case ranks of
+        0 -> Untrained
+        1 -> Trained
+        2 -> Expert
+        3 -> Master
+        _ -> Legendary

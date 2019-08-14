@@ -2,11 +2,13 @@ module App.Update exposing (update)
 
 import App.Msg exposing (Msg(..))
 import App.State exposing (State)
+import Fun
 import Update.Abilities as Abilities
 import Update.Ancestry as Ancestry
 import Update.Background as Background
 import Update.Class as Class
 import Update.Information as Information
+import Update.Skill as Skill
 
 
 update : Msg -> State -> ( State, Cmd msg )
@@ -14,27 +16,27 @@ update msg state =
     case msg of
         NoOp ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         NewUrlRequest _ ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         NewLocation _ ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         SetView view ->
             { state | currentView = view }
-                |> noCmd
+                |> Fun.noCmd
 
         OpenModal view ->
             { state | modals = view :: state.modals }
-                |> noCmd
+                |> Fun.noCmd
 
         CloseModal ->
             { state | modals = List.drop 1 state.modals }
-                |> noCmd
+                |> Fun.noCmd
 
         Abilities action ->
             Abilities.update action state
@@ -51,7 +53,5 @@ update msg state =
         Information action ->
             Information.update action state
 
-
-noCmd : state -> ( state, Cmd msg )
-noCmd state =
-    ( state, Cmd.none )
+        Skill action ->
+            Skill.update action state

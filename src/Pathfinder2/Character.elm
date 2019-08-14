@@ -22,7 +22,7 @@ type alias Character =
     , class : Maybe Data.Class
     , classOptions : ClassOptions
     , abilityBoosts : Dict Int (List Ability)
-    --, skillIncreases : Dict 
+    , skillIncreases : Dict Int Data.Skill
     }
 
 
@@ -61,6 +61,7 @@ emptyCharacter =
     , class = Nothing
     , classOptions = emptyClassOptions
     , abilityBoosts = Dict.empty
+    , skillIncreases = Dict.empty
     }
 
 
@@ -173,8 +174,19 @@ abilities level character =
 
 skills : Int -> Character -> Dict String Skill
 skills level character =
-    -- Dict.empty
-    Dict.fromList [ ("Acrobatics", { name = "Acrobatics", proficiency = Proficiency.Master }) ]
+    character.skillIncreases
+        |> Dict.values
+        |> List.Extra.group
+        |> List.map
+            (\(skill, list) ->
+                ( skill.name,
+                  { name = skill.name
+                  , proficiency = Proficiency.rank <| 1 + List.length list
+                  , keyAbility = skill.keyAbility
+                  }
+                )
+            )
+        |> Dict.fromList
 
 
 skillProficiency : String -> Int -> Character -> Proficiency
@@ -187,4 +199,5 @@ skillProficiency skill level character =
 type alias Skill =
     { name : String
     , proficiency : Proficiency
+    , keyAbility : Ability
     }
