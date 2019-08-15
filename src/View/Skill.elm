@@ -17,7 +17,7 @@ import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 import UI.Button
-import UI.ChooseOneGrid
+import UI.ButtonGrid
 
 
 render : State -> Int -> Element Msg
@@ -32,7 +32,7 @@ render state level =
                 |> Ability.abilityValue skill.keyAbility
                 |> Ability.modifier
     in
-    UI.ChooseOneGrid.render
+    UI.ButtonGrid.renderChooseOne
         { items = Dict.values state.data.skills
         , selected =
             state.character.skillIncreases
@@ -62,22 +62,17 @@ render state level =
                     ]
                     <| renderProficiency (proficiency skill)
             , \skill ->
-                El.el
-                    [ El.centerY
-                    , Font.center
+                El.column
+                    [ Font.center
                     , El.width El.fill
                     ]
-                    <| El.column
-                        [ Font.center
-                        , El.width El.fill
-                        ]
-                        [ El.el
-                            [ El.width El.fill ]
-                            <| El.text <| Proficiency.toString (proficiency skill)
-                        , El.el
-                            [ El.width El.fill ]
-                            <| El.text <| Fun.formatModifier (proficiencyMod skill)
-                        ]
+                    [ El.el
+                        [ El.width El.fill ]
+                        <| El.text <| Proficiency.toString (proficiency skill)
+                    , El.el
+                        [ El.width El.fill ]
+                        <| El.text <| Fun.formatModifier (proficiencyMod skill)
+                    ]
             , \skill ->
                 El.el
                     [ El.centerY
@@ -95,7 +90,6 @@ render state level =
                         [ El.width El.fill ]
                         <| El.text <| Fun.formatModifier <| abilityMod skill
                     ]
-
             ]
         }
 

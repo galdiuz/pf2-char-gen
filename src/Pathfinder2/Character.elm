@@ -149,13 +149,15 @@ abilities level character =
                 |> Ability.fixedAbilityMods
             , Dict.values character.ancestryOptions.abilityBoosts
             , Dict.values character.backgroundOptions.abilityBoosts
-            , Maybe.map .keyAbility character.class
+            , character.class
+                |> Maybe.map .keyAbility
                 |> Maybe.map List.singleton
                 |> Maybe.withDefault []
                 |> Ability.fixedAbilityMods
             , case character.baseAbilities of
                 Ability.Standard ->
-                    Maybe.map List.singleton character.classOptions.keyAbility
+                    character.classOptions.keyAbility
+                        |> Maybe.map List.singleton
                         |> Maybe.withDefault []
                 Ability.Rolled _ ->
                     []
