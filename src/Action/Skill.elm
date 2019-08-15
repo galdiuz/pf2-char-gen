@@ -5,4 +5,4 @@ import Pathfinder2.Data as Data
 
 type Action
     = NoOp
-    | SetSkillIncrease Int Data.Skill
+    | SetSkillIncrease Int (List Data.Skill)

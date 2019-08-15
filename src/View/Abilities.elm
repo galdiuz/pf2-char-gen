@@ -29,7 +29,8 @@ import UI.Text
 render : State -> Element Msg
 render state =
     El.column
-        [ El.spacing 10 ]
+        [ El.spacing 10
+        ]
         [ UI.Text.header1 "Abilities"
         , renderBaseAbilities state
         , renderAncestry state

@@ -15,8 +15,8 @@ update action state =
             state
                 |> Fun.noCmd
 
-        SetSkillIncrease level skill ->
-            skill
+        SetSkillIncrease level skills ->
+            skills
                 |> asSkillIncreaseIn state.character level
                 |> asCharacterIn state
                 |> Fun.noCmd

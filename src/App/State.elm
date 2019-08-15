@@ -18,7 +18,7 @@ emptyState =
     { character = Character.emptyCharacter
     , data = Data.emptyData
     , currentView = View.Build
-    , modals = [ View.Skill 1 ]
+    , modals = [ View.Skill 1 5 ]
     }
 
 

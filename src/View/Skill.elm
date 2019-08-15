@@ -7,6 +7,7 @@ import Element.Background as Background
 import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
+import Maybe.Extra
 
 import Action.Skill as Skill
 import App.Msg as Msg exposing (Msg)
@@ -20,8 +21,36 @@ import UI.Button
 import UI.ButtonGrid
 
 
-render : State -> Int -> Element Msg
-render state level =
+render : State -> Int -> Int -> Element Msg
+render state level picks =
+    if picks == 1 then
+        UI.ButtonGrid.renderChooseOne
+            { items = Dict.values state.data.skills
+            , available = Dict.values state.data.skills
+            , selected =
+                state.character.skillIncreases
+                    |> Dict.get level
+                    |> Maybe.withDefault []
+                    |> List.head
+            , onChange = Msg.Skill << Skill.SetSkillIncrease level << List.singleton
+            , columns = columns state level
+            }
+    else
+        UI.ButtonGrid.renderChooseMany
+            { items = Dict.values state.data.skills
+            , available = Dict.values state.data.skills
+            , selected =
+                state.character.skillIncreases
+                    |> Dict.get level
+                    |> Maybe.withDefault []
+            , onChange = Msg.Skill << Skill.SetSkillIncrease level
+            , columns = columns state level
+            , max = picks
+            }
+
+
+columns : State -> Int -> List (Data.Skill -> Element Msg)
+columns state level =
     let
         proficiency skill =
             Character.skillProficiency skill.name level state.character
@@ -32,66 +61,58 @@ render state level =
                 |> Ability.abilityValue skill.keyAbility
                 |> Ability.modifier
     in
-    UI.ButtonGrid.renderChooseOne
-        { items = Dict.values state.data.skills
-        , selected =
-            state.character.skillIncreases
-                |> Dict.get level
-        , onChange = Msg.Skill << Skill.SetSkillIncrease level
-        , columns =
-            [ \skill ->
-                El.el
-                    [ El.centerY
-                    ]
-                    <| El.text skill.name
-            , \skill ->
-                El.el
-                    [ El.centerY
-                    , Font.alignRight
-                    , El.width El.fill
-                    ]
-                    <| El.text <| (Fun.formatModifier (proficiencyMod skill + abilityMod skill))
-            , \skill ->
-                El.el
-                    [ El.centerY
-                    ]
-                    <| El.text "="
-            , \skill ->
-                El.el
-                    [ El.centerY
-                    ]
-                    <| renderProficiency (proficiency skill)
-            , \skill ->
-                El.column
-                    [ Font.center
-                    , El.width El.fill
-                    ]
-                    [ El.el
-                        [ El.width El.fill ]
-                        <| El.text <| Proficiency.toString (proficiency skill)
-                    , El.el
-                        [ El.width El.fill ]
-                        <| El.text <| Fun.formatModifier (proficiencyMod skill)
-                    ]
-            , \skill ->
-                El.el
-                    [ El.centerY
-                    ]
-                    <| El.text "+"
-            , \skill ->
-                El.column
-                    [ Font.center
-                    , El.width El.fill
-                    ]
-                    [ El.el
-                        [ El.width El.fill ]
-                        <| El.text <| Ability.toString skill.keyAbility
-                    , El.el
-                        [ El.width El.fill ]
-                        <| El.text <| Fun.formatModifier <| abilityMod skill
-                    ]
+    [ \skill ->
+        El.el
+            [ El.centerY
             ]
-        }
+            <| El.text skill.name
+    , \skill ->
+        El.el
+            [ El.centerY
+            , Font.alignRight
+            , El.width <| El.minimum 30 El.fill
+            ]
+            <| El.text <| (Fun.formatModifier (proficiencyMod skill + abilityMod skill))
+    , \skill ->
+        El.el
+            [ El.centerY
+            ]
+            <| El.text "="
+    , \skill ->
+        El.el
+            [ El.centerY
+            ]
+            <| renderProficiency (proficiency skill)
+    , \skill ->
+        El.column
+            [ Font.center
+            , El.width El.fill
+            ]
+            [ El.el
+                [ El.width El.fill ]
+                <| El.text <| Proficiency.toString (proficiency skill)
+            , El.el
+                [ El.width El.fill ]
+                <| El.text <| Fun.formatModifier (proficiencyMod skill)
+            ]
+    , \skill ->
+        El.el
+            [ El.centerY
+            ]
+            <| El.text "+"
+    , \skill ->
+        El.column
+            [ Font.center
+            , El.width El.fill
+            ]
+            [ El.el
+                [ El.width El.fill ]
+                <| El.text <| Ability.toString skill.keyAbility
+            , El.el
+                [ El.width El.fill ]
+                <| El.text <| Fun.formatModifier <| abilityMod skill
+            ]
+    ]
 
 
 renderProficiency : Proficiency -> Element Msg

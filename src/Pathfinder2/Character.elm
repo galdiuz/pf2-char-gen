@@ -22,7 +22,7 @@ type alias Character =
     , class : Maybe Data.Class
     , classOptions : ClassOptions
     , abilityBoosts : Dict Int (List Ability)
-    , skillIncreases : Dict Int Data.Skill
+    , skillIncreases : Dict Int (List Data.Skill)
     }
 
 
@@ -178,6 +178,8 @@ skills : Int -> Character -> Dict String Skill
 skills level character =
     character.skillIncreases
         |> Dict.values
+        |> List.concat
+        |> List.sortBy (.name)
         |> List.Extra.group
         |> List.map
             (\(skill, list) ->

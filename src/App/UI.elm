@@ -108,8 +108,8 @@ renderContent view state =
         View.AbilityBoosts level ->
             Abilities.render2 state level
 
-        View.Skill level ->
-            Skill.render state level
+        View.Skill level picks ->
+            Skill.render state level picks
 
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
@@ -131,27 +131,28 @@ renderModal view remaining state =
         , El.height El.fill
         , El.padding 50
         , Background.color <| El.rgba 0 0 0 0.5
-        , El.scrollbarY
+        , El.inFront
+            <| El.el
+                ( withModals
+                    [ El.padding 10
+                    , Background.color <| El.rgb 0.8 0.8 0.8
+                    , Border.width 1
+                    , Border.rounded 2
+                    , El.centerX
+                    ]
+                    remaining
+                    state
+                )
+                <| El.column
+                    [ El.spacing 20
+                    ]
+                    [ renderContent view state
+                    , El.el
+                        [ El.centerX ]
+                        <| UI.Button.render
+                            { onPress = Just Msg.CloseModal
+                            , label = El.text "Close"
+                            }
+                    ]
         ]
-        <| El.el
-            ( withModals
-                [ El.padding 10
-                , Background.color <| El.rgb 0.8 0.8 0.8
-                , Border.width 1
-                , El.centerX
-                , Border.rounded 2
-                ]
-                remaining
-                state
-            )
-            <| El.column
-                [ El.spacing 20
-                ]
-                [ renderContent view state
-                , El.el
-                    [ El.centerX ]
-                    <| UI.Button.render
-                        { onPress = Just Msg.CloseModal
-                        , label = El.text "Close"
-                        }
-                ]
+        El.none

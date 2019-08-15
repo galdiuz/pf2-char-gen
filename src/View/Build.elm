@@ -89,6 +89,15 @@ renderLevel1 state level =
                         , El.text <| Maybe.withDefault "<Not selected>" <| Nothing
                         ]
                 }
+            , UI.Button.render
+                { onPress = Just <| Msg.OpenModal <| View.Skill 1 4
+                , label =
+                    El.column
+                        []
+                        [ UI.Text.label "Skills"
+                        , El.text <| Maybe.withDefault "<Not selected>" <| Nothing
+                        ]
+                }
             ]
     else
         El.none
@@ -161,7 +170,7 @@ renderSkillIncreases state level =
     in
     if List.member level levels then
         UI.Button.render
-            { onPress = Just <| Msg.OpenModal <| View.Skill level
+            { onPress = Just <| Msg.OpenModal <| View.Skill level 1
             , label =
                 El.column
                     []
