@@ -1,6 +1,7 @@
 module App exposing (init, render, subscriptions)
 
 import Browser exposing (Document)
+import Browser.Events
 import Browser.Navigation
 import Html exposing (Html)
 import Url
@@ -8,7 +9,7 @@ import Url
 import Yaml.Decode
 
 import App.Flags exposing (Flags)
-import App.Msg exposing (Msg)
+import App.Msg as Msg exposing (Msg)
 import App.State as State exposing (State)
 import App.UI as UI
 import Pathfinder2.Data as Data
@@ -23,6 +24,7 @@ init flags url navKey =
                 |> List.map (Json.decode)
                 |> List.foldl (Data.mergeData) Data.emptyData
             )
+        |> State.setWindow flags.window.width flags.window.height
         |> noCmd
 
 
@@ -35,7 +37,9 @@ render state =
 
 subscriptions : State -> Sub Msg
 subscriptions state =
-    Sub.none
+    Sub.batch
+        [ Browser.Events.onResize Msg.OnResize
+        ]
 
 
 renderView : State -> Html Msg

@@ -16,6 +16,7 @@ type Msg
     = NoOp
     | NewUrlRequest Browser.UrlRequest
     | NewLocation Url.Url
+    | OnResize Int Int
     | SetView View.View
     | OpenModal View.View
     | CloseModal

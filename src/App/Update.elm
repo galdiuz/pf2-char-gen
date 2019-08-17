@@ -1,7 +1,7 @@
 module App.Update exposing (update)
 
 import App.Msg exposing (Msg(..))
-import App.State exposing (State)
+import App.State as State exposing (State)
 import Fun
 import Update.Abilities as Abilities
 import Update.Ancestry as Ancestry
@@ -24,6 +24,11 @@ update msg state =
 
         NewLocation _ ->
             state
+                |> Fun.noCmd
+
+        OnResize width height ->
+            state
+                |> State.setWindow width height
                 |> Fun.noCmd
 
         SetView view ->
