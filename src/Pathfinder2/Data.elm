@@ -36,7 +36,7 @@ type alias Heritage =
 type alias Background =
     { name : String
     , abilityBoosts : List Ability.AbilityMod
-    , skillIncreases : List String
+    , skills : List String
     }
 
 
@@ -44,8 +44,10 @@ type alias Class =
     { name : String
     , hitPoints : Int
     , keyAbility : Ability.AbilityMod
-    , skillFeats : List Int
-    , skillIncreases : List Int
+    , skills : List String
+    , skillIncreases : Int
+    , skillFeatLevels : List Int
+    , skillIncreaseLevels : List Int
     }
 
 

@@ -30,12 +30,14 @@ render state =
     El.layout
         ( withModals
             [ Background.color <| El.rgb 0.8 0.8 0.8
+            , El.height <| El.px state.window.height
+            , El.clipY
             ]
-            (List.reverse state.modals)
+            state.modals
             state
         )
         <| El.row
-            [ El.spacing 10
+            [ El.width El.fill
             , El.height El.fill
             ]
             [ renderNavigation state
@@ -86,6 +88,17 @@ renderNavigation state =
 
 renderContent : View -> State -> Element Msg
 renderContent view state =
+    El.el
+        [ El.scrollbarY
+        , El.padding 5
+        , El.width El.fill
+        , El.height <| El.px state.window.height
+        ]
+        <| renderView view state
+
+
+renderView : View -> State -> Element Msg
+renderView view state =
     case view of
         View.Build ->
             Build.render state
@@ -114,45 +127,67 @@ renderContent view state =
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
 withModals attributes views state =
-    case List.Extra.uncons views of
-        Nothing ->
-            attributes
-        Just ( view, remaining ) ->
-            attributes
-            ++
-            [ El.inFront <| renderModal view remaining state
-            ]
-
-
-renderModal : View -> List View -> State -> Element Msg
-renderModal view remaining state =
-    El.el
-        [ El.width El.fill
-        , El.height El.fill
-        , El.padding 50
-        , Background.color <| El.rgba 0 0 0 0.5
-        , El.inFront
+    if List.isEmpty views then
+        attributes
+    else
+        attributes
+        ++
+        [ El.inFront
             <| El.el
-                ( withModals
-                    [ El.padding 10
-                    , Background.color <| El.rgb 0.8 0.8 0.8
-                    , Border.width 1
-                    , Border.rounded 2
-                    , El.centerX
-                    ]
-                    remaining
-                    state
+                ( [ El.width El.fill
+                  , El.height El.fill
+                  , Background.color <| El.rgba 0 0 0 0.5
+                  ]
+                  ++
+                  List.indexedMap
+                    (\idx view ->
+                        El.inFront
+                            <| El.el
+                                [ El.padding 10
+                                , El.width El.fill
+                                , El.height El.fill
+                                ]
+                                <| El.column
+                                    [ El.padding 10
+                                    , El.spacing 10
+                                    , Background.color <| El.rgb 0.8 0.8 0.8
+                                    , Border.width 1
+                                    , Border.rounded 2
+                                    , El.centerX
+                                    , El.centerY
+                                    , El.height
+                                        <| El.maximum (state.window.height - 20)
+                                        <| El.shrink
+                                    , El.inFront
+                                        ( if idx /= List.length views - 1 then
+                                            El.el
+                                                [ El.width El.fill
+                                                , El.height El.fill
+                                                , Background.color <| El.rgba 0 0 0 0.5
+                                                , Border.rounded 1
+                                                ]
+                                                El.none
+                                        else
+                                            El.none
+                                        )
+                                    ]
+                                    [ El.el
+                                        [ El.clip
+                                        , El.height
+                                            <| El.maximum (state.window.height - 82)
+                                            <| El.fill
+                                        ]
+                                        <| renderView view state
+                                    , El.el
+                                        [ El.centerX
+                                        ]
+                                        <| UI.Button.render
+                                            { onPress = Just Msg.CloseModal
+                                            , label = El.text "Close"
+                                            }
+                                    ]
+                    )
+                    (List.reverse views)
                 )
-                <| El.column
-                    [ El.spacing 20
-                    ]
-                    [ renderContent view state
-                    , El.el
-                        [ El.centerX ]
-                        <| UI.Button.render
-                            { onPress = Just Msg.CloseModal
-                            , label = El.text "Close"
-                            }
-                    ]
+                El.none
         ]
-        El.none

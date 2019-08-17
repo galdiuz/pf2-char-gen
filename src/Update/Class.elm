@@ -40,6 +40,7 @@ asClassIn character class =
     { character
         | class = Just class
         , classOptions = Character.emptyClassOptions
+        , skillIncreases = Dict.empty
     }
 
 

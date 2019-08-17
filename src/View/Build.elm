@@ -12,6 +12,7 @@ import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import App.View as View
 import Pathfinder2.Ability as Ability exposing (Ability)
+import Pathfinder2.Character as Character exposing (Character)
 import UI.Button
 import UI.ChooseOne
 import UI.Text
@@ -21,9 +22,7 @@ render : State -> Element Msg
 render state =
     El.column
         [ El.alignTop
-        , El.width El.fill
         , El.spacing 10
-        , El.padding 10
         ]
         <| List.map (renderLevel state) <| List.range 1 20
 
@@ -90,12 +89,22 @@ renderLevel1 state level =
                         ]
                 }
             , UI.Button.render
-                { onPress = Just <| Msg.OpenModal <| View.Skill 1 4
+                { onPress =
+                    Just
+                        <| Msg.OpenModal
+                        <| View.Skill 1
+                        <| Character.level1SkillIncreases state.character
                 , label =
                     El.column
                         []
                         [ UI.Text.label "Skills"
-                        , El.text <| Maybe.withDefault "<Not selected>" <| Nothing
+                        , El.text
+                            <| selections
+                            <| List.map .name
+                                ( state.character.skillIncreases
+                                    |> Dict.get 1
+                                    |> Maybe.withDefault []
+                                )
                         ]
                 }
             ]
@@ -165,7 +174,7 @@ renderSkillIncreases state level =
     let
         levels =
             state.character.class
-                |> Maybe.map .skillIncreases
+                |> Maybe.map .skillIncreaseLevels
                 |> Maybe.withDefault []
     in
     if List.member level levels then
@@ -175,7 +184,14 @@ renderSkillIncreases state level =
                 El.column
                     []
                     [ UI.Text.label "Skill Increase"
-                    , El.text "<Not selected>"
+                    -- , El.text "<Not selected>"
+                    , El.text
+                        <| String.join ", "
+                        <| List.map .name
+                            ( state.character.skillIncreases
+                                |> Dict.get level
+                                |> Maybe.withDefault []
+                            )
                     ]
             }
     else
@@ -186,7 +202,7 @@ renderSkillFeats state level =
     let
         levels =
             state.character.class
-                |> Maybe.map .skillFeats
+                |> Maybe.map .skillFeatLevels
                 |> Maybe.withDefault []
     in
     if List.member level levels then
@@ -226,3 +242,11 @@ box =
     , El.spacing 5
     , El.width El.fill
     ]
+
+
+selections : List String -> String
+selections list =
+    if List.isEmpty list then
+        "<Not selected>"
+    else
+        String.join ", " list

@@ -200,6 +200,25 @@ skillProficiency skill level character =
         |> Maybe.withDefault Proficiency.Untrained
 
 
+level1SkillIncreases : Character -> Int
+level1SkillIncreases character =
+    List.sum
+        [ character.class
+            |> Maybe.map .skillIncreases
+            |> Maybe.withDefault 0
+        , abilities 1 character
+            |> .int
+            |> Ability.modifier
+        , case (character.background, character.class) of
+            (Just background, Just class) ->
+                List.Extra.count
+                    (\s -> List.member s background.skills)
+                    class.skills
+            (_, _) ->
+                0
+        ]
+
+
 type alias Skill =
     { name : String
     , proficiency : Proficiency

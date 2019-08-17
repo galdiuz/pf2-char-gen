@@ -30,6 +30,7 @@ render : State -> Element Msg
 render state =
     El.column
         [ El.spacing 10
+        , El.scrollbarY
         ]
         [ UI.Text.header1 "Abilities"
         , renderBaseAbilities state
