@@ -10,3 +10,4 @@ type Action
     | SetVoluntaryFlaw Bool
     | SetAbilityBoost Int Ability
     | SetAbilityFlaw Int Ability
+    | SetHeritage Data.Heritage

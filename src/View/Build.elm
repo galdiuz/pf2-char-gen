@@ -5,6 +5,7 @@ import Dict
 import Element as El exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
+import Maybe.Extra
 
 import Action.Ancestry as Ancestry
 import Action.Background as Background
@@ -20,7 +21,7 @@ import UI.Text
 
 render : State -> Element Msg
 render state =
-    El.column
+    El.wrappedRow
         [ El.alignTop
         , El.spacing 10
         ]
@@ -76,37 +77,46 @@ renderLevel1 state level =
                 }
             , UI.Button.render
                 { onPress = Just <| Msg.OpenModal View.Abilities
-                , label = El.text <|
-                    "Ability Boosts"
+                , label = UI.Text.label "Ability Boosts"
                 }
-            , UI.Button.render
-                { onPress = Just <| Msg.NoOp
-                , label =
-                    El.column
-                        []
-                        [ UI.Text.label "Heritage"
-                        , El.text <| Maybe.withDefault "<Not selected>" <| Nothing
-                        ]
-                }
-            , UI.Button.render
-                { onPress =
-                    Just
-                        <| Msg.OpenModal
-                        <| View.Skill 1
-                        <| Character.level1SkillIncreases state.character
-                , label =
-                    El.column
-                        []
-                        [ UI.Text.label "Skills"
-                        , El.text
-                            <| selections
-                            <| List.map .name
-                                ( state.character.skillIncreases
-                                    |> Dict.get 1
-                                    |> Maybe.withDefault []
+            , if Maybe.Extra.isJust state.character.ancestry then
+                UI.Button.render
+                    { onPress = Just <| Msg.OpenModal View.Heritage
+                    , label =
+                        El.column
+                            []
+                            [ UI.Text.label "Heritage"
+                            , El.text
+                                ( state.character.ancestryOptions.heritage
+                                    |> Maybe.map .name
+                                    |> Maybe.withDefault "<Not selected>"
                                 )
-                        ]
-                }
+                            ]
+                    }
+              else
+                El.none
+            , if Maybe.Extra.isJust state.character.class then
+                UI.Button.render
+                    { onPress =
+                        Just
+                            <| Msg.OpenModal
+                            <| View.Skill 1
+                            <| Character.level1SkillIncreases state.character
+                    , label =
+                        El.column
+                            []
+                            [ UI.Text.label "Skills"
+                            , El.text
+                                <| selections
+                                <| List.map .name
+                                    ( state.character.skillIncreases
+                                        |> Dict.get 1
+                                        |> Maybe.withDefault []
+                                    )
+                            ]
+                    }
+              else
+                El.none
             ]
     else
         El.none
@@ -141,7 +151,8 @@ renderAbilityBoosts state level =
 
 
 renderAncestryFeats state level =
-    if List.member level [1, 5, 9, 13, 17] then
+    if Maybe.Extra.isJust state.character.ancestry
+      && List.member level [1, 5, 9, 13, 17] then
         UI.Button.render
             { onPress = Nothing
             , label =
@@ -156,7 +167,8 @@ renderAncestryFeats state level =
 
 
 renderClassFeats state level =
-    if List.member level [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20] then
+    if Maybe.Extra.isJust state.character.class
+      && List.member level [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20] then
         UI.Button.render
             { onPress = Nothing
             , label =
@@ -240,7 +252,7 @@ box =
     , Border.rounded 2
     , El.padding 5
     , El.spacing 5
-    , El.width El.fill
+    , El.alignTop
     ]
 
 

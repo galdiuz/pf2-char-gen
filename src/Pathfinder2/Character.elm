@@ -30,7 +30,7 @@ type alias AncestryOptions =
     { abilityBoosts : Dict Int Ability
     , abilityFlaws : Dict Int Ability
     , voluntaryFlaw : Bool
-    , heritage : Maybe String
+    , heritage : Maybe Data.Heritage
     , languages : List String
     }
 
@@ -174,12 +174,23 @@ abilities level character =
         )
 
 
-skillProficiencies : Int -> Character -> Dict String Proficiency
-skillProficiencies level character =
-    character.skillIncreases
+skillProficiencies : Int -> Character -> Dict String Data.Skill -> Dict String Proficiency
+skillProficiencies level character skills =
+    [ character.skillIncreases
         |> Dict.filter
             (\l _ -> level >= l)
         |> Dict.values
+        |> List.concat
+    , character.background
+        |> Maybe.map .skills
+        |> Maybe.withDefault []
+        |> List.filterMap (Data.getSkill skills)
+    , character.class
+        |> Maybe.map .skills
+        |> Maybe.withDefault []
+        |> List.filterMap (Data.getSkill skills)
+    -- TODO: Fix overlaps between background and class
+    ]
         |> List.concat
         |> List.sortBy .name
         |> List.Extra.group
@@ -192,9 +203,9 @@ skillProficiencies level character =
         |> Dict.fromList
 
 
-skillProficiency : String -> Int -> Character -> Proficiency
-skillProficiency skill level character =
-    Dict.get skill (skillProficiencies level character)
+skillProficiency : String -> Int -> Character -> Dict String Data.Skill -> Proficiency
+skillProficiency skill level character skills =
+    Dict.get skill (skillProficiencies level character skills)
         |> Maybe.withDefault Proficiency.Untrained
 
 
@@ -221,7 +232,7 @@ availableSkills : Int -> Character -> Dict String Data.Skill -> Dict String Data
 availableSkills level character skills =
     Dict.filter
         (\_ skill ->
-            skillProficiencies (level - 1) character
+            skillProficiencies (level - 1) character skills
                 |> Dict.get skill.name
                 |> Maybe.withDefault Proficiency.Untrained
                 |> Proficiency.compare (Proficiency.maxProficiency level)

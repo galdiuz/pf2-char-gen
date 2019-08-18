@@ -19,7 +19,6 @@ decoder =
     Field.require "languages" (Decode.list Decode.string) <| \languages ->
     Field.require "traits" (Decode.list Decode.string) <| \traits ->
     Field.require "heritages" (Decode.list heritageDecoder) <| \heritages ->
-    -- Field.require "feats" (Decode.list featDecoder) <| \feats ->
 
     let
         abilityBoosts =
@@ -47,17 +46,14 @@ decoder =
         , languages = languages
         , traits = traits
         , heritages = heritages
-        -- , feats = feats
         }
 
 
 heritageDecoder =
     Field.require "name" Decode.string <| \name ->
-    Field.require "description" Decode.string <| \description ->
 
     Decode.succeed
         { name = name
-        , description = description
         }
 
 

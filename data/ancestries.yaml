@@ -16,16 +16,10 @@ ancestries:
       - "Humanoid"
     heritages:
       - name: "Ancient-Blooded Dwarf"
-        description: ""
       - name: "Death Warden Dwarf"
-        description: ""
-    feats:
-      - name: "Dwarven Lore"
-        level: 1
-        description: "Desc"
-      - name: "Dwarven Weapon Familiarity"
-        level: 1
-        description: "Desc"
+      - name: "Forge Dward"
+      - name: "Rock Dwarf"
+      - name: "Strong-Blooded Dwarf"
 
   - name: "Elf"
     hitPoints: 6
@@ -43,9 +37,78 @@ ancestries:
       - "Elf"
       - "Humanoid"
     heritages:
-        []
-    feats:
-        []
+      - name: "Arctic Elf"
+      - name: "Cavern Elf"
+      - name: "Seer Elf"
+      - name: "Whisper Elf"
+      - name: "Woodland Elf"
+
+  - name: "Gnome"
+    hitPoints: 8
+    size: "Small"
+    speed: 25
+    abilityBoosts:
+      - "Con"
+      - "Cha"
+    abilityFlaws:
+      - "Str"
+    languages:
+      - "Common"
+      - "Gnomish"
+      - "Sylvan"
+    traits:
+      - "Gnome"
+      - "Humanoid"
+    heritages:
+      - name: "Chameleon Gnome"
+      - name: "Fey-Touched Gnome"
+      - name: "Sensate Gnome"
+      - name: "Umbral Gnome"
+      - name: "Wellspring Gnome"
+
+  - name: "Goblin"
+    hitPoints: 6
+    size: "Small"
+    speed: 25
+    abilityBoosts:
+      - "Dex"
+      - "Cha"
+    abilityFlaws:
+      - "Wis"
+    languages:
+      - "Common"
+      - "Goblin"
+    traits:
+      - "Goblin"
+      - "Humanoid"
+    heritages:
+      - name: "Charhide Goblin"
+      - name: "Irongut Goblin"
+      - name: "Razortooth Goblin"
+      - name: "Snow Goblin"
+      - name: "Unbreakable Goblin"
+
+  - name: "Halfling"
+    hitPoints: 6
+    size: "Small"
+    speed: 25
+    abilityBoosts:
+      - "Dex"
+      - "Wis"
+    abilityFlaws:
+      - "Str"
+    languages:
+      - "Common"
+      - "Halfling"
+    traits:
+      - "Halfling"
+      - "Humanoid"
+    heritages:
+      - name: "Gutsy Halfling"
+      - name: "Hillock Halfling"
+      - name: "Nomadic Halfling"
+      - name: "Twilight Halfling"
+      - name: "Wildwood Halfling"
 
   - name: "Human"
     hitPoints: 8
@@ -60,6 +123,7 @@ ancestries:
     traits:
       - "Humanoid"
     heritages:
-        []
-    feats:
-        []
+      - name: "Half-Elf"
+      - name: "Half-Orc"
+      - name: "Skilled Heritage"
+      - name: "Versatile Heritage"

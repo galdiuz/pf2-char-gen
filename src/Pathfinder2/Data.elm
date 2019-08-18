@@ -25,13 +25,11 @@ type alias Ancestry =
     , languages : List String
     , traits : List String
     , heritages : List Heritage
-    -- , feats : List Feat
     }
 
 
 type alias Heritage =
     { name : String
-    , description : String
     }
 
 

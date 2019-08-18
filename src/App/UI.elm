@@ -19,6 +19,7 @@ import View.Background as Background
 import View.Build as Build
 import View.Class as Class
 import View.Information as Information
+import View.Heritage as Heritage
 import View.Skill as Skill
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Character as Character exposing (Character)
@@ -120,6 +121,9 @@ renderView view state =
 
         View.AbilityBoosts level ->
             Abilities.render2 state level
+
+        View.Heritage ->
+            Heritage.render state
 
         View.Skill level picks ->
             Skill.render state level picks

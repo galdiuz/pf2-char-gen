@@ -9,6 +9,7 @@ type View
     | Class
     | Abilities
     | AbilityBoosts Int
+    | Heritage
     | Skill Int Int
     -- | Feats
     -- | Equipment

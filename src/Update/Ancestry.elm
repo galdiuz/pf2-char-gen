@@ -41,6 +41,12 @@ update action state =
                 |> State.asCharacterIn state
                 |> Fun.noCmd
 
+        SetHeritage heritage ->
+            setHeritage state.character.ancestryOptions heritage
+                |> Character.asAncestryOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
+
 
 setVoluntaryFlaw : Character.AncestryOptions -> Bool -> Character.AncestryOptions
 setVoluntaryFlaw options value =
@@ -63,3 +69,8 @@ setAbilityFlaw options index value =
     { options
         | abilityFlaws = Dict.insert index value <| .abilityFlaws options
     }
+
+
+setHeritage : Character.AncestryOptions -> Data.Heritage -> Character.AncestryOptions
+setHeritage options heritage =
+    { options | heritage = Just heritage }

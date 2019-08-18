@@ -82,7 +82,7 @@ columns : State -> Int -> List (Data.Skill -> Element Msg)
 columns state level =
     let
         proficiency skill =
-            Character.skillProficiency skill.name level state.character
+            Character.skillProficiency skill.name level state.character state.data.skills
         proficiencyMod skill =
             Proficiency.modifier (proficiency skill) level
         abilityMod skill =
