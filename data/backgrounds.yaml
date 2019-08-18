@@ -5,7 +5,7 @@ backgrounds:
       - "Wis"
     skills:
       - "Religion"
-      - "Lore - Scribing"
+      - "Scribing Lore"
     feats:
       - "Student of the Canon"
 
@@ -15,7 +15,7 @@ backgrounds:
       - "Dex"
     skills:
       - "Acrobatics"
-      - "Lore - Circus"
+      - "Circus Lore"
     feats:
       - "Steady Balance"
 
@@ -25,24 +25,386 @@ backgrounds:
       - "Cha"
     skills:
       - "Nature"
-      - "Lore"
+      - "[Terrain] Lore"
     feats:
       - "Train Animal"
+
+  - name: "Artisan"
+    abilityBoosts:
+      - "Str"
+      - "Int"
+    skills:
+      - "Crafting"
+      - "Guild Lore"
+    feats:
+      - "Speciality Crafting"
+
+  - name: "Artist"
+    abilityBoosts:
+      - "Dex"
+      - "Cha"
+    skills:
+      - "Crafting"
+      - "Art Lore"
+    feats:
+      - "Speciality Crafting"
+
+  - name: "Barkeep"
+    abilityBoosts:
+      - "Con"
+      - "Cha"
+    skills:
+      - "Diplomacy"
+      - "Alcohol Lore"
+    feats:
+      - "Hobnobber"
+
+  - name: "Barrister"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Diplomacy"
+      - "Legal Lore"
+    feats:
+      - "Group Impression"
+
+  - name: "Bounty Hunter"
+    abilityBoosts:
+      - "Str"
+      - "Wis"
+    skills:
+      - "Survival"
+      - "Legal Lore"
+    feats:
+      - "Experienced Tracker"
+
+  - name: "Charlatan"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Deception"
+      - "Underworld Lore"
+    feats:
+      - "Charming Liar"
+
+  - name: "Criminal"
+    abilityBoosts:
+      - "Dex"
+      - "Int"
+    skills:
+      - "Stealth"
+      - "Underworld Lore"
+    feats:
+      - "Experienced Smuggler"
+
+  - name: "Detenctive"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Society"
+      - "Underworld Lore"
+    feats:
+      - "Streetwise"
+
+  - name: "Emissary"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Society"
+      - "[City] Lore"
+    feats:
+      - "Multilingual"
+
+  - name: "Entertainer"
+    abilityBoosts:
+      - "Dex"
+      - "Cha"
+    skills:
+      - "Performance"
+      - "Theater Lore"
+    feats:
+      - "Fascinating Performance"
+
+  - name: "Farmhand"
+    abilityBoosts:
+      - "Con"
+      - "Wis"
+    skills:
+      - "Athletics"
+      - "Farming Lore"
+    feats:
+      - "Athletics Assurance"
+
+  - name: "Field Medic"
+    abilityBoosts:
+      - "Con"
+      - "Wis"
+    skills:
+      - "Medicine"
+      - "Warfare Lore"
+    feats:
+      - "Battle Medic"
+
+  - name: "Fortune Teller"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Occultism"
+      - "Fortune-Telling Lore"
+    feats:
+      - "Oddity Identification"
+
+  - name: "Gambler"
+    abilityBoosts:
+      - "Dex"
+      - "Cha"
+    skills:
+      - "Deception"
+      - "Games Lore"
+    feats:
+      - "Lie to Me"
+
+  - name: "Gladiator"
+    abilityBoosts:
+      - "Str"
+      - "Cha"
+    skills:
+      - "Performance"
+      - "Gladiatorial Lore"
+    feats:
+      - "Impressive Performance"
+
+  - name: "Guard"
+    abilityBoosts:
+      - "Str"
+      - "Cha"
+    skills:
+      - "Intimidation"
+      - "Legal Lore"
+    feats:
+      - "Quick Coercion"
+
+  - name: "Herbalist"
+    abilityBoosts:
+      - "Con"
+      - "Wis"
+    skills:
+      - "Nature"
+      - "Herbalism Lore"
+    feats:
+      - "Natural Medicine"
+
+  - name: "Hermit (Nature)"
+    abilityBoosts:
+      - "Con"
+      - "Int"
+    skills:
+      - "Nature"
+      - "[Terrain] Lore"
+    feats:
+      - "Dubious Knowledge"
+
+  - name: "Hermit (Occultism)"
+    abilityBoosts:
+      - "Con"
+      - "Int"
+    skills:
+      - "Occultism"
+      - "[Terrain] Lore"
+    feats:
+      - "Dubious Knowledge"
+
+  - name: "Hunter"
+    abilityBoosts:
+      - "Dex"
+      - "Wis"
+    skills:
+      - "Survival"
+      - "Tanning Lore"
+    feats:
+      - "Survey Wildlife"
+
+  - name: "Laborer"
+    abilityBoosts:
+      - "Str"
+      - "Con"
+    skills:
+      - "Athletics"
+      - "Labor Lore"
+    feats:
+      - "Hefty Hauler"
+
   - name: "Martial Disciple (Athletics)"
     abilityBoosts:
       - "Str"
       - "Dex"
     skills:
       - "Athletics"
-      - "Lore - Warfare"
+      - "Warfare Lore"
     feats:
       - "Quick Jump"
+
   - name: "Martial Disciple (Acrobatics)"
     abilityBoosts:
       - "Str"
       - "Dex"
     skills:
       - "Acrobatics"
-      - "Lore - Warfare"
+      - "Warfare Lore"
     feats:
       - "Cat Fall"
+
+  - name: "Merchant"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Diplomancy"
+      - "Mercantile Lore"
+    feats:
+      - "Bargain Hunter"
+
+  - name: "Miner"
+    abilityBoosts:
+      - "Str"
+      - "Wis"
+    skills:
+      - "Survival"
+      - "Mining Lore"
+    feats:
+      - "Underground Terrain Expertise"
+
+  - name: "Noble (Genealogy)"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Society"
+      - "Genealogy Lore"
+    feats:
+      - "Courtly Graces"
+
+  - name: "Noble (Heraldry)"
+    abilityBoosts:
+      - "Int"
+      - "Cha"
+    skills:
+      - "Society"
+      - "Heraldry"
+    feats:
+      - "Courtly Graces"
+
+  - name: "Nomad"
+    abilityBoosts:
+      - "Con"
+      - "Wis"
+    skills:
+      - "Survival"
+      - "[Terrain] Lore"
+    feats:
+      - "Survival Assurance"
+
+  - name: "Prisoner"
+    abilityBoosts:
+      - "Str"
+      - "Con"
+    skills:
+      - "Stealth"
+      - "Underworld Lore"
+    feats:
+      - "Experienced Smuggler"
+
+  - name: "Sailor"
+    abilityBoosts:
+      - "Str"
+      - "Dex"
+    skills:
+      - "Athletics"
+      - "Sailing Lore"
+    feats:
+      - "Underwater Marauder"
+
+  - name: "Scholar (Arcana)"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Arcana"
+      - "Academia Lore"
+    feats:
+      - "Arcana Assurance"
+
+  - name: "Scholar (Nature)"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Nature"
+      - "Academia Lore"
+    feats:
+      - "Nature Assurance"
+
+  - name: "Scholar (Occultism)"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Occultism"
+      - "Academia Lore"
+    feats:
+      - "Occultism Assurance"
+
+  - name: "Scholar (Religion)"
+    abilityBoosts:
+      - "Int"
+      - "Wis"
+    skills:
+      - "Religion"
+      - "Academia Lore"
+    feats:
+      - "Religion Assurance"
+
+  - name: "Scout"
+    abilityBoosts:
+      - "Dex"
+      - "Wis"
+    skills:
+      - "Survival"
+      - "[Terrain] Lore"
+    feats:
+      - "Forager"
+
+  - name: "Street Urchin"
+    abilityBoosts:
+      - "Dex"
+      - "Con"
+    skills:
+      - "Thievery"
+      - "[City] Lore"
+    feats:
+      - "Pickpocket"
+
+  - name: "Tinker"
+    abilityBoosts:
+      - "Dex"
+      - "Int"
+    skills:
+      - "Crafting"
+      - "Engineering Lore"
+    feats:
+      - "Speciality Crafting"
+
+  - name: "Warrior"
+    abilityBoosts:
+      - "Str"
+      - "Con"
+    skills:
+      - "Intimidation"
+      - "Warfare Lore"
+    feats:
+      - "Intimidating Glare"
