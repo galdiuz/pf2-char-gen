@@ -6,8 +6,6 @@ import Browser.Navigation
 import Html exposing (Html)
 import Url
 
-import Yaml.Decode
-
 import App.Flags exposing (Flags)
 import App.Msg as Msg exposing (Msg)
 import App.State as State exposing (State)

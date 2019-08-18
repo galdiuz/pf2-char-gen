@@ -1,7 +1,8 @@
 module Pathfinder2.Data.Decoder.Json.Ancestry exposing (decoder)
 
-import Maybe.Extra
 import Json.Decode as Decode exposing (Decoder)
+
+import Maybe.Extra
 import Json.Decode.Field as Field
 
 import Pathfinder2.Ability as Ability

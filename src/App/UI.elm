@@ -18,8 +18,9 @@ import View.Ancestry as Ancestry
 import View.Background as Background
 import View.Build as Build
 import View.Class as Class
-import View.Information as Information
+import View.Feat as Feat
 import View.Heritage as Heritage
+import View.Information as Information
 import View.Skill as Skill
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Character as Character exposing (Character)
@@ -127,6 +128,9 @@ renderView view state =
 
         View.Skill level picks ->
             Skill.render state level picks
+
+        View.Feat level tags ->
+            Feat.render state level tags
 
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)

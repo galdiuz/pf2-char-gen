@@ -154,7 +154,7 @@ renderAncestryFeats state level =
     if Maybe.Extra.isJust state.character.ancestry
       && List.member level [1, 5, 9, 13, 17] then
         UI.Button.render
-            { onPress = Nothing
+            { onPress = Just <| Msg.OpenModal <| View.Feat level []
             , label =
                 El.column
                     []
@@ -170,7 +170,7 @@ renderClassFeats state level =
     if Maybe.Extra.isJust state.character.class
       && List.member level [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20] then
         UI.Button.render
-            { onPress = Nothing
+            { onPress = Just <| Msg.OpenModal <| View.Feat level []
             , label =
                 El.column
                     []
@@ -219,7 +219,7 @@ renderSkillFeats state level =
     in
     if List.member level levels then
         UI.Button.render
-            { onPress = Nothing
+            { onPress = Just <| Msg.OpenModal <| View.Feat level []
             , label =
                 El.column
                     []
@@ -234,7 +234,7 @@ renderSkillFeats state level =
 renderGeneralFeats state level =
     if List.member level [3, 7, 11, 15, 19] then
         UI.Button.render
-            { onPress = Nothing
+            { onPress = Just <| Msg.OpenModal <| View.Feat level []
             , label =
                 El.column
                     []

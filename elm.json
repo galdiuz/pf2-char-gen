@@ -1,8 +1,7 @@
 {
     "type": "application",
     "source-directories": [
-        "src",
-        "lib"
+        "src"
     ],
     "elm-version": "0.19.0",
     "dependencies": {
@@ -16,7 +15,6 @@
             "elm-community/maybe-extra": "5.0.0",
             "elm-community/string-extra": "4.0.1",
             "mdgriffith/elm-ui": "1.1.5",
-            "terezka/yaml": "1.0.0",
             "webbhuset/elm-json-decode": "1.0.2"
         },
         "indirect": {
