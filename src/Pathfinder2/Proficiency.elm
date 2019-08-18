@@ -4,6 +4,7 @@ module Pathfinder2.Proficiency exposing
     , modifier
     , compare
     , rank
+    , maxProficiency
     )
 
 
@@ -64,3 +65,13 @@ rank ranks =
         2 -> Expert
         3 -> Master
         _ -> Legendary
+
+
+maxProficiency : Int -> Proficiency
+maxProficiency level =
+    if level < 7 then
+        Expert
+    else if level < 15 then
+        Master
+    else
+        Legendary

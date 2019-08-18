@@ -3,7 +3,8 @@ module Update.Background exposing (update)
 import Dict
 
 import Action.Background exposing (Action(..))
-import App.State exposing (State)
+import App.State as State exposing (State)
+import Fun
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Ability exposing (Ability)
 import Pathfinder2.Data as Data
@@ -14,43 +15,19 @@ update action state =
     case action of
         NoOp ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         SetBackground background ->
             background
-                |> asBackgroundIn state.character
-                |> asCharacterIn state
-                |> noCmd
+                |> Character.asBackgroundIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
         SetAbilityBoost index value ->
             setAbilityBoost state.character.backgroundOptions index value
-                |> asOptionsIn state.character
-                |> asCharacterIn state
-                |> noCmd
-
-
-noCmd state =
-    ( state, Cmd.none )
-
-
-asCharacterIn : State -> Character -> State
-asCharacterIn state character =
-    { state | character = character }
-
-
-asBackgroundIn : Character -> Data.Background -> Character
-asBackgroundIn character background =
-    { character
-        | background = Just background
-        , backgroundOptions = Character.emptyBackgroundOptions
-    }
-
-
-asOptionsIn : Character -> Character.BackgroundOptions -> Character
-asOptionsIn character options =
-    { character
-        | backgroundOptions = options
-    }
+                |> Character.asBackgroundOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
 
 setAbilityBoost : Character.BackgroundOptions -> Int -> Ability -> Character.BackgroundOptions

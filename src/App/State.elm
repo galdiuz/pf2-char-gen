@@ -1,4 +1,11 @@
-module App.State exposing (State, emptyState, setData, setWindow)
+module App.State exposing
+    ( State
+    , Inputs
+    , emptyState
+    , asCharacterIn
+    , asDataIn
+    , setWindow
+    )
 
 import App.View as View exposing (View)
 import Pathfinder2.Character as Character exposing (Character)
@@ -14,6 +21,12 @@ type alias State =
         { width : Int
         , height : Int
         }
+    , inputs : Inputs
+    }
+
+
+type alias Inputs =
+    { loreSkill : String
     }
 
 
@@ -28,11 +41,23 @@ emptyState =
         { width = 0
         , height = 0
         }
+    , inputs = emptyInputs
     }
 
 
-setData : Data -> State -> State
-setData data state =
+emptyInputs : Inputs
+emptyInputs =
+    { loreSkill = ""
+    }
+
+
+asCharacterIn : State -> Character -> State
+asCharacterIn state character =
+    { state | character = character }
+
+
+asDataIn : State -> Data -> State
+asDataIn state data =
     { state | data = data }
 
 

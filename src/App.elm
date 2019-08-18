@@ -18,12 +18,11 @@ import Pathfinder2.Data.Decoder.Json as Json
 
 init : Flags -> Url.Url -> Browser.Navigation.Key -> ( State, Cmd Msg )
 init flags url navKey =
-    State.emptyState
-        |> State.setData
-            ( flags.data
-                |> List.map (Json.decode)
-                |> List.foldl (Data.mergeData) Data.emptyData
-            )
+    ( flags.data
+        |> List.map (Json.decode)
+        |> List.foldl (Data.mergeData) Data.emptyData
+    )
+        |> State.asDataIn State.emptyState
         |> State.setWindow flags.window.width flags.window.height
         |> noCmd
 

@@ -6,3 +6,5 @@ import Pathfinder2.Data as Data
 type Action
     = NoOp
     | SetSkillIncrease Int (List Data.Skill)
+    | SetLoreSkillInput String
+    | AddLoreSkill String

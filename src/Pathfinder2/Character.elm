@@ -174,20 +174,19 @@ abilities level character =
         )
 
 
-skills : Int -> Character -> Dict String Skill
-skills level character =
+skillProficiencies : Int -> Character -> Dict String Proficiency
+skillProficiencies level character =
     character.skillIncreases
+        |> Dict.filter
+            (\l _ -> level >= l)
         |> Dict.values
         |> List.concat
-        |> List.sortBy (.name)
+        |> List.sortBy .name
         |> List.Extra.group
         |> List.map
             (\(skill, list) ->
-                ( skill.name,
-                  { name = skill.name
-                  , proficiency = Proficiency.rank <| 1 + List.length list
-                  , keyAbility = skill.keyAbility
-                  }
+                ( skill.name
+                , Proficiency.rank <| 1 + List.length list
                 )
             )
         |> Dict.fromList
@@ -195,8 +194,7 @@ skills level character =
 
 skillProficiency : String -> Int -> Character -> Proficiency
 skillProficiency skill level character =
-    Dict.get skill (skills level character)
-        |> Maybe.map .proficiency
+    Dict.get skill (skillProficiencies level character)
         |> Maybe.withDefault Proficiency.Untrained
 
 
@@ -219,8 +217,70 @@ level1SkillIncreases character =
         ]
 
 
-type alias Skill =
-    { name : String
-    , proficiency : Proficiency
-    , keyAbility : Ability
+availableSkills : Int -> Character -> Dict String Data.Skill -> Dict String Data.Skill
+availableSkills level character skills =
+    Dict.filter
+        (\_ skill ->
+            skillProficiencies (level - 1) character
+                |> Dict.get skill.name
+                |> Maybe.withDefault Proficiency.Untrained
+                |> Proficiency.compare (Proficiency.maxProficiency level)
+                |> (==) GT
+        )
+        skills
+
+
+asAncestryIn : Character -> Data.Ancestry -> Character
+asAncestryIn character ancestry =
+    { character
+        | ancestry = Just ancestry
+        , ancestryOptions = emptyAncestryOptions
+    }
+
+
+asAncestryOptionsIn : Character -> AncestryOptions -> Character
+asAncestryOptionsIn character options =
+    { character
+        | ancestryOptions = options
+    }
+
+
+asBackgroundIn : Character -> Data.Background -> Character
+asBackgroundIn character background =
+    { character
+        | background = Just background
+        , backgroundOptions = emptyBackgroundOptions
+    }
+
+
+asBackgroundOptionsIn : Character -> BackgroundOptions -> Character
+asBackgroundOptionsIn character options =
+    { character
+        | backgroundOptions = options
+    }
+
+
+asClassIn : Character -> Data.Class -> Character
+asClassIn character class =
+    { character
+        | class = Just class
+        , classOptions = emptyClassOptions
+        , skillIncreases = Dict.empty
+    }
+
+
+asClassOptionsIn : Character -> ClassOptions -> Character
+asClassOptionsIn character options =
+    { character
+        | classOptions = options
+    }
+
+
+asBaseAbilitiesIn : Character -> Ability.BaseAbilities -> Character
+asBaseAbilitiesIn character baseAbilities =
+    { character
+        | baseAbilities = baseAbilities
+        , ancestryOptions = emptyAncestryOptions
+        , backgroundOptions = emptyBackgroundOptions
+        , abilityBoosts = Dict.empty
     }

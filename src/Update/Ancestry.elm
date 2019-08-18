@@ -3,7 +3,8 @@ module Update.Ancestry exposing (update)
 import Dict
 
 import Action.Ancestry exposing (Action(..))
-import App.State exposing (State)
+import App.State as State exposing (State)
+import Fun
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Ability exposing (Ability)
 import Pathfinder2.Data as Data
@@ -14,51 +15,31 @@ update action state =
     case action of
         NoOp ->
             state
-                |> noCmd
+                |> Fun.noCmd
 
         SetAncestry ancestry ->
             ancestry
-                |> asAncestryIn state.character
-                |> asCharacterIn state
-                |> noCmd
+                |> Character.asAncestryIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
         SetVoluntaryFlaw value ->
             setVoluntaryFlaw state.character.ancestryOptions value
-                |> asOptionsIn state.character
-                |> asCharacterIn state
-                |> noCmd
+                |> Character.asAncestryOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
         SetAbilityBoost index value ->
             setAbilityBoost state.character.ancestryOptions index value
-                |> asOptionsIn state.character
-                |> asCharacterIn state
-                |> noCmd
+                |> Character.asAncestryOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
         SetAbilityFlaw index value ->
             setAbilityFlaw state.character.ancestryOptions index value
-                |> asOptionsIn state.character
-                |> asCharacterIn state
-                |> noCmd
-
-
-asCharacterIn : State -> Character -> State
-asCharacterIn state character =
-    { state | character = character }
-
-
-asAncestryIn : Character -> Data.Ancestry -> Character
-asAncestryIn character ancestry =
-    { character
-        | ancestry = Just ancestry
-        , ancestryOptions = Character.emptyAncestryOptions
-    }
-
-
-asOptionsIn : Character -> Character.AncestryOptions -> Character
-asOptionsIn character options =
-    { character
-        | ancestryOptions = options
-    }
+                |> Character.asAncestryOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
 
 
 setVoluntaryFlaw : Character.AncestryOptions -> Bool -> Character.AncestryOptions
@@ -82,8 +63,3 @@ setAbilityFlaw options index value =
     { options
         | abilityFlaws = Dict.insert index value <| .abilityFlaws options
     }
-
-
-noCmd : state -> ( state, Cmd msg )
-noCmd state =
-    ( state, Cmd.none )

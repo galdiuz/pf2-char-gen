@@ -27,12 +27,16 @@ render : State -> Int -> Int -> Element Msg
 render state level picks =
     El.column
         [ El.scrollbarY
+        , El.spacing 20
         ]
         [ UI.Text.header2 "Skills"
         , if picks == 1 then
             UI.ButtonGrid.renderChooseOne
-                { items = Dict.values state.data.skills
-                , available = Dict.values state.data.skills
+                { all = List.sortWith Data.compareSkills <| Dict.values <| Data.skills state.data
+                , available =
+                    Data.skills state.data
+                        |> Character.availableSkills level state.character
+                        |> Dict.values
                 , selected =
                     state.character.skillIncreases
                         |> Dict.get level
@@ -43,8 +47,11 @@ render state level picks =
                 }
         else
             UI.ButtonGrid.renderChooseMany
-                { items = Dict.values state.data.skills
-                , available = Dict.values state.data.skills
+                { all = List.sortWith Data.compareSkills <| Dict.values <| Data.skills state.data
+                , available =
+                    Data.skills state.data
+                        |> Character.availableSkills level state.character
+                        |> Dict.values
                 , selected =
                     state.character.skillIncreases
                         |> Dict.get level
@@ -53,18 +60,18 @@ render state level picks =
                 , columns = columns state level
                 , max = picks
                 }
-        , UI.Text.header2 "Lore Skills"
         , El.row
-            []
+            [ El.spacing 5 ]
             [ Input.text
                 []
-                { onChange = \_ -> Msg.NoOp
-                , text = ""
+                { onChange = Msg.Skill << Skill.SetLoreSkillInput
+                , text = state.inputs.loreSkill
                 , placeholder = Nothing
-                , label = Input.labelAbove [] <| El.text "Add lore skill"
+                , label = Input.labelHidden "Add lore skill"
                 }
+            , El.text "Lore"
             , UI.Button.render
-                { onPress = Nothing
+                { onPress = Just <| Msg.Skill <| Skill.AddLoreSkill state.inputs.loreSkill
                 , label = El.text "Add Lore Skill"
                 }
             ]

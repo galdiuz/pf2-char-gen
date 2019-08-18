@@ -2,6 +2,8 @@ module Pathfinder2.Data exposing (..)
 
 import Dict exposing (Dict)
 
+import Maybe.Extra
+
 import Pathfinder2.Ability as Ability exposing (Ability)
 
 
@@ -78,3 +80,67 @@ mergeData a b =
     , classes = Dict.union b.classes a.classes
     , skills = Dict.union b.skills a.skills
     }
+
+
+skills : Data -> Dict String Skill
+skills data =
+    Dict.union
+        data.skills
+        ( data.backgrounds
+            |> Dict.values
+            |> List.map .skills
+            |> List.concat
+            |> List.filterMap ( getSkill data.skills )
+            |> List.map (\s -> (s.name, s))
+            |> Dict.fromList
+        )
+
+
+compareSkills : Skill -> Skill -> Order
+compareSkills a b =
+    case (isLore a, isLore b) of
+        (True, True) ->
+            compare a.name b.name
+        (True, False) ->
+            GT
+        (False, True) ->
+            LT
+        (False, False) ->
+            compare a.name b.name
+
+
+isLore : Skill -> Bool
+isLore skill =
+    String.endsWith "Lore" skill.name
+
+
+loreSkills : Dict String Skill -> Dict String Skill
+loreSkills dict =
+    Dict.filter
+        (\k _ ->
+            String.endsWith "Lore" k
+        )
+        dict
+
+
+nonLoreSkills : Dict String Skill -> Dict String Skill
+nonLoreSkills dict =
+    Dict.filter
+        (\k _ ->
+            not <| String.endsWith "Lore" k
+        )
+        dict
+
+
+getSkill : Dict String Skill -> String -> Maybe Skill
+getSkill dict name =
+    Maybe.Extra.or
+        ( Dict.get name dict )
+        ( if String.endsWith "Lore" name then
+            Just
+                { name = name
+                , keyAbility = Ability.Int
+                }
+          else
+            Nothing
+        )

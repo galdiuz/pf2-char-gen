@@ -112,7 +112,7 @@ renderRolledAbilities abilities =
         ]
 
 
--- pairAbilityInputs : (Ability, Ability) -> a
+-- pairRolledInputs : (Ability, Ability) -> a
 pairRolledInputs abilities (ability1, ability2) =
     { label1 =
         El.el
@@ -248,9 +248,9 @@ renderAncestryMod ancestry character modType index mod =
 validAncestryChoices : List a -> List a -> List a -> List a -> List a -> List a
 validAncestryChoices fixedSame fixedOther selectedSame selectedOther list =
     list
-        |> filterList (filterList fixedOther fixedSame)
-        |> filterList (filterList fixedOther selectedSame)
-        |> filterList selectedOther
+        |> listDifference (listDifference fixedOther fixedSame)
+        |> listDifference (listDifference fixedOther selectedSame)
+        |> listDifference selectedOther
 
 
 fixedAbilities : List Ability.AbilityMod -> List Ability
@@ -324,7 +324,7 @@ renderBackgroundMod background character index mod =
                 { all = list
                 , selected = Dict.get index character.backgroundOptions.abilityBoosts
                 , available =
-                    filterList
+                    listDifference
                         (Dict.values character.backgroundOptions.abilityBoosts)
                         list
                 , onChange = Msg.Background << Background.SetAbilityBoost index
@@ -398,16 +398,6 @@ renderFree state level =
             El.none
 
 
-renderFreeMod character index =
-    UI.ChooseOne.render
-        { all = Ability.list
-        , selected = Nothing
-        , available = Ability.list
-        , onChange = \_ -> Msg.NoOp
-        , toString = Ability.toString
-        }
-
-
 renderTotal : State -> Int -> Element Msg
 renderTotal state level =
     El.column
@@ -460,8 +450,8 @@ pairTotalInputs abilities (ability1, ability2) =
     }
 
 
-filterList : List a -> List a -> List a
-filterList filter list =
+listDifference : List a -> List a -> List a
+listDifference filter list =
     List.filter (\v -> not <| List.member v filter) list
 
 

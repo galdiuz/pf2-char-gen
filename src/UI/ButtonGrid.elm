@@ -9,7 +9,7 @@ import List.Extra
 
 
 type alias ChooseOneConfig a msg =
-    { items : List a
+    { all : List a
     , available : List a
     , columns : List (a -> Element msg)
     , selected : Maybe a
@@ -18,7 +18,7 @@ type alias ChooseOneConfig a msg =
 
 
 type alias ChooseManyConfig a msg =
-    { items : List a
+    { all : List a
     , available : List a
     , columns : List (a -> Element msg)
     , selected : List a
@@ -37,6 +37,7 @@ type Status
     = Selected
     | Selectable
     | Disabled
+    | SelectedDisabled
 
 
 renderChooseOne : ChooseOneConfig a msg -> Element msg
@@ -45,7 +46,7 @@ renderChooseOne config =
         [ El.spacingXY 0 5
         , El.scrollbarY
         ]
-        { data = config.items
+        { data = config.all
         , columns =
             config.columns
                 |> mapPosition
@@ -63,7 +64,10 @@ mapColumnChooseOne config list =
                 \value ->
                     let
                         status =
-                            if config.selected == Just value then
+                            if config.selected == Just value
+                              && (not <| List.member value config.available) then
+                                SelectedDisabled
+                            else if config.selected == Just value then
                                 Selected
                             else if List.member value config.available then
                                 Selectable
@@ -87,7 +91,14 @@ mapColumnChooseOne config list =
                                 , El.height El.fill
                                 ]
                             Disabled ->
-                                [ Background.color <| El.rgb 0.5 0.5 0.5
+                                [ Background.color <| El.rgb 0.8 0.8 0.8
+                                , Border.dashed
+                                , borderWidth position 1
+                                , El.padding 5
+                                , El.height El.fill
+                                ]
+                            SelectedDisabled ->
+                                [ Background.color <| El.rgb 1 0.8 0.8
                                 , Border.dashed
                                 , borderWidth position 1
                                 , El.padding 5
@@ -106,7 +117,7 @@ renderChooseMany config =
         [ El.spacingXY 0 5
         , El.scrollbarY
         ]
-        { data = config.items
+        { data = config.all
         , columns =
             config.columns
                 |> mapPosition
@@ -124,10 +135,13 @@ mapColumnChooseMany config list =
                 \value ->
                     let
                         status =
-                            if List.member value config.selected then
+                            if List.member value config.selected
+                              && (not <| List.member value config.available) then
+                                SelectedDisabled
+                            else if List.member value config.selected then
                                 Selected
                             else if List.member value config.available
-                            && List.length config.selected < config.max then
+                              && List.length config.selected < config.max then
                                 Selectable
                             else
                                 Disabled
@@ -161,51 +175,18 @@ mapColumnChooseMany config list =
                                 , El.padding 5
                                 , El.height El.fill
                                 ]
+                            SelectedDisabled ->
+                                [ Background.color <| El.rgb 1 0.8 0.8
+                                , Border.dashed
+                                , borderWidth position 1
+                                , El.padding 5
+                                , El.height El.fill
+                                ]
                         )
                         <| innerElement value
             }
         )
         list
-
-
-attributes position status deselect =
-    ( case status of
-        Selected ->
-            []
-        Selectable ->
-            [ El.pointer ]
-        Disabled ->
-            []
-    )
-    ++
-    [ El.padding 5
-    , El.height El.fill
-    ]
-    -- [ case position of
-    --     First ->
-    --         Border.widthEach
-    --             { top = 1
-    --             , bottom = 1
-    --             , left = 1
-    --             , right = 0
-    --             }
-    --     Middle ->
-    --         Border.widthXY 0 1
-    --     Last ->
-    --         Border.widthEach
-    --             { top = 1
-    --             , bottom = 1
-    --             , left = 0
-    --             , right = 1
-    --             }
-    -- , El.pointer
-    -- , Background.color <| El.rgb 1 1 1
-    -- , if List.member item config.selected then
-    --     Background.color <| El.rgb 0.8 0.8 1
-    --   else
-    --     El.pointer
-    -- -- , Events.onClick <| config.onChange item
-    -- ]
 
 
 mapPosition : List a -> List (Position, a)

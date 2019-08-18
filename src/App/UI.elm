@@ -134,60 +134,59 @@ withModals attributes views state =
         ++
         [ El.inFront
             <| El.el
-                ( [ El.width El.fill
-                  , El.height El.fill
-                  , Background.color <| El.rgba 0 0 0 0.5
-                  ]
-                  ++
-                  List.indexedMap
-                    (\idx view ->
-                        El.inFront
-                            <| El.el
-                                [ El.padding 10
-                                , El.width El.fill
-                                , El.height El.fill
-                                ]
-                                <| El.column
-                                    [ El.padding 10
-                                    , El.spacing 10
-                                    , Background.color <| El.rgb 0.8 0.8 0.8
-                                    , Border.width 1
-                                    , Border.rounded 2
-                                    , El.centerX
-                                    , El.centerY
-                                    , El.height
-                                        <| El.maximum (state.window.height - 20)
-                                        <| El.shrink
-                                    , El.inFront
-                                        ( if idx /= List.length views - 1 then
-                                            El.el
-                                                [ El.width El.fill
-                                                , El.height El.fill
-                                                , Background.color <| El.rgba 0 0 0 0.5
-                                                , Border.rounded 1
-                                                ]
-                                                El.none
-                                        else
-                                            El.none
-                                        )
-                                    ]
-                                    [ El.el
-                                        [ El.clip
-                                        , El.height
-                                            <| El.maximum (state.window.height - 82)
-                                            <| El.fill
-                                        ]
-                                        <| renderView view state
-                                    , El.el
-                                        [ El.centerX
-                                        ]
-                                        <| UI.Button.render
-                                            { onPress = Just Msg.CloseModal
-                                            , label = El.text "Close"
-                                            }
-                                    ]
-                    )
-                    (List.reverse views)
-                )
+                [ El.width El.fill
+                , El.height El.fill
+                , Background.color <| El.rgba 0 0 0 0.5
+                ]
                 El.none
         ]
+        ++
+        List.indexedMap
+            (\idx view ->
+                El.inFront
+                    <| El.el
+                        [ El.padding 10
+                        , El.width El.fill
+                        , El.height El.fill
+                        ]
+                        <| El.column
+                            [ El.padding 10
+                            , El.spacing 10
+                            , Background.color <| El.rgb 0.8 0.8 0.8
+                            , Border.width 1
+                            , Border.rounded 2
+                            , El.centerX
+                            , El.centerY
+                            , El.height
+                                <| El.maximum (state.window.height - 20)
+                                <| El.shrink
+                            , El.inFront
+                                ( if idx /= List.length views - 1 then
+                                    El.el
+                                        [ El.width El.fill
+                                        , El.height El.fill
+                                        , Background.color <| El.rgba 0 0 0 0.5
+                                        , Border.rounded 1
+                                        ]
+                                        El.none
+                                else
+                                    El.none
+                                )
+                            ]
+                            [ El.el
+                                [ El.clip
+                                , El.height
+                                    <| El.maximum (state.window.height - 82)
+                                    <| El.fill
+                                ]
+                                <| renderView view state
+                            , El.el
+                                [ El.centerX
+                                ]
+                                <| UI.Button.render
+                                    { onPress = Just Msg.CloseModal
+                                    , label = El.text "Close"
+                                    }
+                            ]
+            )
+            (List.reverse views)
