@@ -45,6 +45,8 @@ renderChooseOne config =
     El.table
         [ El.spacingXY 0 5
         , El.scrollbarY
+        , El.width El.fill
+        , El.height El.fill
         ]
         { data = config.all
         , columns =
@@ -116,6 +118,8 @@ renderChooseMany config =
     El.table
         [ El.spacingXY 0 5
         , El.scrollbarY
+        , El.width El.fill
+        , El.height El.fill
         ]
         { data = config.all
         , columns =

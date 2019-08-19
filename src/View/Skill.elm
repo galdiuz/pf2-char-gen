@@ -20,60 +20,76 @@ import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 import UI.Button
 import UI.ButtonGrid
+import UI.Layout
 import UI.Text
 
 
 render : State -> Int -> Int -> Element Msg
 render state level picks =
     El.column
-        [ El.scrollbarY
+        [ El.width El.fill
+        , El.height El.fill
         , El.spacing 20
+        , El.scrollbarY
         ]
-        [ UI.Text.header2 "Skills"
-        , if picks == 1 then
-            UI.ButtonGrid.renderChooseOne
-                { all = List.sortWith Data.compareSkills <| Dict.values <| Data.skills state.data
-                , available =
-                    Data.skills state.data
-                        |> Character.availableSkills level state.character
-                        |> Dict.values
-                , selected =
-                    state.character.skillIncreases
-                        |> Dict.get level
-                        |> Maybe.withDefault []
-                        |> List.head
-                , onChange = Msg.Skill << Skill.SetSkillIncrease level << List.singleton
-                , columns = columns state level
-                }
-        else
-            UI.ButtonGrid.renderChooseMany
-                { all = List.sortWith Data.compareSkills <| Dict.values <| Data.skills state.data
-                , available =
-                    Data.skills state.data
-                        |> Character.availableSkills level state.character
-                        |> Dict.values
-                , selected =
-                    state.character.skillIncreases
-                        |> Dict.get level
-                        |> Maybe.withDefault []
-                , onChange = Msg.Skill << Skill.SetSkillIncrease level
-                , columns = columns state level
-                , max = picks
-                }
-        , El.row
-            [ El.spacing 5 ]
-            [ Input.text
-                []
-                { onChange = Msg.Skill << Skill.SetLoreSkillInput
-                , text = state.inputs.loreSkill
-                , placeholder = Nothing
-                , label = Input.labelHidden "Add lore skill"
-                }
-            , El.text "Lore"
-            , UI.Button.render
-                { onPress = Just <| Msg.Skill <| Skill.AddLoreSkill state.inputs.loreSkill
-                , label = El.text "Add Lore Skill"
-                }
+        [ UI.Layout.box
+            [ UI.Text.header2 "Skills"
+            , El.column
+                [ El.height El.fill
+                , El.scrollbarY
+                ]
+                [ if picks == 1 then
+                    UI.ButtonGrid.renderChooseOne
+                        { all =
+                            Data.skills state.data
+                                |> Dict.values
+                                |> List.sortWith Data.compareSkills
+                        , available =
+                            Data.skills state.data
+                                |> Character.availableSkills level state.character
+                                |> Dict.values
+                        , selected =
+                            state.character.skillIncreases
+                                |> Dict.get level
+                                |> Maybe.withDefault []
+                                |> List.head
+                        , onChange = Msg.Skill << Skill.SetSkillIncrease level << List.singleton
+                        , columns = columns state level
+                        }
+                  else
+                    UI.ButtonGrid.renderChooseMany
+                        { all =
+                            Data.skills state.data
+                                |> Dict.values
+                                |> List.sortWith Data.compareSkills
+                        , available =
+                            Data.skills state.data
+                                |> Character.availableSkills level state.character
+                                |> Dict.values
+                        , selected =
+                            state.character.skillIncreases
+                                |> Dict.get level
+                                |> Maybe.withDefault []
+                        , onChange = Msg.Skill << Skill.SetSkillIncrease level
+                        , columns = columns state level
+                        , max = picks
+                        }
+                ]
+            , El.row
+                [ El.spacing 5 ]
+                [ Input.text
+                    []
+                    { onChange = Msg.Skill << Skill.SetLoreSkillInput
+                    , text = state.inputs.loreSkill
+                    , placeholder = Nothing
+                    , label = Input.labelHidden "Add lore skill"
+                    }
+                , El.text "Lore"
+                , UI.Button.render
+                    { onPress = Just <| Msg.Skill <| Skill.AddLoreSkill state.inputs.loreSkill
+                    , label = El.text "Add Lore Skill"
+                    }
+                ]
             ]
         ]
 

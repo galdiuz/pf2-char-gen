@@ -23,6 +23,7 @@ import Pathfinder2.Data as Data
 import UI.Button
 import UI.ChooseOne
 import UI.ChooseMany
+import UI.Layout
 import UI.Text
 
 
@@ -32,8 +33,7 @@ render state =
         [ El.spacing 10
         , El.scrollbarY
         ]
-        [ UI.Text.header1 "Abilities"
-        , renderBaseAbilities state
+        [ renderBaseAbilities state
         , renderAncestry state
         , renderBackground state
         , renderClass state
@@ -45,7 +45,9 @@ render state =
 render2 : State -> Int -> Element Msg
 render2 state level =
     El.column
-        [ El.spacing 10 ]
+        [ El.spacing 10
+        , El.scrollbarY
+        ]
         [ renderFree state level
         , renderTotal state level
         ]
@@ -53,8 +55,7 @@ render2 state level =
 
 renderBaseAbilities : State -> Element Msg
 renderBaseAbilities state =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header2 "Base Abilities"
         , UI.ChooseOne.render
             { all = [ "Standard", "Rolled" ]
@@ -78,8 +79,7 @@ renderBaseAbilities state =
 
 renderRolledAbilities : Ability.Abilities -> Element Msg
 renderRolledAbilities abilities =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header3 "Rolled Abilities"
         , El.table
             []
@@ -153,8 +153,7 @@ pairRolledInputs abilities (ability1, ability2) =
 
 renderAncestry : State -> Element Msg
 renderAncestry state =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header2 "Ancestry"
         , case state.character.ancestry of
             Nothing ->
@@ -181,8 +180,7 @@ renderAncestry state =
                                 []
                                 <| El.text "Voluntary Flaw"
                         }
-                    , El.column
-                        box
+                    , UI.Layout.box
                         <| List.concat
                             [ [ UI.Text.header3 "Ability Boosts" ]
                             , List.indexedMap (renderAncestryMod ancestry state.character Boost)
@@ -191,8 +189,7 @@ renderAncestry state =
                     , if List.isEmpty (Character.ancestryAbilityFlaws state.character) then
                         El.none
                       else
-                        El.column
-                            box
+                        UI.Layout.box
                             <| List.concat
                                 [ [ UI.Text.header3 "Ability Flaws" ]
                                 , List.indexedMap (renderAncestryMod ancestry state.character Flaw)
@@ -284,8 +281,7 @@ optionField modType invert =
 
 renderBackground : State -> Element Msg
 renderBackground state =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header2 "Background"
         , case state.character.background of
             Nothing ->
@@ -302,8 +298,7 @@ renderBackground state =
                         { onPress = Just <| Msg.OpenModal View.Background
                         , label = El.text background.name
                         }
-                    , El.column
-                        box
+                    , UI.Layout.box
                         ( [ UI.Text.header3 "Ability Boosts" ]
                         ++
                         ( List.indexedMap (renderBackgroundMod background state.character)
@@ -334,8 +329,7 @@ renderBackgroundMod background character index mod =
 
 renderClass : State -> Element Msg
 renderClass state =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header2 "Class"
         , case state.character.class of
             Nothing ->
@@ -352,8 +346,7 @@ renderClass state =
                         { onPress = Just <| Msg.OpenModal View.Class
                         , label = El.text class.name
                         }
-                    , El.column
-                        box
+                    , UI.Layout.box
                         [ UI.Text.header3 "Key Ability"
                         , renderClassMod class state.character
                         ]
@@ -380,8 +373,7 @@ renderFree : State -> Int -> Element Msg
 renderFree state level =
     case state.character.baseAbilities of
         Ability.Standard ->
-            El.column
-                box
+            UI.Layout.box
                 [ UI.Text.header2 "Free Ability Boosts"
                 , UI.ChooseMany.render
                     { all = Ability.list
@@ -400,8 +392,7 @@ renderFree state level =
 
 renderTotal : State -> Int -> Element Msg
 renderTotal state level =
-    El.column
-        box
+    UI.Layout.box
         [ UI.Text.header2 "Total"
         , El.table
             []
@@ -453,13 +444,3 @@ pairTotalInputs abilities (ability1, ability2) =
 listDifference : List a -> List a -> List a
 listDifference filter list =
     List.filter (\v -> not <| List.member v filter) list
-
-
-box =
-    [ Background.color <| El.rgb 0.9 0.9 0.9
-    , Border.width 1
-    , Border.rounded 2
-    , El.padding 5
-    , El.width El.fill
-    , El.spacing 5
-    ]

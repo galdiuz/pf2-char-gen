@@ -20,7 +20,10 @@ type alias Config a msg =
 render : Config a msg -> Element msg
 render config =
     El.wrappedRow
-        [ El.spacing 2 ]
+        [ El.spacing 2
+        , El.height El.fill
+        , El.width El.fill
+        ]
         <| List.map (renderButton config) config.all
 
 

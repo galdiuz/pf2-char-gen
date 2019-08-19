@@ -156,6 +156,7 @@ withModals attributes views state =
                         [ El.padding 10
                         , El.width El.fill
                         , El.height El.fill
+                        , El.scrollbarY
                         ]
                         <| El.column
                             [ El.padding 10
@@ -165,9 +166,7 @@ withModals attributes views state =
                             , Border.rounded 2
                             , El.centerX
                             , El.centerY
-                            , El.height
-                                <| El.maximum (state.window.height - 20)
-                                <| El.shrink
+                            , El.scrollbarY
                             , El.inFront
                                 ( if idx /= List.length views - 1 then
                                     El.el
@@ -182,10 +181,9 @@ withModals attributes views state =
                                 )
                             ]
                             [ El.el
-                                [ El.clip
-                                , El.height
-                                    <| El.maximum (state.window.height - 82)
-                                    <| El.fill
+                                [ El.scrollbarY
+                                , El.height El.fill
+                                , El.width El.fill
                                 ]
                                 <| renderView view state
                             , El.el
