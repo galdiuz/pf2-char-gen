@@ -25,9 +25,3 @@ feats:
     level: 1
     tags:
      - "Monk"
-
-  - name: "Battle Medicine"
-    level: 1
-    tags:
-      - "General"
-      - "Skill"

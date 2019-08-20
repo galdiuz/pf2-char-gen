@@ -1,0 +1,68 @@
+feats:
+  - name: "Additional Lore"
+    level: 1
+    tags:
+      - "General"
+      - "Skill"
+
+  - name: "Adopted Ancestry"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Alchemical Crafting"
+    level: 1
+    tags:
+      - "General"
+      - "Skill"
+    prereqs:
+      - "Trained Crafting"
+
+  - name: "Ancestral Paragon"
+    level: 3
+    tags:
+      - "General"
+
+  - name: "Arcane Sense"
+    level: 1
+    tags:
+      - "General"
+      - "Skill"
+
+  - name: "Armor Proficiency"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Battle Medicine"
+    level: 1
+    tags:
+      - "General"
+      - "Skill"
+
+  - name: "Breath Control"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Canny Acumen"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Diehard"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Feather Step"
+    level: 1
+    tags:
+      - "General"
+    prereqs:
+      - "Dex 14"
+
+  - name: "Fleet"
+    level: 1
+    tags:
+      - "General"

@@ -12,8 +12,8 @@ decoder : Decoder Data.Feat
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "level" Decode.int <| \level ->
-    Field.require "tags" (Decode.list Decode.string) <| \tags
-    Field.attempt "prereqs" (Decode.list Decode.string) <| \prereqs
+    Field.require "tags" (Decode.list Decode.string) <| \tags ->
+    Field.attempt "prereqs" (Decode.list Decode.string) <| \prereqs ->
 
     Decode.succeed
         { name = name

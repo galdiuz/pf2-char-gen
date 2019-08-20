@@ -12,6 +12,7 @@ type alias Data =
     , backgrounds : Dict String Background
     , classes : Dict String Class
     , skills : Dict String Skill
+    , feats : Dict String Feat
     }
 
 
@@ -61,7 +62,7 @@ type alias Feat =
     { name : String
     , level : Int
     , prereqs : List String
-    , tags: List String
+    , tags : List String
     }
 
 
@@ -71,6 +72,7 @@ emptyData =
     , backgrounds = Dict.empty
     , classes = Dict.empty
     , skills = Dict.empty
+    , feats = Dict.empty
     }
 
 
@@ -80,6 +82,7 @@ mergeData a b =
     , backgrounds = Dict.union b.backgrounds a.backgrounds
     , classes = Dict.union b.classes a.classes
     , skills = Dict.union b.skills a.skills
+    , feats = Dict.union b.feats a.feats
     }
 
 
@@ -145,3 +148,12 @@ getSkill dict name =
           else
             Nothing
         )
+
+
+filterFeatTag : String -> Dict String Feat -> Dict String Feat
+filterFeatTag tag feats =
+    Dict.filter
+        (\_ feat ->
+            List.member tag feat.tags
+        )
+        feats

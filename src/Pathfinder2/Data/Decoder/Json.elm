@@ -9,6 +9,7 @@ import Pathfinder2.Data exposing (Data)
 import Pathfinder2.Data.Decoder.Json.Ancestry as Ancestry
 import Pathfinder2.Data.Decoder.Json.Background as Background
 import Pathfinder2.Data.Decoder.Json.Class as Class
+import Pathfinder2.Data.Decoder.Json.Feat as Feat
 import Pathfinder2.Data.Decoder.Json.Skill as Skill
 
 
@@ -22,6 +23,7 @@ decode value =
     , backgrounds = tryDecode "backgrounds" Background.decoder value
     , classes = tryDecode "classes" Class.decoder value
     , skills = tryDecode "skills" Skill.decoder value
+    , feats = tryDecode "feats" Feat.decoder value
     }
 
 

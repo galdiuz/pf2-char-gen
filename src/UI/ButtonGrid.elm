@@ -31,6 +31,7 @@ type Position
     = First
     | Middle
     | Last
+    | Both
 
 
 type Status
@@ -197,7 +198,9 @@ mapPosition : List a -> List (Position, a)
 mapPosition list =
     List.indexedMap
         (\idx item ->
-            if idx == 0 then
+            if List.length list == 1 then
+                (Both, item)
+            else if idx == 0 then
                 (First, item)
             else if idx == (List.length list) - 1 then
                 (Last, item)
@@ -226,3 +229,5 @@ borderWidth position width =
                 , left = 0
                 , right = width
                 }
+        Both ->
+            Border.width width
