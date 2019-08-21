@@ -66,3 +66,43 @@ feats:
     level: 1
     tags:
       - "General"
+
+  - name: "Incredible Initiative"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Ride"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Shield Block"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Toughness"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Weapon Proficiency"
+    level: 1
+    tags:
+      - "General"
+
+  - name: "Untrained Improvisation"
+    level: 3
+    tags:
+      - "General"
+
+  - name: "Expeditious Search"
+    level: 7
+    tags:
+      - "General"
+
+  - name: "Incredible Investiture"
+    level: 11
+    tags:
+      - "General"
