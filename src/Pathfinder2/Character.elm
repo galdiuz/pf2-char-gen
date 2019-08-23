@@ -23,6 +23,7 @@ type alias Character =
     , classOptions : ClassOptions
     , abilityBoosts : Dict Int (List Ability)
     , skillIncreases : Dict Int (List Data.Skill)
+    , feats : Dict String Data.Feat
     }
 
 
@@ -62,6 +63,7 @@ emptyCharacter =
     , classOptions = emptyClassOptions
     , abilityBoosts = Dict.empty
     , skillIncreases = Dict.empty
+    , feats = Dict.empty
     }
 
 
@@ -295,3 +297,8 @@ asBaseAbilitiesIn character baseAbilities =
         , backgroundOptions = emptyBackgroundOptions
         , abilityBoosts = Dict.empty
     }
+
+
+setFeat : String -> Data.Feat -> Character -> Character
+setFeat key feat character =
+    { character | feats = Dict.insert key feat character.feats }

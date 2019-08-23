@@ -1,4 +1,6 @@
-module Fun exposing (formatModifier, noCmd)
+module Fun exposing (formatModifier, noCmd, sortWith)
+
+import List.Extra
 
 
 formatModifier : Int -> String
@@ -12,3 +14,18 @@ formatModifier value =
 noCmd : state -> ( state, Cmd msg )
 noCmd state =
     ( state, Cmd.none )
+
+
+sortWith : (a -> a -> Order) -> List (a -> a -> Order) -> List a -> List a
+sortWith fun rem list =
+    List.sortWith (sortWithRec fun rem) list
+
+
+sortWithRec : (a -> a -> Order) -> List (a -> a -> Order) -> (a -> a -> Order)
+sortWithRec fun rem =
+    \a b ->
+        case (fun a b, List.Extra.uncons rem) of
+            (EQ, Just (x, y)) ->
+                (sortWithRec x y) a b
+            (order, _) ->
+                order

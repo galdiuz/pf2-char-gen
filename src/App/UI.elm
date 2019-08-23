@@ -129,8 +129,8 @@ renderView view state =
         View.Skill level picks ->
             Skill.render state level picks
 
-        View.Feat level tags ->
-            Feat.render state level tags
+        View.Feat level key tags ->
+            Feat.render state level key tags
 
 
 withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)

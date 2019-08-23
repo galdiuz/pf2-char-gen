@@ -9,6 +9,7 @@ import Update.Background as Background
 import Update.Class as Class
 import Update.Information as Information
 import Update.Skill as Skill
+import Update.Feat as Feat
 
 
 update : Msg -> State -> ( State, Cmd msg )
@@ -60,3 +61,6 @@ update msg state =
 
         Skill action ->
             Skill.update action state
+
+        Feat action ->
+            Feat.update action state

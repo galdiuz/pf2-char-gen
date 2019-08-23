@@ -10,6 +10,7 @@ import Action.Background as Background
 import Action.Class as Class
 import Action.Information as Information
 import Action.Skill as Skill
+import Action.Feat as Feat
 
 
 type Msg
@@ -26,6 +27,7 @@ type Msg
     | Class Class.Action
     | Information Information.Action
     | Skill Skill.Action
+    | Feat Feat.Action
 
 
 init =

@@ -1,18 +1,18 @@
 feats:
   - name: "Additional Lore"
     level: 1
-    tags:
+    traits:
       - "General"
       - "Skill"
 
   - name: "Adopted Ancestry"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Alchemical Crafting"
     level: 1
-    tags:
+    traits:
       - "General"
       - "Skill"
     prereqs:
@@ -20,89 +20,89 @@ feats:
 
   - name: "Ancestral Paragon"
     level: 3
-    tags:
+    traits:
       - "General"
 
   - name: "Arcane Sense"
     level: 1
-    tags:
+    traits:
       - "General"
       - "Skill"
 
   - name: "Armor Proficiency"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Battle Medicine"
     level: 1
-    tags:
+    traits:
       - "General"
       - "Skill"
 
   - name: "Breath Control"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Canny Acumen"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Diehard"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Feather Step"
     level: 1
-    tags:
+    traits:
       - "General"
     prereqs:
       - "Dex 14"
 
   - name: "Fleet"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Incredible Initiative"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Ride"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Shield Block"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Toughness"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Weapon Proficiency"
     level: 1
-    tags:
+    traits:
       - "General"
 
   - name: "Untrained Improvisation"
     level: 3
-    tags:
+    traits:
       - "General"
 
   - name: "Expeditious Search"
     level: 7
-    tags:
+    traits:
       - "General"
 
   - name: "Incredible Investiture"
     level: 11
-    tags:
+    traits:
       - "General"

@@ -1,27 +1,22 @@
 feats:
   - name: "Dwarven Lore"
     level: 1
-    tags:
+    traits:
       - "Dwarf"
 
   - name: "Dwarven Weapon Familiarity"
     level: 1
-    tags:
+    traits:
       - "Dwarf"
 
   - name: "Rock Runner"
     level: 1
-    tags:
+    traits:
       - "Dwarf"
 
   - name: "Boulder Roll"
     level: 5
-    tags:
+    traits:
       - "Dwarf"
     prereqs:
       - "Rock Runner"
-
-  - name: "Crane Stance"
-    level: 1
-    tags:
-     - "Monk"

@@ -11,6 +11,6 @@ type View
     | AbilityBoosts Int
     | Heritage
     | Skill Int Int
-    | Feat Int String
+    | Feat Int String String
     -- | Equipment
     -- | Spells

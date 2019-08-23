@@ -43,6 +43,7 @@ renderLevel state level =
         ]
 
 
+renderLevel1 : State -> Int -> Element Msg
 renderLevel1 state level =
     if level == 1 then
         El.column
@@ -122,6 +123,7 @@ renderLevel1 state level =
         El.none
 
 
+renderAbilityBoosts : State -> Int -> Element Msg
 renderAbilityBoosts state level =
     if List.member level [5, 10, 15, 20] then
         UI.Button.render
@@ -150,11 +152,12 @@ renderAbilityBoosts state level =
         El.none
 
 
+renderAncestryFeats : State -> Int -> Element Msg
 renderAncestryFeats state level =
     if Maybe.Extra.isJust state.character.ancestry
       && List.member level [1, 5, 9, 13, 17] then
         UI.Button.render
-            { onPress = Just <| Msg.OpenModal <| View.Feat level ""
+            { onPress = Just <| Msg.OpenModal <| View.Feat level "" "Ancestry"
             , label =
                 El.column
                     []
@@ -166,11 +169,15 @@ renderAncestryFeats state level =
         El.none
 
 
+renderClassFeats : State -> Int -> Element Msg
 renderClassFeats state level =
     if Maybe.Extra.isJust state.character.class
       && List.member level [1, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20] then
         UI.Button.render
-            { onPress = Just <| Msg.OpenModal <| View.Feat level ""
+            { onPress = Just <| Msg.OpenModal <| View.Feat
+                level
+                (String.fromInt level ++ "-class")
+                (Maybe.withDefault "" <| Maybe.map .name state.character.class)
             , label =
                 El.column
                     []
@@ -182,6 +189,7 @@ renderClassFeats state level =
         El.none
 
 
+renderSkillIncreases : State -> Int -> Element Msg
 renderSkillIncreases state level =
     let
         levels =
@@ -210,6 +218,7 @@ renderSkillIncreases state level =
         El.none
 
 
+renderSkillFeats : State -> Int -> Element Msg
 renderSkillFeats state level =
     let
         levels =
@@ -219,7 +228,7 @@ renderSkillFeats state level =
     in
     if List.member level levels then
         UI.Button.render
-            { onPress = Just <| Msg.OpenModal <| View.Feat level "Skill"
+            { onPress = Just <| Msg.OpenModal <| View.Feat level (String.fromInt level ++ "-skill") "Skill"
             , label =
                 El.column
                     []
@@ -231,10 +240,11 @@ renderSkillFeats state level =
         El.none
 
 
+renderGeneralFeats : State -> Int -> Element Msg
 renderGeneralFeats state level =
     if List.member level [3, 7, 11, 15, 19] then
         UI.Button.render
-            { onPress = Just <| Msg.OpenModal <| View.Feat level "General"
+            { onPress = Just <| Msg.OpenModal <| View.Feat level (String.fromInt level ++ "-general") "General"
             , label =
                 El.column
                     []

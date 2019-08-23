@@ -62,7 +62,7 @@ type alias Feat =
     { name : String
     , level : Int
     , prereqs : List String
-    , tags : List String
+    , traits : List String
     }
 
 
@@ -150,10 +150,20 @@ getSkill dict name =
         )
 
 
-filterFeatTag : String -> Dict String Feat -> Dict String Feat
-filterFeatTag tag feats =
+filterFeatsByTrait : String -> Dict String Feat -> Dict String Feat
+filterFeatsByTrait trait feats =
     Dict.filter
         (\_ feat ->
-            List.member tag feat.tags
+            List.member trait feat.traits
         )
         feats
+
+
+compareFeatsByName : Feat -> Feat -> Order
+compareFeatsByName a b =
+    compare a.name b.name
+
+
+compareFeatsByLevel : Feat -> Feat -> Order
+compareFeatsByLevel a b =
+    compare a.level b.level
