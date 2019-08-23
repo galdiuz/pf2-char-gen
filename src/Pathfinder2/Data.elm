@@ -157,13 +157,3 @@ filterFeatsByTrait trait feats =
             List.member trait feat.traits
         )
         feats
-
-
-compareFeatsByName : Feat -> Feat -> Order
-compareFeatsByName a b =
-    compare a.name b.name
-
-
-compareFeatsByLevel : Feat -> Feat -> Order
-compareFeatsByLevel a b =
-    compare a.level b.level

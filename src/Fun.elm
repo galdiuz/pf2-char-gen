@@ -1,4 +1,4 @@
-module Fun exposing (formatModifier, noCmd, sortWith)
+module Fun exposing (formatModifier, noCmd, sortWith, compare)
 
 import List.Extra
 
@@ -29,3 +29,9 @@ sortWithRec fun rem =
                 (sortWithRec x y) a b
             (order, _) ->
                 order
+
+
+compare : (a -> comparable) -> (a -> a -> Order)
+compare fun =
+    \a b ->
+        Basics.compare (fun a) (fun b)

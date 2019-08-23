@@ -47,7 +47,7 @@ renderList state key trait =
             state.data.feats
                 |> Data.filterFeatsByTrait trait
                 |> Dict.values
-                |> Fun.sortWith Data.compareFeatsByLevel [ Data.compareFeatsByName ]
+                |> Fun.sortWith (Fun.compare .level) [ Fun.compare .name ]
         , available =
             state.data.feats
                 |> Data.filterFeatsByTrait trait
