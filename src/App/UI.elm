@@ -22,6 +22,7 @@ import View.Feat as Feat
 import View.Heritage as Heritage
 import View.Information as Information
 import View.Skill as Skill
+import View.Subclass as Subclass
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Character as Character exposing (Character)
 import UI.Button
@@ -45,6 +46,71 @@ render state =
             [ renderNavigation state
             , renderContent state.currentView state
             ]
+
+
+withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
+withModals attributes views state =
+    if List.isEmpty views then
+        attributes
+    else
+        attributes
+        ++
+        [ El.inFront
+            <| El.el
+                [ El.width El.fill
+                , El.height El.fill
+                , Background.color <| El.rgba 0 0 0 0.5
+                ]
+                El.none
+        ]
+        ++
+        List.indexedMap
+            (\idx view ->
+                El.inFront
+                    <| El.el
+                        [ El.padding 10
+                        , El.width El.fill
+                        , El.height El.fill
+                        , El.scrollbarY
+                        ]
+                        <| El.column
+                            [ El.padding 10
+                            , El.spacing 10
+                            , Background.color <| El.rgb 0.8 0.8 0.8
+                            , Border.width 1
+                            , Border.rounded 2
+                            , El.centerX
+                            , El.centerY
+                            , El.scrollbarY
+                            , El.inFront
+                                ( if idx /= List.length views - 1 then
+                                    El.el
+                                        [ El.width El.fill
+                                        , El.height El.fill
+                                        , Background.color <| El.rgba 0 0 0 0.5
+                                        , Border.rounded 1
+                                        ]
+                                        El.none
+                                else
+                                    El.none
+                                )
+                            ]
+                            [ El.el
+                                [ El.scrollbarY
+                                , El.height El.fill
+                                , El.width El.fill
+                                ]
+                                <| renderView view state
+                            , El.el
+                                [ El.centerX
+                                ]
+                                <| UI.Button.render
+                                    { onPress = Just Msg.CloseModal
+                                    , label = El.text "Close"
+                                    }
+                            ]
+            )
+            (List.reverse views)
 
 
 renderNavigation : State -> Element Msg
@@ -117,6 +183,9 @@ renderView view state =
         View.Class ->
             Class.render state
 
+        View.Subclass subclass ->
+            Subclass.render state subclass
+
         View.Abilities ->
             Abilities.render state
 
@@ -131,68 +200,3 @@ renderView view state =
 
         View.Feat level key tags ->
             Feat.render state level key tags
-
-
-withModals : List (El.Attribute Msg) -> List View -> State -> List (El.Attribute Msg)
-withModals attributes views state =
-    if List.isEmpty views then
-        attributes
-    else
-        attributes
-        ++
-        [ El.inFront
-            <| El.el
-                [ El.width El.fill
-                , El.height El.fill
-                , Background.color <| El.rgba 0 0 0 0.5
-                ]
-                El.none
-        ]
-        ++
-        List.indexedMap
-            (\idx view ->
-                El.inFront
-                    <| El.el
-                        [ El.padding 10
-                        , El.width El.fill
-                        , El.height El.fill
-                        , El.scrollbarY
-                        ]
-                        <| El.column
-                            [ El.padding 10
-                            , El.spacing 10
-                            , Background.color <| El.rgb 0.8 0.8 0.8
-                            , Border.width 1
-                            , Border.rounded 2
-                            , El.centerX
-                            , El.centerY
-                            , El.scrollbarY
-                            , El.inFront
-                                ( if idx /= List.length views - 1 then
-                                    El.el
-                                        [ El.width El.fill
-                                        , El.height El.fill
-                                        , Background.color <| El.rgba 0 0 0 0.5
-                                        , Border.rounded 1
-                                        ]
-                                        El.none
-                                else
-                                    El.none
-                                )
-                            ]
-                            [ El.el
-                                [ El.scrollbarY
-                                , El.height El.fill
-                                , El.width El.fill
-                                ]
-                                <| renderView view state
-                            , El.el
-                                [ El.centerX
-                                ]
-                                <| UI.Button.render
-                                    { onPress = Just Msg.CloseModal
-                                    , label = El.text "Close"
-                                    }
-                            ]
-            )
-            (List.reverse views)

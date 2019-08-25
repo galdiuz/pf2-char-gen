@@ -10,6 +10,12 @@ classes:
     skillIncreases: 3
     proficiencies:
         []
+    subclass:
+        name: "Research Field"
+        options:
+          - "Bomber"
+          - "Chirurgeon"
+          - "Mutagenist"
     feats:
         []
     skillFeatLevels: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
@@ -26,10 +32,42 @@ classes:
     skillIncreases: 3
     proficiencies:
         []
+    subclass:
+        name: "Instict"
+        options:
+          - "Animal Instict"
+          - "Dragon Instict"
+          - "Fury Instict"
+          - "Giant Instict"
+          - "Spirit Instict"
     feats:
         []
     skillFeatLevels: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
     skillIncreaseLevels: [3, 5, 7, 9, 11, 13, 15, 17, 19]
+
+  - name: "Bard"
+    hitPoints: 10
+    keyAbility:
+      - "Cha"
+    savingThrows:
+        []
+    skills:
+      - "Occultism"
+      - "Performance"
+    skillIncreases: 4
+    proficiencies:
+        []
+    subclass:
+        name: "Muse"
+        options:
+          - "Enigma"
+          - "Maestro"
+          - "Polymath"
+    feats:
+        []
+    skillFeatLevels: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+    skillIncreaseLevels: [3, 5, 7, 9, 11, 13, 15, 17, 19]
+
 
   - name: "Monk"
     hitPoints: 10
@@ -58,6 +96,12 @@ classes:
     skillIncreases: 7
     proficiencies:
         []
+    subclass:
+        name: "Rogue's Racket"
+        options:
+          - "Ruffian"
+          - "Scoundrel"
+          - "Thief"
     feats:
         []
     skillFeatLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]

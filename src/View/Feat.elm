@@ -35,19 +35,20 @@ render state level key trait =
             , El.scrollbarY
             ]
             <| UI.Layout.scrollBox
-                [ renderList state key trait
+                [ renderList state level key trait
                 ]
         ]
 
 
-renderList : State -> String -> String -> Element Msg
-renderList state key trait =
+renderList : State -> Int -> String -> String -> Element Msg
+renderList state level key trait =
     UI.ButtonGrid.renderChooseOne
         { all =
             state.data.feats
                 |> Data.filterFeatsByTrait trait
+                |> Data.filterFeatsByLevel level
                 |> Dict.values
-                |> Fun.sortWith (Fun.compare .level) [ Fun.compare .name ]
+                |> Fun.sortWith [ Fun.compare .level, Fun.compare .name ]
         , available =
             state.data.feats
                 |> Data.filterFeatsByTrait trait

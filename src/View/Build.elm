@@ -96,6 +96,23 @@ renderLevel1 state level =
                     }
               else
                 El.none
+            , case Maybe.map .subclass state.character.class of
+                Just (Just subclass) ->
+                    UI.Button.render
+                        { onPress =
+                            Just <| Msg.OpenModal <| View.Subclass subclass
+                        , label =
+                            El.column
+                                []
+                                [ UI.Text.label subclass.name
+                                , El.text
+                                    ( state.character.classOptions.subclass
+                                        |> Maybe.withDefault "<Not selected>"
+                                    )
+                                ]
+                        }
+                _ ->
+                    El.none
             , if Maybe.Extra.isJust state.character.class then
                 UI.Button.render
                     { onPress =

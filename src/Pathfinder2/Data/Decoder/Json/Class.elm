@@ -16,6 +16,7 @@ decoder =
     Field.require "keyAbility" (Decode.list Decode.string) <| \boosts ->
     Field.require "skills" (Decode.list Decode.string) <| \skills ->
     Field.require "skillIncreases" Decode.int <| \skillIncreases ->
+    Field.attempt "subclass" decodeSubclass <| \subclass ->
     Field.require "skillFeatLevels" (Decode.list Decode.int) <| \skillFeatLevels ->
     Field.require "skillIncreaseLevels" (Decode.list Decode.int) <| \skillIncreaseLevels ->
 
@@ -39,6 +40,18 @@ decoder =
                     Ability.Choice <| List.filterMap identity abilities
         , skills = skills
         , skillIncreases = skillIncreases
+        , subclass = subclass
         , skillFeatLevels = skillFeatLevels
         , skillIncreaseLevels = skillIncreaseLevels
+        }
+
+
+decodeSubclass : Decoder Data.Subclass
+decodeSubclass =
+    Field.require "name" Decode.string <| \name ->
+    Field.require "options" (Decode.list Decode.string) <| \options ->
+
+    Decode.succeed
+        { name = name
+        , options = options
         }

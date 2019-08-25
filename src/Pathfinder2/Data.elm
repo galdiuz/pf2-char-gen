@@ -47,8 +47,15 @@ type alias Class =
     , keyAbility : Ability.AbilityMod
     , skills : List String
     , skillIncreases : Int
+    , subclass : Maybe Subclass
     , skillFeatLevels : List Int
     , skillIncreaseLevels : List Int
+    }
+
+
+type alias Subclass =
+    { name : String
+    , options : List String
     }
 
 
@@ -155,5 +162,14 @@ filterFeatsByTrait trait feats =
     Dict.filter
         (\_ feat ->
             List.member trait feat.traits
+        )
+        feats
+
+
+filterFeatsByLevel : Int -> Dict String Feat -> Dict String Feat
+filterFeatsByLevel level feats =
+    Dict.filter
+        (\_ feat ->
+            feat.level <= level
         )
         feats

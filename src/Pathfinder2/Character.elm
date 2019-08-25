@@ -43,6 +43,7 @@ type alias BackgroundOptions =
 
 type alias ClassOptions =
     { keyAbility : Maybe Ability
+    , subclass : Maybe String
     }
 
 
@@ -86,6 +87,7 @@ emptyBackgroundOptions =
 emptyClassOptions : ClassOptions
 emptyClassOptions =
     { keyAbility = Nothing
+    , subclass = Nothing
     }
 
 

@@ -1,5 +1,7 @@
 module App.View exposing (View(..))
 
+import Pathfinder2.Data as Data
+
 
 type View
     = Build
@@ -7,6 +9,7 @@ type View
     | Ancestry
     | Background
     | Class
+    | Subclass Data.Subclass
     | Abilities
     | AbilityBoosts Int
     | Heritage

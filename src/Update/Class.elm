@@ -23,6 +23,13 @@ update action state =
                 |> State.asCharacterIn state
                 |> Fun.noCmd
 
+        SetSubclass subclass ->
+            subclass
+                |> asSubclassIn state.character.classOptions
+                |> Character.asClassOptionsIn state.character
+                |> State.asCharacterIn state
+                |> Fun.noCmd
+
         SetKeyAbility ability ->
             ability
                 |> asKeyAbilityIn state.character.classOptions
@@ -35,4 +42,11 @@ asKeyAbilityIn : Character.ClassOptions -> Ability -> Character.ClassOptions
 asKeyAbilityIn options ability =
     { options
         | keyAbility = Just ability
+    }
+
+
+asSubclassIn : Character.ClassOptions -> String -> Character.ClassOptions
+asSubclassIn options subclass =
+    { options
+        | subclass = Just subclass
     }
