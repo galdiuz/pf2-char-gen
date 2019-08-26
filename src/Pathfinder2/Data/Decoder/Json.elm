@@ -30,7 +30,7 @@ decode value =
 tryDecode : String -> Decoder (NamedRecord r) -> Decode.Value -> Dict String (NamedRecord r)
 tryDecode field decoder value =
     Decode.decodeValue (Decode.field field (Decode.list decoder)) value
-        |> Debug.log "decode"
+        -- |> Debug.log "decode"
         |> Result.withDefault []
         |> List.map (\v -> (v.name, v))
         |> Dict.fromList

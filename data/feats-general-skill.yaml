@@ -34,6 +34,22 @@ feats:
     traits:
       - "General"
 
+  - name: "Automatic Knowledge"
+    level: 2
+    traits:
+      - "General"
+      - "Skill"
+    prereqs:
+      - type: "or"
+        conditions:
+          - type: "and"
+            conditions:
+              - type: "skill"
+                name: "Arcana"
+                rank: "Trained"
+              - type: "feat"
+                name: "Assurance"
+
   - name: "Battle Medicine"
     level: 1
     traits:
@@ -49,6 +65,18 @@ feats:
     level: 1
     traits:
       - "General"
+
+  - name: "Connections"
+    level: 2
+    traits:
+      - "General"
+      - "Skill"
+    prereqs:
+      - type: "skill"
+        name: "Society"
+        rank: "Expert"
+      - type: "feat"
+        name: "Courtly Graces"
 
   - name: "Diehard"
     level: 1

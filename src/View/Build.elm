@@ -250,7 +250,12 @@ renderSkillFeats state level =
                 El.column
                     []
                     [ UI.Text.label "Skill Feat"
-                    , El.text "<Not selected>"
+                    , El.text
+                        ( state.character.feats
+                            |> Dict.get (String.fromInt level ++ "-skill")
+                            |> Maybe.map .name
+                            |> Maybe.withDefault "<Not selected>"
+                        )
                     ]
             }
     else
@@ -266,7 +271,12 @@ renderGeneralFeats state level =
                 El.column
                     []
                     [ UI.Text.label "General Feat"
-                    , El.text "<Not selected>"
+                    , El.text
+                        ( state.character.feats
+                            |> Dict.get (String.fromInt level ++ "-general")
+                            |> Maybe.map .name
+                            |> Maybe.withDefault "<Not selected>"
+                        )
                     ]
             }
     else
