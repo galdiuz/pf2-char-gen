@@ -19,4 +19,5 @@ feats:
     traits:
       - "Dwarf"
     prereqs:
-      - "Rock Runner"
+      - feat:
+            name: "Rock Runner"

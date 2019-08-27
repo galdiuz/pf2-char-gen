@@ -2,73 +2,75 @@ feats:
   - name: "Crane Stance"
     level: 1
     traits:
-     - "Monk"
-     - "Stance"
+      - "Monk"
+      - "Stance"
 
   - name: "Dragon Stance"
     level: 1
     traits:
-     - "Monk"
-     - "Stance"
+      - "Monk"
+      - "Stance"
 
   - name: "Ki Rush"
     level: 1
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Ki Strike"
     level: 1
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Monastic Weaponry"
     level: 1
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Mountain Stance"
     level: 1
     traits:
-     - "Monk"
-     - "Stance"
+      - "Monk"
+      - "Stance"
 
   - name: "Tiger Stance"
     level: 1
     traits:
-     - "Monk"
-     - "Stance"
+      - "Monk"
+      - "Stance"
 
   - name: "Wolf Stance"
     level: 1
     traits:
-     - "Monk"
-     - "Stance"
+      - "Monk"
+      - "Stance"
 
   - name: "Brawling Focus"
     level: 2
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Crushing Grab"
     level: 2
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Dancing Leaf"
     level: 2
     traits:
-     - "Monk"
+      - "Monk"
 
   - name: "Elemental Fist"
     level: 2
     traits:
-     - "Monk"
+      - "Monk"
     prereqs:
-     - "Ki Strike"
+      - feat:
+            name: "Ki Strike"
 
   - name: "Stunning Fist"
     level: 2
     traits:
-     - "Monk"
+      - "Monk"
     prereqs:
-     - "Flurry of Blows"
+      - feat:
+            name: "Flurry of Blows"

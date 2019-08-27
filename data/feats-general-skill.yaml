@@ -16,7 +16,8 @@ feats:
       - "General"
       - "Skill"
     prereqs:
-      - "Trained Crafting"
+      - feat:
+            name: "Trained Crafting"
 
   - name: "Ancestral Paragon"
     level: 3
@@ -40,15 +41,19 @@ feats:
       - "General"
       - "Skill"
     prereqs:
-      - type: "or"
-        conditions:
-          - type: "and"
-            conditions:
-              - type: "skill"
-                name: "Arcana"
-                rank: "Trained"
-              - type: "feat"
-                name: "Assurance"
+      - or:
+          - and:
+              - skill:
+                    name: "Arcana"
+                    rank: "Trained"
+              - feat:
+                    name: "Assurance"
+          - and:
+              - skill:
+                    name: "Occultism"
+                    rank: "Trained"
+              - feat:
+                    name: "Assurance"
 
   - name: "Battle Medicine"
     level: 1
@@ -72,11 +77,11 @@ feats:
       - "General"
       - "Skill"
     prereqs:
-      - type: "skill"
-        name: "Society"
-        rank: "Expert"
-      - type: "feat"
-        name: "Courtly Graces"
+      - skill:
+            name: "Society"
+            rank: "Expert"
+      - feat:
+            name: "Courtly Graces"
 
   - name: "Diehard"
     level: 1
@@ -88,7 +93,9 @@ feats:
     traits:
       - "General"
     prereqs:
-      - "Dex 14"
+      - ability:
+          name: "Dex"
+          value: 14
 
   - name: "Fleet"
     level: 1

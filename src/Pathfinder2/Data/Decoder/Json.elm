@@ -5,7 +5,8 @@ import Json.Decode as Decode exposing (Decoder)
 
 import Json.Decode.Field as Field
 
-import Pathfinder2.Data exposing (Data)
+import Fun
+import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Data.Decoder.Json.Ancestry as Ancestry
 import Pathfinder2.Data.Decoder.Json.Background as Background
 import Pathfinder2.Data.Decoder.Json.Class as Class
@@ -19,18 +20,38 @@ type alias NamedRecord r =
 
 decode : Decode.Value -> Data
 decode value =
-    { ancestries = tryDecode "ancestries" Ancestry.decoder value
-    , backgrounds = tryDecode "backgrounds" Background.decoder value
-    , classes = tryDecode "classes" Class.decoder value
-    , skills = tryDecode "skills" Skill.decoder value
-    , feats = tryDecode "feats" Feat.decoder value
-    }
+    Decode.decodeValue decoder value
+        |> (\result ->
+            case result of
+                Ok _ ->
+                    result
+                Err error ->
+                    Debug.log "decode error" (Decode.errorToString error)
+                        |> always result
+        )
+        |> Result.withDefault Data.emptyData
 
 
-tryDecode : String -> Decoder (NamedRecord r) -> Decode.Value -> Dict String (NamedRecord r)
-tryDecode field decoder value =
-    Decode.decodeValue (Decode.field field (Decode.list decoder)) value
-        -- |> Debug.log "decode"
-        |> Result.withDefault []
+decoder : Decoder Data
+decoder =
+    Fun.ifExists "ancestries" (Decode.list Ancestry.decoder) <| \ancestries ->
+    Fun.ifExists "backgrounds" (Decode.list Background.decoder) <| \backgrounds ->
+    Fun.ifExists "classes" (Decode.list Class.decoder) <| \classes ->
+    Fun.ifExists "feats" (Decode.list Feat.decoder) <| \feats ->
+    Fun.ifExists "skills" (Decode.list Skill.decoder) <| \skills ->
+
+    Decode.succeed
+        { ancestries = mapMaybe ancestries
+        , backgrounds = mapMaybe backgrounds
+        , classes = mapMaybe classes
+        , feats = mapMaybe feats
+        , skills = mapMaybe skills
+        }
+
+
+mapMaybe : Maybe (List (NamedRecord r)) -> Dict String (NamedRecord r)
+mapMaybe maybeList =
+    maybeList
+        |> Maybe.withDefault []
         |> List.map (\v -> (v.name, v))
         |> Dict.fromList
