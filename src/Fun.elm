@@ -1,4 +1,4 @@
-module Fun exposing (formatModifier, noCmd, sortWith, compare, reverse, ifExists)
+module Fun exposing (formatModifier, noCmd, sortWith, compare, reverse)
 
 import Json.Decode as Decode exposing (Decoder)
 
@@ -51,15 +51,3 @@ reverse fun =
             LT -> GT
             EQ -> EQ
             GT -> LT
-
-
-ifExists : String -> Decoder a -> (Maybe a -> Decoder b) -> Decoder b
-ifExists fieldName valueDecoder continuation =
-    Field.attempt fieldName Decode.value <| \value ->
-    case value of
-        Just _ ->
-            Field.require fieldName valueDecoder (Decode.succeed << Just)
-                |> Decode.andThen continuation
-        Nothing ->
-            Decode.succeed Nothing
-                |> Decode.andThen continuation

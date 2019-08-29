@@ -5,7 +5,6 @@ import Json.Decode as Decode exposing (Decoder)
 
 import Json.Decode.Field as Field
 
-import Fun
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Data.Decoder.Json.Ancestry as Ancestry
 import Pathfinder2.Data.Decoder.Json.Background as Background
@@ -34,11 +33,11 @@ decode value =
 
 decoder : Decoder Data
 decoder =
-    Fun.ifExists "ancestries" (Decode.list Ancestry.decoder) <| \ancestries ->
-    Fun.ifExists "backgrounds" (Decode.list Background.decoder) <| \backgrounds ->
-    Fun.ifExists "classes" (Decode.list Class.decoder) <| \classes ->
-    Fun.ifExists "feats" (Decode.list Feat.decoder) <| \feats ->
-    Fun.ifExists "skills" (Decode.list Skill.decoder) <| \skills ->
+    Field.optional "ancestries" (Decode.list Ancestry.decoder) <| \ancestries ->
+    Field.optional "backgrounds" (Decode.list Background.decoder) <| \backgrounds ->
+    Field.optional "classes" (Decode.list Class.decoder) <| \classes ->
+    Field.optional "feats" (Decode.list Feat.decoder) <| \feats ->
+    Field.optional "skills" (Decode.list Skill.decoder) <| \skills ->
 
     Decode.succeed
         { ancestries = mapMaybe ancestries

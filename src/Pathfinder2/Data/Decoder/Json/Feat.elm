@@ -5,7 +5,6 @@ import Json.Decode as Decode exposing (Decoder)
 import Maybe.Extra
 import Json.Decode.Field as Field
 
-import Fun
 import Pathfinder2.Data as Data
 
 
@@ -14,7 +13,7 @@ decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "level" Decode.int <| \level ->
     Field.require "traits" (Decode.list Decode.string) <| \traits ->
-    Fun.ifExists "prereqs" pre <| \prereq ->
+    Field.optional "prereqs" pre <| \prereq ->
 
     let
         _ =
