@@ -2,7 +2,6 @@ module Pathfinder2.Proficiency exposing
     ( Proficiency(..)
     , toString
     , fromString
-    , decoder
     , modifier
     , compare
     , rank
@@ -45,19 +44,6 @@ fromString string =
             Just Legendary
         _ ->
             Nothing
-
-
-decoder : Decoder Proficiency
-decoder =
-    Decode.string
-        |> Decode.andThen
-            (\string ->
-                case fromString string of
-                    Just proficiency ->
-                        Decode.succeed proficiency
-                    Nothing ->
-                        Decode.fail <| "Unknown proficiency '" ++ string ++ "'"
-            )
 
 
 modifier : Proficiency -> Int -> Int

@@ -255,6 +255,9 @@ availableSkills level character skills =
 prereqsMet : Int -> Character -> Prereq -> Bool
 prereqsMet level character prereq =
     case prereq of
+        Prereq.None ->
+            True
+
         Prereq.And prereqs ->
             List.all (prereqsMet level character) prereqs
 

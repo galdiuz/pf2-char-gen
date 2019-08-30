@@ -1,5 +1,6 @@
 module Pathfinder2.Prereq exposing
     ( Prereq(..)
+    , none
     , and
     , or
     , ability
@@ -12,7 +13,8 @@ import Pathfinder2.Proficiency exposing (Proficiency)
 
 
 type Prereq
-    = And (List Prereq)
+    = None
+    | And (List Prereq)
     | Or (List Prereq)
     | Ability AbilityPrereq
     | Feat FeatPrereq
@@ -36,11 +38,20 @@ type alias SkillPrereq =
     }
 
 
+none : Prereq
+none =
+    None
+
+
 and : List Prereq -> Prereq
 and list =
     case list of
+        [] ->
+            None
+
         [prereq] ->
             prereq
+
         _ ->
             And list
 
@@ -48,8 +59,12 @@ and list =
 or : List Prereq -> Prereq
 or list =
     case list of
+        [] ->
+            None
+
         [prereq] ->
             prereq
+
         _ ->
             Or list
 

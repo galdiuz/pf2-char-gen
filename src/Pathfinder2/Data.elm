@@ -69,7 +69,7 @@ type alias Skill =
 type alias Feat =
     { name : String
     , level : Int
-    , prereqs : Maybe Prereq
+    , prereqs : Prereq
     , traits : List String
     }
 
