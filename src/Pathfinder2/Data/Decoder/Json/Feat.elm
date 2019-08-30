@@ -5,7 +5,10 @@ import Json.Decode as Decode exposing (Decoder)
 import Maybe.Extra
 import Json.Decode.Field as Field
 
+import Pathfinder2.Ability as Ability
 import Pathfinder2.Data as Data
+import Pathfinder2.Prereq as Prereq exposing (Prereq)
+import Pathfinder2.Proficiency as Proficiency
 
 
 decoder : Decoder Data.Feat
@@ -13,76 +16,66 @@ decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "level" Decode.int <| \level ->
     Field.require "traits" (Decode.list Decode.string) <| \traits ->
-    Field.optional "prereqs" pre <| \prereq ->
+    Field.optional "prereqs" singleOrListPrereq <| \prereqs ->
 
-    let
-        _ =
-            Debug.log "prereqs" prereq
-    in
     Decode.succeed
         { name = name
         , level = level
         , traits = traits
-        -- , prereqs = Maybe.withDefault [] prereqs
-        , prereqs = []
+        , prereqs = prereqs
         }
 
 
-pre =
+singleOrListPrereq =
     Decode.oneOf
         [ prereqDecoder
         , Decode.list prereqDecoder
-            |> Decode.map And
+            |> Decode.map Prereq.and
         ]
-
-
-type Prereq
-    = And (List Prereq)
-    | Or (List Prereq)
-    | Skill { name : String, rank : String }
-    | Feat { name : String }
-    | Ability { name : String, value : Int }
 
 
 prereqDecoder : Decoder Prereq
 prereqDecoder =
     Decode.oneOf
         [ Decode.field "and" (Decode.list <| Decode.lazy <| \_ -> prereqDecoder)
-            |> Decode.map And
+            |> Decode.map Prereq.and
         , Decode.field "or" (Decode.list <| Decode.lazy <| \_ -> prereqDecoder)
-            |> Decode.map Or
+            |> Decode.map Prereq.or
         , Decode.field "skill" skillPrereq
         , Decode.field "feat" featPrereq
         , Decode.field "ability" abilityPrereq
         ]
 
 
+skillPrereq : Decoder Prereq
 skillPrereq =
     Field.require "name" Decode.string <| \name ->
-    Field.require "rank" Decode.string <| \rank ->
+    Field.require "rank" Proficiency.decoder <| \rank ->
 
     Decode.succeed
-        <| Skill
+        <| Prereq.skill
             { name = name
             , rank = rank
             }
 
 
+featPrereq : Decoder Prereq
 featPrereq =
     Field.require "name" Decode.string <| \name ->
 
     Decode.succeed
-        <| Feat
+        <| Prereq.feat
             { name = name
             }
 
 
+abilityPrereq : Decoder Prereq
 abilityPrereq =
-    Field.require "name" Decode.string <| \name ->
+    Field.require "name" Ability.decoder <| \ability ->
     Field.require "value" Decode.int <| \value ->
 
     Decode.succeed
-        <| Ability
-            { name = name
+        <| Prereq.ability
+            { ability = ability
             , value = value
             }

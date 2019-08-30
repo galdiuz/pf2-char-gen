@@ -6,6 +6,7 @@ module Pathfinder2.Ability exposing
     , list
     , toString
     , fromString
+    , decoder
     , modFromString
     , free
     , compare
@@ -15,6 +16,8 @@ module Pathfinder2.Ability exposing
     , abilityValue
     , modifier
     )
+
+import Json.Decode as Decode exposing (Decoder)
 
 
 type Ability
@@ -83,6 +86,19 @@ fromString string =
         "Wis" -> Just Wis
         "Cha" -> Just Cha
         _ -> Nothing
+
+
+decoder : Decoder Ability
+decoder =
+    Decode.string
+        |> Decode.andThen
+            (\string ->
+                case fromString string of
+                    Just ability ->
+                        Decode.succeed ability
+                    Nothing ->
+                        Decode.fail <| "Unknown ability '" ++ string ++ "'"
+            )
 
 
 modFromString : String -> Maybe AbilityMod

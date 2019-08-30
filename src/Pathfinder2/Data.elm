@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Maybe.Extra
 
 import Pathfinder2.Ability as Ability exposing (Ability)
+import Pathfinder2.Prereq exposing (Prereq)
 
 
 type alias Data =
@@ -68,7 +69,7 @@ type alias Skill =
 type alias Feat =
     { name : String
     , level : Int
-    , prereqs : List String
+    , prereqs : Maybe Prereq
     , traits : List String
     }
 

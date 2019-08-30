@@ -1,11 +1,15 @@
 module Pathfinder2.Proficiency exposing
     ( Proficiency(..)
     , toString
+    , fromString
+    , decoder
     , modifier
     , compare
     , rank
     , maxProficiency
     )
+
+import Json.Decode as Decode exposing (Decoder)
 
 
 type Proficiency
@@ -24,6 +28,36 @@ toString proficiency =
         Expert -> "Expert"
         Master -> "Master"
         Legendary -> "Legendary"
+
+
+fromString : String -> Maybe Proficiency
+fromString string =
+    case string of
+        "Untrained" ->
+            Just Untrained
+        "Trained" ->
+            Just Trained
+        "Expert" ->
+            Just Expert
+        "Master" ->
+            Just Master
+        "Legendary" ->
+            Just Legendary
+        _ ->
+            Nothing
+
+
+decoder : Decoder Proficiency
+decoder =
+    Decode.string
+        |> Decode.andThen
+            (\string ->
+                case fromString string of
+                    Just proficiency ->
+                        Decode.succeed proficiency
+                    Nothing ->
+                        Decode.fail <| "Unknown proficiency '" ++ string ++ "'"
+            )
 
 
 modifier : Proficiency -> Int -> Int

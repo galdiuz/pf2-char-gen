@@ -5,6 +5,10 @@ import List.Extra
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
+import Pathfinder2.Prereq as Prereq exposing (Prereq)
+
+
+-- Types
 
 
 type alias Character =
@@ -89,6 +93,9 @@ emptyClassOptions =
     { keyAbility = Nothing
     , subclass = Nothing
     }
+
+
+-- Logic
 
 
 ancestryAbilityBoosts : Character -> List Ability.AbilityMod
@@ -243,6 +250,33 @@ availableSkills level character skills =
                 |> (==) GT
         )
         skills
+
+
+prereqsMet : Int -> Character -> Prereq -> Bool
+prereqsMet level character prereq =
+    case prereq of
+        Prereq.And prereqs ->
+            List.all (prereqsMet level character) prereqs
+
+        Prereq.Or prereqs ->
+            List.any (prereqsMet level character) prereqs
+
+        Prereq.Ability data ->
+            abilities level character
+                |> (Ability.abilityValue data.ability)
+                |> compare data.value
+                |> (/=) LT
+
+        Prereq.Feat data ->
+            False
+
+        Prereq.Skill data ->
+            skillProficiency data.name level character Dict.empty
+                |> Proficiency.compare data.rank
+                |> (/=) LT
+
+
+-- Setters
 
 
 asAncestryIn : Character -> Data.Ancestry -> Character
