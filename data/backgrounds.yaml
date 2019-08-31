@@ -4,8 +4,9 @@ backgrounds:
       - "Int"
       - "Wis"
     skills:
-      - "Religion"
-      - "Scribing Lore"
+      - name: "Religion"
+        keyAbility: "Int"
+      - name: "Scribing Lore"
     feats:
       - "Student of the Canon"
 

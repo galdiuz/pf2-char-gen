@@ -5,7 +5,6 @@ import List.Extra
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
-import Pathfinder2.Prereq as Prereq exposing (Prereq)
 
 
 -- Types
@@ -185,8 +184,8 @@ abilities level character =
         )
 
 
-skillProficiencies : Int -> Character -> Dict String Data.Skill -> Dict String Proficiency
-skillProficiencies level character skills =
+skillProficiencies : Int -> Character -> Dict String Proficiency
+skillProficiencies level character =
     [ character.skillIncreases
         |> Dict.filter
             (\l _ -> level >= l)
@@ -195,11 +194,9 @@ skillProficiencies level character skills =
     , character.background
         |> Maybe.map .skills
         |> Maybe.withDefault []
-        |> List.filterMap (Data.getSkill skills)
     , character.class
         |> Maybe.map .skills
         |> Maybe.withDefault []
-        |> List.filterMap (Data.getSkill skills)
     -- TODO: Fix overlaps between background and class
     ]
         |> List.concat
@@ -214,9 +211,9 @@ skillProficiencies level character skills =
         |> Dict.fromList
 
 
-skillProficiency : String -> Int -> Character -> Dict String Data.Skill -> Proficiency
-skillProficiency skill level character skills =
-    Dict.get skill (skillProficiencies level character skills)
+skillProficiency : String -> Int -> Character -> Proficiency
+skillProficiency skill level character =
+    Dict.get skill (skillProficiencies level character)
         |> Maybe.withDefault Proficiency.Untrained
 
 
@@ -243,40 +240,13 @@ availableSkills : Int -> Character -> Dict String Data.Skill -> Dict String Data
 availableSkills level character skills =
     Dict.filter
         (\_ skill ->
-            skillProficiencies (level - 1) character skills
+            skillProficiencies (level - 1) character
                 |> Dict.get skill.name
                 |> Maybe.withDefault Proficiency.Untrained
                 |> Proficiency.compare (Proficiency.maxProficiency level)
                 |> (==) GT
         )
         skills
-
-
-prereqsMet : Int -> Character -> Prereq -> Bool
-prereqsMet level character prereq =
-    case prereq of
-        Prereq.None ->
-            True
-
-        Prereq.And prereqs ->
-            List.all (prereqsMet level character) prereqs
-
-        Prereq.Or prereqs ->
-            List.any (prereqsMet level character) prereqs
-
-        Prereq.Ability data ->
-            abilities level character
-                |> (Ability.abilityValue data.ability)
-                |> compare data.value
-                |> (/=) LT
-
-        Prereq.Feat data ->
-            False
-
-        Prereq.Skill data ->
-            skillProficiency data.name level character Dict.empty
-                |> Proficiency.compare data.rank
-                |> (/=) LT
 
 
 -- Setters

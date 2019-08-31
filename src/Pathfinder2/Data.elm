@@ -38,7 +38,7 @@ type alias Heritage =
 type alias Background =
     { name : String
     , abilityBoosts : List Ability.AbilityMod
-    , skills : List String
+    , skills : List Skill
     }
 
 
@@ -46,7 +46,7 @@ type alias Class =
     { name : String
     , hitPoints : Int
     , keyAbility : Ability.AbilityMod
-    , skills : List String
+    , skills : List Skill
     , skillIncreases : Int
     , subclass : Maybe Subclass
     , skillFeatLevels : List Int
@@ -102,7 +102,6 @@ skills data =
             |> Dict.values
             |> List.map .skills
             |> List.concat
-            |> List.filterMap ( getSkill data.skills )
             |> List.map (\s -> (s.name, s))
             |> Dict.fromList
         )

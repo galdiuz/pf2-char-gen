@@ -7,18 +7,22 @@ import Maybe.Extra
 
 import Pathfinder2.Ability as Ability
 import Pathfinder2.Data as Data
+import Pathfinder2.Data.Decoder.Json.Ability as Ability
 
 
 decoder : Decoder Data.Skill
 decoder =
     Field.require "name" Decode.string <| \name ->
-    Field.require "keyAbility" Decode.string <| \rawKeyAbility ->
 
-    case Ability.fromString rawKeyAbility of
-        Nothing ->
-            Decode.fail "Invalid key ability"
-        Just keyAbility ->
-            Decode.succeed
-                { name = name
-                , keyAbility = keyAbility
-                }
+    if String.endsWith "Lore" name then
+        Decode.succeed
+            { name = name
+            , keyAbility = Ability.Int
+            }
+    else
+        Field.require "keyAbility" Ability.decoder <| \keyAbility ->
+
+        Decode.succeed
+            { name = name
+            , keyAbility = keyAbility
+            }

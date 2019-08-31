@@ -7,6 +7,7 @@ import Maybe.Extra
 
 import Pathfinder2.Ability as Ability
 import Pathfinder2.Data as Data
+import Pathfinder2.Data.Decoder.Json.Skill as Skill
 
 
 decoder : Decoder Data.Class
@@ -14,7 +15,7 @@ decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->
     Field.require "keyAbility" (Decode.list Decode.string) <| \boosts ->
-    Field.require "skills" (Decode.list Decode.string) <| \skills ->
+    Field.require "skills" (Decode.list Skill.decoder) <| \skills ->
     Field.require "skillIncreases" Decode.int <| \skillIncreases ->
     Field.attempt "subclass" decodeSubclass <| \subclass ->
     Field.require "skillFeatLevels" (Decode.list Decode.int) <| \skillFeatLevels ->
