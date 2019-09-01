@@ -9,6 +9,7 @@ import Action.Feat as Feat
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import Fun
+import Pathfinder2.Character as Character
 import Pathfinder2.Data as Data
 import UI.ButtonGrid
 import UI.Layout
@@ -53,6 +54,7 @@ renderList state level key trait =
             state.data.feats
                 |> Data.filterFeatsByTrait trait
                 |> Dict.values
+                |> List.filter (Character.isPrereqMet level state.character << .prereqs)
         , selected =
             state.character.feats
                 |> Dict.get key

@@ -289,7 +289,7 @@ isPrereqMet level character prereq =
             abilities level character
                 |> (Ability.abilityValue data.ability)
                 |> compare data.value
-                |> (/=) LT
+                |> (/=) GT
 
         Prereq.Feat data ->
             False
@@ -297,7 +297,7 @@ isPrereqMet level character prereq =
         Prereq.Skill data ->
             skillProficiency data.name level character
                 |> Proficiency.compare data.rank
-                |> (/=) LT
+                |> (/=) GT
 
 
 -- Setters
