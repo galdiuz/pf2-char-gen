@@ -1,5 +1,5 @@
 module Pathfinder2.Prereq exposing
-    ( Prereq
+    ( Prereq(..)
     , none
     , and
     , or
@@ -8,9 +8,8 @@ module Pathfinder2.Prereq exposing
     , skill
     )
 
-import Pathfinder2.Ability exposing (Ability)
--- import Pathfinder2.Character as Character exposing (Character)
-import Pathfinder2.Proficiency exposing (Proficiency)
+import Pathfinder2.Ability as Ability exposing (Ability)
+import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 
 
 type Prereq
@@ -83,30 +82,3 @@ feat data =
 skill : SkillData -> Prereq
 skill data =
     Skill data
-
-
--- isMet : Int -> Character -> Prereq -> Bool
--- isMet level character prereq =
---     case prereq of
---         Prereq.None ->
---             True
-
---         Prereq.And prereqs ->
---             List.all (prereqsMet level character) prereqs
-
---         Prereq.Or prereqs ->
---             List.any (prereqsMet level character) prereqs
-
---         Prereq.Ability data ->
---             Character.abilities level character
---                 |> (Ability.abilityValue data.ability)
---                 |> compare data.value
---                 |> (/=) LT
-
---         Prereq.Feat data ->
---             False
-
---         Prereq.Skill data ->
---             Character.skillProficiency data.name level character Dict.empty
---                 |> Proficiency.compare data.rank
---                 |> (/=) LT

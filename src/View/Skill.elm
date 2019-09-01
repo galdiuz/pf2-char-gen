@@ -14,7 +14,7 @@ import Action.Skill as Skill
 import App.Msg as Msg exposing (Msg)
 import App.State exposing (State)
 import Fun
-import Pathfinder2.Ability as Ability
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
@@ -94,7 +94,7 @@ render state level picks =
         ]
 
 
-columns : State -> Int -> List (Data.Skill -> Element Msg)
+columns : State -> Int -> List (Data.Skill Ability -> Element Msg)
 columns state level =
     let
         proficiency skill =

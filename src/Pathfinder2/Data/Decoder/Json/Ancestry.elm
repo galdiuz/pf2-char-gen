@@ -9,7 +9,7 @@ import Pathfinder2.Ability as Ability
 import Pathfinder2.Data as Data
 
 
-decoder : Decoder Data.Ancestry
+decoder : Decoder (Data.Ancestry Ability.AbilityMod)
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->

@@ -4,10 +4,34 @@ import Dict exposing (Dict)
 import List.Extra
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data
+import Pathfinder2.Prereq as Prereq exposing (Prereq)
 import Pathfinder2.Proficiency as Proficiency exposing (Proficiency)
 
 
 -- Types
+
+
+type alias Ancestry =
+    Data.Ancestry Ability.AbilityMod
+
+
+type alias Background =
+    Data.Background Ability Ability.AbilityMod
+
+
+type alias Class =
+    Data.Class Ability Ability.AbilityMod
+
+
+type alias Feat =
+    Data.Feat Prereq
+
+
+type alias Skill =
+    Data.Skill Ability
+
+
+-- Records
 
 
 type alias Character =
@@ -18,15 +42,15 @@ type alias Character =
     , level : Int
     , experience : Int
     , baseAbilities : Ability.BaseAbilities
-    , ancestry : Maybe Data.Ancestry
+    , ancestry : Maybe Ancestry
     , ancestryOptions : AncestryOptions
-    , background : Maybe Data.Background
+    , background : Maybe Background
     , backgroundOptions : BackgroundOptions
-    , class : Maybe Data.Class
+    , class : Maybe Class
     , classOptions : ClassOptions
     , abilityBoosts : Dict Int (List Ability)
-    , skillIncreases : Dict Int (List Data.Skill)
-    , feats : Dict String Data.Feat
+    , skillIncreases : Dict Int (List Skill)
+    , feats : Dict String Feat
     }
 
 
@@ -236,7 +260,7 @@ level1SkillIncreases character =
         ]
 
 
-availableSkills : Int -> Character -> Dict String Data.Skill -> Dict String Data.Skill
+availableSkills : Int -> Character -> Dict String Skill -> Dict String Skill
 availableSkills level character skills =
     Dict.filter
         (\_ skill ->
@@ -249,10 +273,37 @@ availableSkills level character skills =
         skills
 
 
+isPrereqMet : Int -> Character -> Prereq -> Bool
+isPrereqMet level character prereq =
+    case prereq of
+        Prereq.None ->
+            True
+
+        Prereq.And prereqs ->
+            List.all (isPrereqMet level character) prereqs
+
+        Prereq.Or prereqs ->
+            List.any (isPrereqMet level character) prereqs
+
+        Prereq.Ability data ->
+            abilities level character
+                |> (Ability.abilityValue data.ability)
+                |> compare data.value
+                |> (/=) LT
+
+        Prereq.Feat data ->
+            False
+
+        Prereq.Skill data ->
+            skillProficiency data.name level character
+                |> Proficiency.compare data.rank
+                |> (/=) LT
+
+
 -- Setters
 
 
-asAncestryIn : Character -> Data.Ancestry -> Character
+asAncestryIn : Character -> Ancestry -> Character
 asAncestryIn character ancestry =
     { character
         | ancestry = Just ancestry
@@ -267,7 +318,7 @@ asAncestryOptionsIn character options =
     }
 
 
-asBackgroundIn : Character -> Data.Background -> Character
+asBackgroundIn : Character -> Background -> Character
 asBackgroundIn character background =
     { character
         | background = Just background
@@ -282,7 +333,7 @@ asBackgroundOptionsIn character options =
     }
 
 
-asClassIn : Character -> Data.Class -> Character
+asClassIn : Character -> Class -> Character
 asClassIn character class =
     { character
         | class = Just class
@@ -308,6 +359,6 @@ asBaseAbilitiesIn character baseAbilities =
     }
 
 
-setFeat : String -> Data.Feat -> Character -> Character
+setFeat : String -> Data.Feat Prereq -> Character -> Character
 setFeat key feat character =
     { character | feats = Dict.insert key feat character.feats }

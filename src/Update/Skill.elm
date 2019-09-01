@@ -7,7 +7,7 @@ import String.Extra
 import Action.Skill exposing (Action(..))
 import App.State as State exposing (State)
 import Fun
-import Pathfinder2.Ability as Ability
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data exposing (Data)
 
@@ -53,12 +53,12 @@ asSkillIncreaseIn character level skill =
     { character | skillIncreases = Dict.insert level skill character.skillIncreases }
 
 
-asSkillsIn : Data -> Dict String Data.Skill -> Data
+asSkillsIn : Data a am p -> Dict String (Data.Skill a) -> Data a am p
 asSkillsIn data skills =
     { data | skills = skills }
 
 
-asLoreSkillIn : Dict String Data.Skill -> String -> Dict String Data.Skill
+asLoreSkillIn : Dict String (Data.Skill Ability) -> String -> Dict String (Data.Skill Ability)
 asLoreSkillIn skills name =
     Dict.insert
         name

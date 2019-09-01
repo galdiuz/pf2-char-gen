@@ -8,13 +8,15 @@ module App.State exposing
     )
 
 import App.View as View exposing (View)
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data exposing (Data)
+import Pathfinder2.Prereq exposing (Prereq)
 
 
 type alias State =
     { character : Character
-    , data : Data
+    , data : Data Ability Ability.AbilityMod Prereq
     , currentView : View
     , modals : List View
     , window :
@@ -55,7 +57,7 @@ asCharacterIn state character =
     { state | character = character }
 
 
-asDataIn : State -> Data -> State
+asDataIn : State -> Data Ability Ability.AbilityMod Prereq -> State
 asDataIn state data =
     { state | data = data }
 

@@ -7,10 +7,10 @@ import Json.Decode.Field as Field
 
 import Pathfinder2.Data as Data
 import Pathfinder2.Data.Decoder.Json.Prereq as Prereq
-import Pathfinder2.Prereq as Prereq
+import Pathfinder2.Prereq as Prereq exposing (Prereq)
 
 
-decoder : Decoder Data.Feat
+decoder : Decoder (Data.Feat Prereq)
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "level" Decode.int <| \level ->

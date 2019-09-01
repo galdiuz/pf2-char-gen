@@ -5,19 +5,21 @@ import Json.Decode as Decode exposing (Decoder)
 
 import Json.Decode.Field as Field
 
+import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Data.Decoder.Json.Ancestry as Ancestry
 import Pathfinder2.Data.Decoder.Json.Background as Background
 import Pathfinder2.Data.Decoder.Json.Class as Class
 import Pathfinder2.Data.Decoder.Json.Feat as Feat
 import Pathfinder2.Data.Decoder.Json.Skill as Skill
+import Pathfinder2.Prereq exposing (Prereq)
 
 
 type alias NamedRecord r =
     { r | name : String }
 
 
-decode : Decode.Value -> Data
+decode : Decode.Value -> Data Ability Ability.AbilityMod Prereq
 decode value =
     Decode.decodeValue decoder value
         |> (\result ->
@@ -31,7 +33,7 @@ decode value =
         |> Result.withDefault Data.emptyData
 
 
-decoder : Decoder Data
+decoder : Decoder (Data Ability Ability.AbilityMod Prereq)
 decoder =
     Field.optional "ancestries" (Decode.list Ancestry.decoder) <| \ancestries ->
     Field.optional "backgrounds" (Decode.list Background.decoder) <| \backgrounds ->

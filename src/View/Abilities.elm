@@ -204,7 +204,7 @@ type AbilityModType
     | Flaw
 
 
-renderAncestryMod : Data.Ancestry -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
+renderAncestryMod : Data.Ancestry Ability.AbilityMod -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
 renderAncestryMod ancestry character modType index mod =
     case mod of
         Ability.Fixed ability ->
@@ -309,7 +309,7 @@ renderBackground state =
         ]
 
 
-renderBackgroundMod : Data.Background -> Character -> Int -> Ability.AbilityMod -> Element Msg
+renderBackgroundMod : Data.Background Ability Ability.AbilityMod -> Character -> Int -> Ability.AbilityMod -> Element Msg
 renderBackgroundMod background character index mod =
     case mod of
         Ability.Fixed ability ->
@@ -354,7 +354,7 @@ renderClass state =
         ]
 
 
-renderClassMod : Data.Class -> Character -> Element Msg
+renderClassMod : Data.Class Ability Ability.AbilityMod -> Character -> Element Msg
 renderClassMod class character =
     case class.keyAbility of
         Ability.Fixed ability ->

@@ -5,25 +5,24 @@ import Dict exposing (Dict)
 import Maybe.Extra
 
 import Pathfinder2.Ability as Ability exposing (Ability)
-import Pathfinder2.Prereq exposing (Prereq)
 
 
-type alias Data =
-    { ancestries : Dict String Ancestry
-    , backgrounds : Dict String Background
-    , classes : Dict String Class
-    , skills : Dict String Skill
-    , feats : Dict String Feat
+type alias Data ability abilityMod prereq =
+    { ancestries : Dict String (Ancestry abilityMod)
+    , backgrounds : Dict String (Background ability abilityMod)
+    , classes : Dict String (Class ability abilityMod)
+    , skills : Dict String (Skill ability)
+    , feats : Dict String (Feat prereq)
     }
 
 
-type alias Ancestry =
+type alias Ancestry abilityMod =
     { name : String
     , hitPoints : Int
     , size : String
     , speed : Int
-    , abilityBoosts : List Ability.AbilityMod
-    , abilityFlaws : List Ability.AbilityMod
+    , abilityBoosts : List abilityMod
+    , abilityFlaws : List abilityMod
     , languages : List String
     , traits : List String
     , heritages : List Heritage
@@ -35,18 +34,18 @@ type alias Heritage =
     }
 
 
-type alias Background =
+type alias Background ability abilityMod =
     { name : String
-    , abilityBoosts : List Ability.AbilityMod
-    , skills : List Skill
+    , abilityBoosts : List abilityMod
+    , skills : List (Skill ability)
     }
 
 
-type alias Class =
+type alias Class ability abilityMod =
     { name : String
     , hitPoints : Int
-    , keyAbility : Ability.AbilityMod
-    , skills : List Skill
+    , keyAbility : abilityMod
+    , skills : List (Skill ability)
     , skillIncreases : Int
     , subclass : Maybe Subclass
     , skillFeatLevels : List Int
@@ -60,21 +59,21 @@ type alias Subclass =
     }
 
 
-type alias Skill =
+type alias Skill ability =
     { name : String
-    , keyAbility : Ability
+    , keyAbility : ability
     }
 
 
-type alias Feat =
+type alias Feat prereq =
     { name : String
     , level : Int
-    , prereqs : Prereq
+    , prereqs : prereq
     , traits : List String
     }
 
 
-emptyData : Data
+emptyData : Data ability abilityMod prereq
 emptyData =
     { ancestries = Dict.empty
     , backgrounds = Dict.empty
@@ -84,7 +83,7 @@ emptyData =
     }
 
 
-mergeData : Data -> Data -> Data
+mergeData : Data a am p -> Data a am p -> Data a am p
 mergeData a b =
     { ancestries = Dict.union b.ancestries a.ancestries
     , backgrounds = Dict.union b.backgrounds a.backgrounds
@@ -94,7 +93,7 @@ mergeData a b =
     }
 
 
-skills : Data -> Dict String Skill
+skills : Data a am p -> Dict String (Skill a)
 skills data =
     Dict.union
         data.skills
@@ -107,7 +106,7 @@ skills data =
         )
 
 
-compareSkills : Skill -> Skill -> Order
+compareSkills : Skill a -> Skill a -> Order
 compareSkills a b =
     case (isLore a, isLore b) of
         (True, True) ->
@@ -120,12 +119,12 @@ compareSkills a b =
             compare a.name b.name
 
 
-isLore : Skill -> Bool
+isLore : Skill a -> Bool
 isLore skill =
     String.endsWith "Lore" skill.name
 
 
-loreSkills : Dict String Skill -> Dict String Skill
+loreSkills : Dict String (Skill a) -> Dict String (Skill a)
 loreSkills dict =
     Dict.filter
         (\k _ ->
@@ -134,7 +133,7 @@ loreSkills dict =
         dict
 
 
-nonLoreSkills : Dict String Skill -> Dict String Skill
+nonLoreSkills : Dict String (Skill a) -> Dict String (Skill a)
 nonLoreSkills dict =
     Dict.filter
         (\k _ ->
@@ -143,7 +142,7 @@ nonLoreSkills dict =
         dict
 
 
-getSkill : Dict String Skill -> String -> Maybe Skill
+getSkill : Dict String (Skill Ability) -> String -> Maybe (Skill Ability)
 getSkill dict name =
     Maybe.Extra.or
         ( Dict.get name dict )
@@ -157,7 +156,7 @@ getSkill dict name =
         )
 
 
-filterFeatsByTrait : String -> Dict String Feat -> Dict String Feat
+filterFeatsByTrait : String -> Dict String (Feat p) -> Dict String (Feat p)
 filterFeatsByTrait trait feats =
     Dict.filter
         (\_ feat ->
@@ -166,7 +165,7 @@ filterFeatsByTrait trait feats =
         feats
 
 
-filterFeatsByLevel : Int -> Dict String Feat -> Dict String Feat
+filterFeatsByLevel : Int -> Dict String (Feat p) -> Dict String (Feat p)
 filterFeatsByLevel level feats =
     Dict.filter
         (\_ feat ->
