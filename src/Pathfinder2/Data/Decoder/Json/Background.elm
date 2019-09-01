@@ -11,11 +11,11 @@ import Pathfinder2.Data.Decoder.Json.Ability as Ability
 import Pathfinder2.Data.Decoder.Json.Skill as Skill
 
 
-decoder : Decoder (Data.Background Ability Ability.AbilityMod)
+decoder : Decoder (Data.Background Ability.AbilityMod String)
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "abilityBoosts" (Decode.list Ability.decoder) <| \abilityBoosts ->
-    Field.require "skills" (Decode.list Skill.decoder) <| \skills ->
+    Field.require "skills" (Decode.list Decode.string) <| \skills ->
 
     Decode.succeed
         { name = name

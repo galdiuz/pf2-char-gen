@@ -14,9 +14,13 @@ import Pathfinder2.Data as Data exposing (Data)
 import Pathfinder2.Prereq exposing (Prereq)
 
 
+type alias Skill =
+    Data.Skill Ability
+
+
 type alias State =
     { character : Character
-    , data : Data Ability Ability.AbilityMod Prereq
+    , data : Data Ability Ability.AbilityMod Prereq Skill
     , currentView : View
     , modals : List View
     , window :
@@ -57,7 +61,7 @@ asCharacterIn state character =
     { state | character = character }
 
 
-asDataIn : State -> Data Ability Ability.AbilityMod Prereq -> State
+asDataIn : State -> Data Ability Ability.AbilityMod Prereq Skill -> State
 asDataIn state data =
     { state | data = data }
 

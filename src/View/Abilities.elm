@@ -27,6 +27,18 @@ import UI.Layout
 import UI.Text
 
 
+type alias Ancestry =
+    Data.Ancestry Ability.AbilityMod
+
+
+type alias Background skill =
+    Data.Background Ability.AbilityMod skill
+
+
+type alias Class skill =
+    Data.Class Ability.AbilityMod skill
+
+
 render : State -> Element Msg
 render state =
     El.column
@@ -204,7 +216,7 @@ type AbilityModType
     | Flaw
 
 
-renderAncestryMod : Data.Ancestry Ability.AbilityMod -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
+renderAncestryMod : Ancestry -> Character -> AbilityModType -> Int -> Ability.AbilityMod -> Element Msg
 renderAncestryMod ancestry character modType index mod =
     case mod of
         Ability.Fixed ability ->
@@ -309,7 +321,7 @@ renderBackground state =
         ]
 
 
-renderBackgroundMod : Data.Background Ability Ability.AbilityMod -> Character -> Int -> Ability.AbilityMod -> Element Msg
+renderBackgroundMod : Background s -> Character -> Int -> Ability.AbilityMod -> Element Msg
 renderBackgroundMod background character index mod =
     case mod of
         Ability.Fixed ability ->
@@ -354,7 +366,7 @@ renderClass state =
         ]
 
 
-renderClassMod : Data.Class Ability Ability.AbilityMod -> Character -> Element Msg
+renderClassMod : Class s -> Character -> Element Msg
 renderClassMod class character =
     case class.keyAbility of
         Ability.Fixed ability ->

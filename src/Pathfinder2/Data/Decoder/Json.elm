@@ -19,7 +19,7 @@ type alias NamedRecord r =
     { r | name : String }
 
 
-decode : Decode.Value -> Data Ability Ability.AbilityMod Prereq
+decode : Decode.Value -> Data Ability Ability.AbilityMod Prereq String
 decode value =
     Decode.decodeValue decoder value
         |> (\result ->
@@ -33,7 +33,7 @@ decode value =
         |> Result.withDefault Data.emptyData
 
 
-decoder : Decoder (Data Ability Ability.AbilityMod Prereq)
+decoder : Decoder (Data Ability Ability.AbilityMod Prereq String)
 decoder =
     Field.optional "ancestries" (Decode.list Ancestry.decoder) <| \ancestries ->
     Field.optional "backgrounds" (Decode.list Background.decoder) <| \backgrounds ->

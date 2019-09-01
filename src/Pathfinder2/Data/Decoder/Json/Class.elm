@@ -7,38 +7,30 @@ import Maybe.Extra
 
 import Pathfinder2.Ability as Ability exposing (Ability)
 import Pathfinder2.Data as Data
+import Pathfinder2.Data.Decoder.Json.Ability as Ability
 import Pathfinder2.Data.Decoder.Json.Skill as Skill
 
 
-decoder : Decoder (Data.Class Ability Ability.AbilityMod)
+decoder : Decoder (Data.Class Ability.AbilityMod String)
 decoder =
     Field.require "name" Decode.string <| \name ->
     Field.require "hitPoints" Decode.int <| \hitPoints ->
-    Field.require "keyAbility" (Decode.list Decode.string) <| \boosts ->
-    Field.require "skills" (Decode.list Skill.decoder) <| \skills ->
+    Field.require "keyAbility" (Decode.list Ability.decoder) <| \keyAbility ->
+    Field.require "skills" (Decode.list Decode.string) <| \skills ->
     Field.require "skillIncreases" Decode.int <| \skillIncreases ->
     Field.attempt "subclass" decodeSubclass <| \subclass ->
     Field.require "skillFeatLevels" (Decode.list Decode.int) <| \skillFeatLevels ->
     Field.require "skillIncreaseLevels" (Decode.list Decode.int) <| \skillIncreaseLevels ->
 
-    let
-        abilityBoosts =
-            List.map Ability.fromString boosts
-    in
-
-    if not <| List.all Maybe.Extra.isJust abilityBoosts then
-        Decode.fail "Invalid ability boost"
-    else
-
     Decode.succeed
         { name = name
         , hitPoints = hitPoints
         , keyAbility =
-            case abilityBoosts of
-                [ Just ability ] ->
-                    Ability.Fixed ability
-                abilities ->
-                    Ability.Choice <| List.filterMap identity abilities
+            case keyAbility of
+                [ fixed ] ->
+                    Ability.Fixed fixed
+                choice ->
+                    Ability.Choice choice
         , skills = skills
         , skillIncreases = skillIncreases
         , subclass = subclass

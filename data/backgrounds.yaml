@@ -4,9 +4,8 @@ backgrounds:
       - "Int"
       - "Wis"
     skills:
-      - name: "Religion"
-        keyAbility: "Int"
-      - name: "Scribing Lore"
+      - "Religion"
+      - "Scribing Lore"
     feats:
       - "Student of the Canon"
 
@@ -265,7 +264,7 @@ backgrounds:
       - "Int"
       - "Cha"
     skills:
-      - "Diplomancy"
+      - "Diplomacy"
       - "Mercantile Lore"
     feats:
       - "Bargain Hunter"
@@ -296,7 +295,7 @@ backgrounds:
       - "Cha"
     skills:
       - "Society"
-      - "Heraldry"
+      - "Heraldry Lore"
     feats:
       - "Courtly Graces"
 

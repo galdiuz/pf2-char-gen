@@ -7,10 +7,10 @@ import Maybe.Extra
 import Pathfinder2.Ability as Ability exposing (Ability)
 
 
-type alias Data ability abilityMod prereq =
+type alias Data ability abilityMod prereq skill =
     { ancestries : Dict String (Ancestry abilityMod)
-    , backgrounds : Dict String (Background ability abilityMod)
-    , classes : Dict String (Class ability abilityMod)
+    , backgrounds : Dict String (Background abilityMod skill)
+    , classes : Dict String (Class abilityMod skill)
     , skills : Dict String (Skill ability)
     , feats : Dict String (Feat prereq)
     }
@@ -34,18 +34,18 @@ type alias Heritage =
     }
 
 
-type alias Background ability abilityMod =
+type alias Background abilityMod skill =
     { name : String
     , abilityBoosts : List abilityMod
-    , skills : List (Skill ability)
+    , skills : List skill
     }
 
 
-type alias Class ability abilityMod =
+type alias Class abilityMod skill =
     { name : String
     , hitPoints : Int
     , keyAbility : abilityMod
-    , skills : List (Skill ability)
+    , skills : List skill
     , skillIncreases : Int
     , subclass : Maybe Subclass
     , skillFeatLevels : List Int
@@ -73,7 +73,7 @@ type alias Feat prereq =
     }
 
 
-emptyData : Data ability abilityMod prereq
+emptyData : Data ability abilityMod prereq skill
 emptyData =
     { ancestries = Dict.empty
     , backgrounds = Dict.empty
@@ -83,7 +83,7 @@ emptyData =
     }
 
 
-mergeData : Data a am p -> Data a am p -> Data a am p
+mergeData : Data a am p s -> Data a am p s -> Data a am p s
 mergeData a b =
     { ancestries = Dict.union b.ancestries a.ancestries
     , backgrounds = Dict.union b.backgrounds a.backgrounds
@@ -93,17 +93,17 @@ mergeData a b =
     }
 
 
-skills : Data a am p -> Dict String (Skill a)
+skills : Data a am p (Skill a) -> Dict String (Skill a)
 skills data =
-    Dict.union
-        data.skills
-        ( data.backgrounds
-            |> Dict.values
-            |> List.map .skills
-            |> List.concat
-            |> List.map (\s -> (s.name, s))
-            |> Dict.fromList
-        )
+    data.skills
+    -- Dict.union
+    --     ( data.backgrounds
+    --         |> Dict.values
+    --         |> List.map .skills
+    --         |> List.concat
+    --         |> List.map (\s -> (s.name, s))
+    --         |> Dict.fromList
+    --     )
 
 
 compareSkills : Skill a -> Skill a -> Order
@@ -172,3 +172,71 @@ filterFeatsByLevel level feats =
             feat.level <= level
         )
         feats
+
+
+validateAndMergeData :
+    Data Ability am p (Skill Ability)
+    -> Data Ability am p String
+    -> Result String (Data Ability am p (Skill Ability))
+validateAndMergeData oldData newData =
+    let
+        allSkills =
+            Dict.union oldData.skills newData.skills
+
+        getSkills field =
+            newData
+                |> field
+                |> Dict.values
+                |> List.map .skills
+                |> List.concat
+                |> List.map (\name -> (name, getSkill allSkills name))
+
+        backgroundSkills =
+            getSkills .backgrounds
+
+        classSkills =
+            getSkills .classes
+
+        errors =
+            List.filterMap
+                (\(name, maybeSkill) ->
+                    case maybeSkill of
+                        Just skill ->
+                            Nothing
+                        Nothing ->
+                            Just name
+                )
+                (backgroundSkills ++ classSkills)
+    in
+    if List.isEmpty errors then
+        { ancestries = newData.ancestries
+        , backgrounds =
+            Dict.map
+                (\_ v ->
+                    { name = v.name
+                    , abilityBoosts = v.abilityBoosts
+                    , skills = List.filterMap (\name -> getSkill allSkills name) v.skills
+                    }
+                )
+                newData.backgrounds
+        , classes =
+            Dict.map
+                (\_ v ->
+                    { name = v.name
+                    , hitPoints = v.hitPoints
+                    , keyAbility = v.keyAbility
+                    , skills = List.filterMap (\name -> getSkill allSkills name) v.skills
+                    , skillIncreases = v.skillIncreases
+                    , subclass = v.subclass
+                    , skillFeatLevels = v.skillFeatLevels
+                    , skillIncreaseLevels = v.skillIncreaseLevels
+                    }
+                )
+            newData.classes
+        , skills = newData.skills
+        , feats = newData.feats
+        }
+            |> mergeData oldData
+            |> Ok
+    else
+        Err <| "Undefined skill(s): " ++ (String.join ", " errors)

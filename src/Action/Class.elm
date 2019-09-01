@@ -6,6 +6,6 @@ import Pathfinder2.Data as Data
 
 type Action
     = NoOp
-    | SetClass (Data.Class Ability Ability.AbilityMod)
+    | SetClass (Data.Class Ability.AbilityMod (Data.Skill Ability))
     | SetSubclass String
     | SetKeyAbility Ability

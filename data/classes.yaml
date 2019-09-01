@@ -6,8 +6,7 @@ classes:
     savingThrows:
         []
     skills:
-      - name: "Crafting"
-        keyAbility: "Int"
+      - "Crafting"
     skillIncreases: 3
     proficiencies:
         []
@@ -29,8 +28,7 @@ classes:
     savingThrows:
         []
     skills:
-      - name: "Athletics"
-        keyAbility: "Str"
+      - "Athletics"
     skillIncreases: 3
     proficiencies:
         []
@@ -54,10 +52,8 @@ classes:
     savingThrows:
         []
     skills:
-      - name: "Occultism"
-        keyAbility: "Int"
-      - name: "Performance"
-        keyAbility: "Cha"
+      - "Occultism"
+      - "Performance"
     skillIncreases: 4
     proficiencies:
         []
@@ -96,8 +92,7 @@ classes:
       - "Dex"
       - "Cha"
     skills:
-      - name: "Stealth"
-        keyAbility: "Dex"
+      - "Stealth"
     skillIncreases: 7
     proficiencies:
         []

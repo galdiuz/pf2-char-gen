@@ -6,5 +6,5 @@ import Pathfinder2.Data as Data
 
 type Action
     = NoOp
-    | SetBackground (Data.Background Ability Ability.AbilityMod)
+    | SetBackground (Data.Background Ability.AbilityMod (Data.Skill Ability))
     | SetAbilityBoost Int Ability

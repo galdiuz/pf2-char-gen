@@ -16,11 +16,11 @@ type alias Ancestry =
 
 
 type alias Background =
-    Data.Background Ability Ability.AbilityMod
+    Data.Background Ability.AbilityMod Skill
 
 
 type alias Class =
-    Data.Class Ability Ability.AbilityMod
+    Data.Class Ability.AbilityMod Skill
 
 
 type alias Feat =

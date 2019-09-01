@@ -12,6 +12,10 @@ import Pathfinder2.Character as Character exposing (Character)
 import Pathfinder2.Data as Data exposing (Data)
 
 
+type alias Skill =
+    Data.Skill Ability
+
+
 update : Action -> State -> (State, Cmd msg)
 update action state =
     case action of
@@ -53,12 +57,12 @@ asSkillIncreaseIn character level skill =
     { character | skillIncreases = Dict.insert level skill character.skillIncreases }
 
 
-asSkillsIn : Data a am p -> Dict String (Data.Skill a) -> Data a am p
+asSkillsIn : Data Ability am p Skill -> Dict String Skill -> Data Ability am p Skill
 asSkillsIn data skills =
     { data | skills = skills }
 
 
-asLoreSkillIn : Dict String (Data.Skill Ability) -> String -> Dict String (Data.Skill Ability)
+asLoreSkillIn : Dict String Skill -> String -> Dict String Skill
 asLoreSkillIn skills name =
     Dict.insert
         name
